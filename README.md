@@ -6,8 +6,20 @@ Repository for SeatSeer, Orbital 2021
 2. [Git](https://git-scm.com/)
 3. [Expo CLI and Expo Go app](https://docs.expo.io/get-started/installation/)
 
-## Installation
-Open a terminal session in the working directory. Use expo install to install the required dependencies.
+## Setting up
+1. Clone this repository
+
+```bash
+git clone https://github.com/kwokieee/seatseer.git
+```
+
+2. Change directory into the project root
+
+```bash
+cd seatseer
+```
+
+3. Use expo install to install the required dependencies.
 
 ```bash
 expo install
