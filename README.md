@@ -1,4 +1,4 @@
-# seatseer
+# SeatSeer
 Repository for SeatSeer, Orbital 2021
 
 ## Requirements
