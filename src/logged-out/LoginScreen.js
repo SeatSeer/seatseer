@@ -2,29 +2,50 @@ import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
 import {
   Image,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { CommonActions } from "@react-navigation/native";
 import DismissKeyboard from '../DismissKeyboard';
+import { logIn } from '../../api/auth';
 
-export default function LoginScreen(props) {
+export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoginLoading, setIsLoginLoading] = useState(false);
 
-  // Function to check if email entered is valid
-  // function validate(email) {
-  //   regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  //   if (regex.test(email)) {
-  //     setEmail("Email is valid");
-  //     return true;
-  //   } else {
-  //     setEmail("Email is invalid!");
-  //     return false;
-  //   }
-  // }
+  function handleLogin() {
+    Keyboard.dismiss();
+    setIsLoginLoading(true);
+    logIn({ email, password },
+      // onSuccess callback function
+      (user) => navigation.dispatch(CommonActions.reset({
+        index: 0,
+        routes: [{ name: "MainTabs", params: { name: user.displayName }}]
+      })),
+      // onError callback function
+      (error) => {
+        setIsLoginLoading(false);
+        return console.error(error);
+      }
+    );
+  }
+
+  function goToForgotPasswordScreen() {
+    Keyboard.dismiss();
+    navigation.navigate("ResetPassword");
+  }
+
+  function goToSignUpScreen() {
+    Keyboard.dismiss();
+    navigation.navigate("SignUp");
+  }
 
   return (
     <DismissKeyboard>
@@ -35,8 +56,12 @@ export default function LoginScreen(props) {
         
         <View style={styles.email_input_view}>
           <TextInput
-            style={styles.text_input}
-            placeholder="Email"
+            style={styles.email_text_input}
+            label="Email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            returnKeyType="next"
+            placeholder="e.g. janedoe@example.com"
             placeholderTextColor="#003f5c"
             onChangeText={setEmail}
           />
@@ -44,23 +69,27 @@ export default function LoginScreen(props) {
 
         <View style={styles.password_input_view}>
           <TextInput
-            style={styles.text_input}
-            placeholder="Password"
+            style={styles.password_text_input}
+            label="Password"
+            autoCapitalize="none"
+            placeholder="e.g. password1234"
             placeholderTextColor="#003f5c"
-            secureTextEntry={true}
+            /** @todo Function and button to toggle password visibility */
+            secureTextEntry={!isPasswordVisible}
             onChangeText={setPassword}
           />
+          <Ionicons name={isPasswordVisible ? "eye" : "eye-off"} size={20} color="gray" onPress={() => setIsPasswordVisible(!isPasswordVisible)} />
         </View>
         
-        <TouchableOpacity style={styles.forgot_button} onPress={props.onForgotPasswordPress}>
+        <TouchableOpacity style={styles.forgot_button} onPress={goToForgotPasswordScreen}>
           <Text style={styles.forgot_text}>Forgot your password?</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.login_button} onPress={props.onLoginPress}>
+        <TouchableOpacity style={styles.login_button} onPress={handleLogin}>
           <Text style={styles.login_text}>Login</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.register_button}>
+        <TouchableOpacity style={styles.register_button} onPress={goToSignUpScreen}>
           <Text style={styles.register_text}>Sign up for a SeatSeer account</Text>
         </TouchableOpacity>
 
@@ -86,8 +115,9 @@ const styles = StyleSheet.create({
   },
 
   email_input_view: {
+    flexDirection: "row",
     backgroundColor: "#dbd6d2",
-    borderRadius: 30,
+    borderRadius: 5,
     width: "80%",
     height: 45,
     marginBottom: 10,
@@ -95,21 +125,33 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
 
+  email_text_input: {
+    height: 45,
+    width: "80%",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "left"
+  },
+
   password_input_view: {
+    flexDirection: "row",
     backgroundColor: "#dbd6d2",
-    borderRadius: 30,
+    borderRadius: 5,
     width: "80%",
     height: 45,
     alignItems: "center",
     justifyContent: "center"
   },
 
-  text_input: {
+  password_text_input: {
     height: 45,
     width: "80%",
     alignItems: "center",
     justifyContent: "center",
-    textAlign: "left"
+    textAlign: "left",
+    borderLeftWidth: 10,
+    /** @todo Come up with a better way to align the email and password text */
+    borderColor: "#dbd6d2"
   },
 
   forgot_button: {

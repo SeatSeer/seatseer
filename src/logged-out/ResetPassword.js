@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {
   Image,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
@@ -9,10 +10,15 @@ import {
 } from 'react-native';
 import DismissKeyboard from '../DismissKeyboard';
 
-export default function LoginScreen(props) {
+export default function LoginScreen({ navigation }) {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
+
+    function goToLoginScreen() {
+        Keyboard.dismiss();
+        navigation.navigate("Login");
+    }
 
     return (
         <DismissKeyboard>
@@ -22,6 +28,7 @@ export default function LoginScreen(props) {
                 <View style={styles.password_input_view}>
                 <TextInput
                     style={styles.text_input}
+                    label="Enter old password"
                     placeholder="Old password"
                     placeholderTextColor="#003f5c"
                     secureTextEntry={true}
@@ -32,6 +39,7 @@ export default function LoginScreen(props) {
                 <View style={styles.password_input_view}>
                 <TextInput
                     style={styles.text_input}
+                    label="Enter new password"
                     placeholder="New password"
                     placeholderTextColor="#003f5c"
                     secureTextEntry={true}
@@ -42,6 +50,7 @@ export default function LoginScreen(props) {
                 <View style={styles.password_input_view}>
                 <TextInput
                     style={styles.text_input}
+                    label="Re-enter new password"
                     placeholder="Re-enter new password"
                     placeholderTextColor="#003f5c"
                     secureTextEntry={true}
@@ -49,11 +58,11 @@ export default function LoginScreen(props) {
                 />
                 </View>
 
-                <TouchableOpacity style={styles.reset_password_button} onPress={props.onLoginPress}>
+                <TouchableOpacity style={styles.reset_password_button} onPress={() => {}}>
                     <Text style={styles.login_text}>Reset password</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.back_to_login_button} onPress={props.backToLoginPress}>
+                <TouchableOpacity style={styles.back_to_login_button} onPress={goToLoginScreen}>
                     <Text style={styles.register_text}>Back to login</Text>
                 </TouchableOpacity>
             </View>
@@ -79,7 +88,7 @@ const styles = StyleSheet.create({
 
     password_input_view: {
         backgroundColor: "#dbd6d2",
-        borderRadius: 30,
+        borderRadius: 5,
         width: "80%",
         height: 45,
         marginBottom: 10,
