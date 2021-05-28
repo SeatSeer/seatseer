@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "test_project",
-    "slug": "test_project",
+    "name": "seatseer",
+    "slug": "seatseer",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
