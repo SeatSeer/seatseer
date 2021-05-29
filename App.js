@@ -1,11 +1,12 @@
 import React from 'react';
 import MainScreen from './src/MainScreen';
-import MainTabs from './src/logged-in/MainTabs';
+import MainTabs from './src/user-screens/MainTabs';
 import {
   LoginScreen,
-  ResetPassword,
-  SignUp
-} from './src/logged-out/index';
+  ResetPasswordScreen,
+  SignUpScreen,
+  VerifyEmailScreen
+} from './src/auth-screens/index';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -13,8 +14,9 @@ const Stack = createStackNavigator();
 const screens = {
   MainScreen: MainScreen,
   Login: LoginScreen,
-  ResetPassword: ResetPassword,
-  SignUp: SignUp,
+  ResetPassword: ResetPasswordScreen,
+  SignUp: SignUpScreen,
+  VerifyEmail: VerifyEmailScreen,
   MainTabs: MainTabs
 }
 

@@ -6,10 +6,19 @@ export default function MainScreen({ navigation }) {
     useEffect(() => {
         setOnAuthStateChanged(
             // onUserAuthenticated callback function
-            () => navigation.reset({
-                index: 0,
-                routes: [{ name: "MainTabs" }]
-            }),
+            (user) => {
+                if (user.emailVerified) {
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: "MainTabs" }]
+                    })
+                } else {
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: "VerifyEmail" }]
+                    })
+                }
+            },
             // onUserNotFound callback function
             () => navigation.reset({
                 index: 0,

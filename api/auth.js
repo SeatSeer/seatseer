@@ -45,3 +45,16 @@ export const setOnAuthStateChanged = (onUserAuthenticated, onUserNotFound) =>
             return onUserNotFound(user);
         }
     });
+
+export const setOnUserEmailVerifiedChanged = async (onUserEmailVerified, onUserEmailNotVerified) => {
+    if (auth.currentUser) {
+        await auth.currentUser.reload();
+        if (auth.currentUser.emailVerified) {
+            return onUserEmailVerified();
+        } else {
+            return onUserEmailNotVerified();
+        }
+    } else {
+        console.error("No user found");
+    }
+}
