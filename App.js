@@ -7,7 +7,8 @@ import {
   SignUpScreen,
   VerifyEmailScreen
 } from './src/auth-screens/index';
-import { NavigationContainer } from '@react-navigation/native';
+import {overallContext} from './src/context'
+import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
@@ -21,13 +22,45 @@ const screens = {
 }
 
 export default function App({ navigation }) {
+
+  const[darkTheme, setDarkTheme] = React.useState(false);
+
+  const themeContext = React.useMemo(() => ({
+    toggleTheme: () => {
+      setDarkTheme( darkTheme => !darkTheme );
+    }
+  }), []);
+
+  const CustomDefaultTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: 'rgb(255, 45, 85)',
+      background: '#ffffff',
+      text: '#333333'
+    },
+  };
+
+  const CustomDarkTheme = {
+    ...DarkTheme,
+    colors: {
+      ...DarkTheme.colors,
+      background: '#333333',
+      text: '#ffffff'
+    },
+  };
+
+  const theme = darkTheme ? CustomDarkTheme : CustomDefaultTheme;
+
   return (
-    <NavigationContainer>
+    <overallContext.Provider value={themeContext}>
+    <NavigationContainer theme = {theme}>
       <Stack.Navigator
       headerMode="none"
-      initialRouteName="MainScreen">
+      initialRouteName="MainTabs">
         {Object.entries(screens).map(([name, component]) => (<Stack.Screen key={name} name={name} component={component} />))}
       </Stack.Navigator>
     </NavigationContainer>
+    </overallContext.Provider>
   );
 }
