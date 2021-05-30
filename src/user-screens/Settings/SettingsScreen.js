@@ -7,8 +7,11 @@ import Acknowledgements from './Acknowledgements';
 import { Button, Text, StyleSheet, View, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { createStackNavigator } from '@react-navigation/stack';
+import { useTheme } from '@react-navigation/native';
 
 function Settings({ navigation }) {
+    const { colors } = useTheme();
+
     const settingsOptions = [ 
         {title: "Account Management", icon: " ", subTitle: "Change Account, Delete Account",
           onPress: () => {navigation.navigate("Account")}},
@@ -19,17 +22,12 @@ function Settings({ navigation }) {
     ];
 
     return (
-        <View style={styles.container}>
-            <ScrollView style = {{color:'#ffffff'}}>
-            {settingsOptions.map(({title, subTitle, onPress}, index)=>
-              <TouchableOpacity key={title} onPress = {onPress}>
-                  <View style={{height:0.5, backgroundColor: '#adb5bd'}}/>
-                <View style={{paddingHorizontal:20, paddingBottom:20, paddingTop:20}}/>
-                <View>
-                  <Text style={{fontSize:17}}>{title}</Text>
-                  {subTitle && <Text style={{fontSize:14, opacity:0.75, color:'#adb5bd', paddingTop: 5}}>{subTitle}</Text>}
-                </View>
-                <View style={{height:0.5, backgroundColor: '#adb5bd'}}/>
+        <View style={[styles.container, { background: colors.background }]}>
+            <ScrollView style = {{color: colors.background}} contentContainerStyle = {styles.scroll_view_container_style}>
+            {settingsOptions.map( ({title, subTitle, onPress}, index) =>
+              <TouchableOpacity key={title} onPress = {onPress} style={styles.settings_options}>
+                  <Text style={{fontSize:17, color: colors.text}}>{title}</Text>
+                  {subTitle && <Text style={styles.subtitle_text}>{subTitle}</Text>}
               </TouchableOpacity>
             )}
           </ScrollView>
@@ -53,10 +51,27 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: 10
-      },
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    scroll_view_container_style: {
+      flex: 1,
+      alignItems: 'stretch',
+      justifyContent: 'space-evenly'
+    },
+
+    settings_options: {
+        height: 45,
+        borderBottomWidth: 1,
+        borderBottomColor: '#adb5bd'
+    },
+
+    subtitle_text: {
+      fontSize: 14,
+      opacity: 0.75,
+      color: '#adb5bd',
+      paddingTop: 5
+    }
 })
