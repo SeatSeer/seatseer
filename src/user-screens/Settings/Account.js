@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
 import { Button, Text, StyleSheet, View } from 'react-native';
 import { CommonActions } from "@react-navigation/native";
-import { logOut } from '../../api/auth';
+import { logOut } from '../../../api/auth';
 
-export default function Settings({ navigation }) {
-
+export default function Account({ navigation }) {
     function handleLogout() {
         logOut(
             // onSuccess callback function
@@ -20,10 +19,10 @@ export default function Settings({ navigation }) {
     }
 
     return (
-        <View style={styles.container}>
-            <Text>Settings tab</Text>
-            <Button title={"Log out"} onPress={handleLogout} color="#3493f9" />
-        </View>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Account Management</Text>
+        <Button title={"Log out"} onPress={handleLogout} color="#3493f9" />
+      </View>
     );
 }
 
