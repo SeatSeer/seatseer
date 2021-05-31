@@ -36,7 +36,7 @@ export default function ResetPasswordScreen({ navigation }) {
     }
 
     return (
-        <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={1} style={styles.scrollview_container} contentContainerStyle={styles.content_container}>
+        <KeyboardAvoidingView behavior = {Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={1} style={styles.scrollview_container} contentContainerStyle={styles.content_container}>
             <DismissKeyboard>
                 <View style={styles.container}>
                     <Image style={styles.image} source={require('../../assets/logo.png')} />

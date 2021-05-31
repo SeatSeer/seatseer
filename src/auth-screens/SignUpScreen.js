@@ -43,38 +43,38 @@ export default function SignUpScreen({ navigation }) {
                     Alert.alert(
                         "Email already in use",
                         `This email is already associated with an account.`,
-                        {
-                            text: "OK"
-                        }
+                        [{
+                            text: "OK"//, onPress: () => console.error("Email already used")
+                        }],
+                        { cancelable: true }
                     )
-                  console.error("Email already used");
                 } else if (errorCode == 'auth/invalid-email') {
                     Alert.alert(
                         "Invalid email",
                         `Please enter a valid email`,
-                        {
-                            text: "OK"
-                        }
+                        [{
+                            text: "OK"//, onPress: () => console.error("Invalid email")
+                        }],
+                        { cancelable: true }
                     )
-                  console.error("Invalid email");
                 } else if (errorCode == 'auth/weak-password') {
                     Alert.alert(
                         "Password too weak",
                         `Please enter a password that is at least 6 characters long`,
-                        {
-                            text: "OK"
-                        }
+                        [{
+                            text: "OK"//, onPress: () => console.error(errorMessage)
+                        }],
+                        { cancelable: true }
                     )
-                  console.error(errorMessage);
                 } else {
                     Alert.alert(
                         "ILLEGAL",
                         `Please don't hack us :(`,
-                        {
-                            text: "OK"
-                        }
+                        [{
+                            text: "OK"//, onPress: () => console.error(error)
+                        }],
+                        { cancelable: true }
                     )
-                  console.error(error);
                 }
             }
         );
@@ -86,7 +86,7 @@ export default function SignUpScreen({ navigation }) {
     }
 
     return (
-        <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={80} style={styles.scrollview_container} contentContainerStyle={styles.content_container}>
+        <KeyboardAvoidingView behavior = {Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={80} style={styles.scrollview_container} contentContainerStyle={styles.content_container}>
             <DismissKeyboard>
                 <View style={styles.container}>
                     <Image style={styles.image} source={require('../../assets/logo.png')} />

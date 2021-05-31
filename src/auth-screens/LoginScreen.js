@@ -40,39 +40,39 @@ export default function LoginScreen({ navigation }) {
         if (errorCode == 'auth/invalid-email') {
           Alert.alert(
             "Invalid email",
-            'Please enter a valid email.',
-            {
-              text: "OK"
-            }
+            'Please enter a valid email.', 
+            [{
+              text: "OK"//, onPress: () => console.error("Please enter a valid email address")
+            }],
+            { cancelable: true }
           )
-          console.error("Please enter a valid email address");
         } else if (errorCode == 'auth/user-disabled') {
           Alert.alert(
             "User disabled",
             'Your account has been disabled.',
-            {
-              text: "OK"
-            }
+            [{
+              text: "OK"//, onPress: () => console.error("Your account has been disabled :P")
+            }],
+            { cancelable: true }
           )
-          console.error("Your account has been disabled :P");
         } else if (errorCode == 'auth/user-not-found') {
           Alert.alert(
             "User not found",
             `The email you have entered is not registered.`,
-            {
-              text: "OK"
-            }
+            [{
+              text: "OK"//, onPress: () => console.error(errorMessage)
+            }],
+            { cancelable: true }
           )
-          console.error(errorMessage);
         } else if (errorCode == 'auth/wrong-password') {
           Alert.alert(
             "Wrong password",
             "The password you have entered is wrong.",
-            {
-              text: "OK"
-            }
+            [{
+              text: "OK"//, onPress: () => console.error("Wrong password")
+            }],
+            { cancelable: true }
           )
-          console.error("Wrong password");
         }
       }
     );
@@ -89,7 +89,7 @@ export default function LoginScreen({ navigation }) {
   }
 
   return (
-    <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={70} style={styles.scrollview_container} contentContainerStyle={styles.content_container}>
+    <KeyboardAvoidingView behavior = {Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={70} style={styles.scrollview_container} contentContainerStyle={styles.content_container}>
       <DismissKeyboard>
         <View style={styles.view_container}>            
           <StatusBar style="auto" />
