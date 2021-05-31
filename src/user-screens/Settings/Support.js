@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
 import { Button, Text, StyleSheet, View } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 
 export default function Support() {
+  const {colors} = useTheme();
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Support</Text>
+      <View style={[styles.container, { background: colors.background }]}>
+        <Text style = {{color:colors.text}}>Support</Text>
       </View>
     );
 }
@@ -12,7 +14,6 @@ export default function Support() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal: 10

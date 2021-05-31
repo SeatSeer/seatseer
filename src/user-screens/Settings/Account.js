@@ -2,8 +2,11 @@ import React, {useState} from 'react';
 import { Button, Text, StyleSheet, View } from 'react-native';
 import { CommonActions } from "@react-navigation/native";
 import { logOut } from '../../../api/auth';
+import { useTheme } from '@react-navigation/native';
 
 export default function Account({ navigation }) {
+    const {colors} = useTheme();
+
     function handleLogout() {
         logOut(
             // onSuccess callback function
@@ -19,8 +22,8 @@ export default function Account({ navigation }) {
     }
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Account Management</Text>
+      <View style={[styles.container, { background: colors.background }]}>
+        <Text style ={{color : colors.text}}>Account Management</Text>
         <Button title={"Log out"} onPress={handleLogout} color="#3493f9" />
       </View>
     );
@@ -29,7 +32,6 @@ export default function Account({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal: 10

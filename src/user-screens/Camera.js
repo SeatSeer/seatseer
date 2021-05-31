@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
 import { Text, StyleSheet, View } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 
 export default function Camera() {
+    const { colors } = useTheme();
     return (
-        <View style={styles.container}>
-            <Text>QR code scanner tab</Text>
+        <View style={[styles.container, { background: colors.background }]}>
+            <Text style = {{color:colors.text}}>QR code scanner tab</Text>
         </View>
     );
 }
@@ -12,7 +14,6 @@ export default function Camera() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal: 10

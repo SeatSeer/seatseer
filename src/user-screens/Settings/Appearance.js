@@ -11,9 +11,7 @@ export default function Appearance() {
 
   return (
       <View style={[styles.container, { background: theme.background }]}>
-        <TouchableOpacity>
-          <Text>Dark Mode</Text>
-        </TouchableOpacity>
+        <Text style = {{color: theme.colors.text}}>Dark Mode</Text>
         <SwitchToggle
             containerStyle = {styles.containerStyle}
             circleStyle = {styles.circleStyle}

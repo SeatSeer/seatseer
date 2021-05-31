@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import { Button, Text, StyleSheet, View } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 
 export default function Help() {
+  const { colors } = useTheme();
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Help</Text>
-        <Text>TBC</Text>
+      <View style={[styles.container, { background: colors.background }]}>
+        <Text style={{color: colors.text}}>Help</Text>
       </View>
     );
 }
@@ -13,7 +14,6 @@ export default function Help() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal: 10

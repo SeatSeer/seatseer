@@ -57,7 +57,7 @@ export default function App({ navigation }) {
     <NavigationContainer theme = {theme}>
       <Stack.Navigator
       headerMode="none"
-      initialRouteName="MainTabs">
+      initialRouteName="MainScreen">
         {Object.entries(screens).map(([name, component]) => (<Stack.Screen key={name} name={name} component={component} />))}
       </Stack.Navigator>
     </NavigationContainer>
