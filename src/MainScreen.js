@@ -10,7 +10,7 @@ export default function MainScreen({ navigation }) {
                 if (user.emailVerified) {
                     navigation.reset({
                         index: 0,
-                        routes: [{ name: "MainTabs" }]
+                        routes: [{ name: "MainTabs", params: { name: user.displayName, email: user.email } }]
                     })
                 } else {
                     navigation.reset({

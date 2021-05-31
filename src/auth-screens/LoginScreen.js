@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
+  Alert,
   Image,
   Keyboard,
   StyleSheet,
@@ -28,7 +29,7 @@ export default function LoginScreen({ navigation }) {
       // onSuccess callback function
       (user) => navigation.dispatch(CommonActions.reset({
         index: 0,
-        routes: [{ name: "MainScreen", params: { name: user.displayName }}]
+        routes: [{ name: "MainScreen" }]
       })),
       // onError callback function
       (error) => {
@@ -37,12 +38,40 @@ export default function LoginScreen({ navigation }) {
         let errorCode = error.code;
         let errorMessage = error.message;
         if (errorCode == 'auth/invalid-email') {
+          Alert.alert(
+            "Invalid email",
+            'Please enter a valid email.',
+            {
+              text: "OK"
+            }
+          )
           console.error("Please enter a valid email address");
         } else if (errorCode == 'auth/user-disabled') {
+          Alert.alert(
+            "User disabled",
+            'Your account has been disabled.',
+            {
+              text: "OK"
+            }
+          )
           console.error("Your account has been disabled :P");
         } else if (errorCode == 'auth/user-not-found') {
+          Alert.alert(
+            "User not found",
+            `The email you have entered is not registered.`,
+            {
+              text: "OK"
+            }
+          )
           console.error(errorMessage);
         } else if (errorCode == 'auth/wrong-password') {
+          Alert.alert(
+            "Wrong password",
+            "The password you have entered is wrong.",
+            {
+              text: "OK"
+            }
+          )
           console.error("Wrong password");
         }
       }

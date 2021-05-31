@@ -50,11 +50,17 @@ export const setOnUserEmailVerifiedChanged = async (onUserEmailVerified, onUserE
     if (auth.currentUser) {
         await auth.currentUser.reload();
         if (auth.currentUser.emailVerified) {
-            return onUserEmailVerified();
+            return onUserEmailVerified(auth.currentUser);
         } else {
             return onUserEmailNotVerified();
         }
     } else {
         console.error("No user found");
     }
+}
+
+export const setOnPasswordReset = async (email, onSuccessfulResetPasswordEmailSent, onPasswordEmailFailedToSend) => {
+    await auth.sendPasswordResetEmail(email)
+    .then(onSuccessfulResetPasswordEmailSent)
+    .catch((error) => onPasswordEmailFailedToSend(error));
 }

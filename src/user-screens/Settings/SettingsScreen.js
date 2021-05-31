@@ -36,11 +36,13 @@ function Settings({ navigation }) {
 }
 
 const SettingsStack = createStackNavigator();
-export default function SettingsScreen() {
+export default function SettingsScreen({ route }) {
+    const { email } = route.params;
+
     return (
         <SettingsStack.Navigator initialRouteName="Settings">
             <SettingsStack.Screen name="Settings" component={Settings} />
-            <SettingsStack.Screen name="Account" component={Account} />
+            <SettingsStack.Screen name="Account" component={Account} initialParams={{ email }} />
             <SettingsStack.Screen name="Appearance" component={Appearance} />
             <SettingsStack.Screen name="Help" component={Help} />
             <SettingsStack.Screen name="Support" component={Support} />

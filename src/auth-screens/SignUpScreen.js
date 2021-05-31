@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  Alert,
   Image,
   Keyboard,
   StyleSheet,
@@ -39,12 +40,40 @@ export default function SignUpScreen({ navigation }) {
                 let errorCode = error.code;
                 let errorMessage = error.message;
                 if (errorCode == 'auth/email-already-in-use') {
+                    Alert.alert(
+                        "Email already in use",
+                        `This email is already associated with an account.`,
+                        {
+                            text: "OK"
+                        }
+                    )
                   console.error("Email already used");
                 } else if (errorCode == 'auth/invalid-email') {
+                    Alert.alert(
+                        "Invalid email",
+                        `Please enter a valid email`,
+                        {
+                            text: "OK"
+                        }
+                    )
                   console.error("Invalid email");
                 } else if (errorCode == 'auth/weak-password') {
+                    Alert.alert(
+                        "Password too weak",
+                        `Please enter a password that is at least 6 characters long`,
+                        {
+                            text: "OK"
+                        }
+                    )
                   console.error(errorMessage);
                 } else {
+                    Alert.alert(
+                        "ILLEGAL",
+                        `Please don't hack us :(`,
+                        {
+                            text: "OK"
+                        }
+                    )
                   console.error(error);
                 }
             }

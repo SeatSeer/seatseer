@@ -9,11 +9,11 @@ export default function VerifyEmailScreen({ navigation }) {
     function handleVerify() {
         setOnUserEmailVerifiedChanged(
             // onUserEmailVerified callback function
-            () => {
+            (user) => {
                 setTellUserToVerifyEmail(false);
                 navigation.dispatch(CommonActions.reset({
                     index: 0,
-                    routes: [{ name: "MainTabs" }]
+                    routes: [{ name: "MainTabs", params: { name: user.displayName, email: user.email } }]
                 }));
             },
             // onUserEmailNotVerified callback function

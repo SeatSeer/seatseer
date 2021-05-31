@@ -9,15 +9,26 @@ import {
   View,
   KeyboardAvoidingView
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../DismissKeyboard';
+import { setOnPasswordReset } from '../../api/auth';
 
 export default function ResetPasswordScreen({ navigation }) {
     const [email, setEmail] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmNewPassword, setConfirmNewPassword] = useState('');
-    const [isNewPasswordVisible, setIsNewPasswordVisible] = useState(false);
-    const [isConfirmNewPasswordVisible, setIsConfirmNewPasswordVisible] = useState(false);
+    const [isPasswordResetEmailSent, setIsPasswordResetEmailSent] = useState(false);
+
+    function handleResetPassword() {
+        setOnPasswordReset(
+            email,
+            // onSuccessfulResetPasswordEmailSent callback function
+            () => {
+                setIsPasswordResetEmailSent(true);
+            },
+            // onPasswordEmailFailedToSend callback function
+            (error) => {
+                console.error(error);
+            }
+        );
+    }
 
     function goToLoginScreen() {
         Keyboard.dismiss();
@@ -25,54 +36,34 @@ export default function ResetPasswordScreen({ navigation }) {
     }
 
     return (
-        <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={90} style={styles.scrollview_container} contentContainerStyle={styles.content_container}>
+        <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={1} style={styles.scrollview_container} contentContainerStyle={styles.content_container}>
             <DismissKeyboard>
                 <View style={styles.container}>
                     <Image style={styles.image} source={require('../../assets/logo.png')} />
 
-                    <View style={styles.email_input_view}>
-                        <TextInput
-                            style={styles.email_text_input}
-                            label="Email"
-                            keyboardType="email-address"
-                            autoCapitalize="none"
-                            returnKeyType="next"
-                            placeholder="e.g. janedoe@example.com"
-                            placeholderTextColor="#003f5c"
-                            onChangeText={setEmail}
-                        />
-                    </View>
+                    {!isPasswordResetEmailSent
+                        ? (<View style={styles.email_input_view}>
+                            <TextInput
+                                style={styles.email_text_input}
+                                label="Email"
+                                keyboardType="email-address"
+                                autoCapitalize="none"
+                                returnKeyType="next"
+                                placeholder="e.g. janedoe@example.com"
+                                placeholderTextColor="#003f5c"
+                                onChangeText={setEmail}
+                            />
+                        </View>)
+                        : (<View>
+                            <Text style={styles.information_text}>An email has been sent to {email} for you to reset your password.</Text>
+                        </View>)}
 
-                    <View style={styles.password_input_view}>
-                        <TextInput
-                            style={styles.password_text_input}
-                            label="Password"
-                            autoCapitalize="none"
-                            placeholder="Enter new password"
-                            placeholderTextColor="#003f5c"
-                            secureTextEntry={!isNewPasswordVisible}
-                            onChangeText={setNewPassword}
-                        />
-                        <Ionicons name={isNewPasswordVisible ? "eye" : "eye-off"} size={20} color="gray" onPress={() => setIsNewPasswordVisible(!isNewPasswordVisible)} />
-                    </View>
-
-                    <View style={styles.password_input_view}>
-                        <TextInput
-                            style={styles.password_text_input}
-                            label="Re-enter new password"
-                            autoCapitalize="none"
-                            placeholder="Re-enter new password"
-                            placeholderTextColor="#003f5c"
-                            secureTextEntry={!isConfirmNewPasswordVisible}
-                            onChangeText={setConfirmNewPassword}
-                        />
-                        <Ionicons name={isConfirmNewPasswordVisible ? "eye" : "eye-off"} size={20} color="gray" onPress={() => setIsConfirmNewPasswordVisible(!isConfirmNewPasswordVisible)} />
-                    </View>
-
-                    {/* @todo Reset password functionality */}
-                    <TouchableOpacity style={styles.reset_password_button} onPress={() => {}}>
-                        <Text style={styles.login_text}>Reset password</Text>
-                    </TouchableOpacity>
+                    {!isPasswordResetEmailSent
+                        ? (<TouchableOpacity style={styles.reset_password_button} onPress={handleResetPassword}>
+                            <Text style={styles.login_text}>Reset password</Text>
+                        </TouchableOpacity>)
+                        : (<View />)
+                    }
 
                     <TouchableOpacity style={styles.back_to_login_button} onPress={goToLoginScreen}>
                         <Text style={styles.register_text}>Back to login</Text>
@@ -127,26 +118,8 @@ const styles = StyleSheet.create({
         textAlign: "left"
     },
 
-    password_input_view: {
-        flexDirection: "row",
-        backgroundColor: "#dbd6d2",
-        borderRadius: 5,
-        width: "80%",
-        height: 45,
-        marginBottom: 10,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-
-    password_text_input: {
-        height: 45,
-        width: "80%",
-        alignItems: "center",
-        justifyContent: "center",
-        textAlign: "left",
-        borderLeftWidth: 10,
-        /** @todo Come up with a better way to align the email and password text */
-        borderColor: "#dbd6d2"
+    information_text: {
+        textAlign: "center"
     },
 
     reset_password_button: {
