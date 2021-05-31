@@ -18,9 +18,10 @@ export default function Account({ route, navigation }) {
                 Alert.alert(
                     "Reset Password",
                     `An email has been sent to ${email} for you to reset your password`,
-                    {
+                    [{
                         text: "OK"
-                    }
+                    }],
+                    { cancelable: true }
                 )
                 setIsPasswordResetEmailSent(true);
             },
