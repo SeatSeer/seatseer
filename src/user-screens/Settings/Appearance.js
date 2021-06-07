@@ -1,11 +1,10 @@
 import React from 'react';
-import { Button, Text, StyleSheet, View, TouchableOpacity, Switch } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 import SwitchToggle from "react-native-switch-toggle";
 import { useTheme } from '@react-navigation/native';
 import {overallContext} from '../../context'
 
 export default function Appearance() {
-
   const theme = useTheme();
   const { toggleTheme } = React.useContext(overallContext);
 
