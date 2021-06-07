@@ -1,21 +1,11 @@
 import React from 'react';
-import { Button, Text, StyleSheet, View } from 'react-native';
-import { useTheme } from '@react-navigation/native';
+import Screen from '../../../misc_components/Screen';
+import CustomText from '../../../misc_components/CustomText';
 
 export default function Acknowledgements() {
-  const {colors} = useTheme();
-    return (
-      <View style={[styles.container, { background: colors.background }]}>
-        <Text style = {{ color: colors.text }}>Acknowledgements</Text>
-      </View>
-    );
+  return (
+    <Screen>
+      <CustomText text={"Acknowledgements"} />
+    </Screen>
+  );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: 10
-      },
-})

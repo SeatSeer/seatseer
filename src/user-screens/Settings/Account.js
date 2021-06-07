@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Alert, Button, Text, StyleSheet, View } from 'react-native';
+import { Alert, Button } from 'react-native';
+import Screen from '../../../misc_components/Screen';
+import CustomText from '../../../misc_components/CustomText';
 import { logOut } from '../../../api/auth';
-import { useTheme } from '@react-navigation/native';
 import { setOnPasswordReset } from '../../../api/auth';
 import { setStateToIsLoading } from '../../../store/slices/authSlice';
-import { useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Account() {
-    const { colors } = useTheme();
     const currentUserEmail = useSelector((state) => state.auth.currentUserEmail);
     const [isPasswordResetEmailSent, setIsPasswordResetEmailSent] = useState(false);
 
@@ -45,24 +45,10 @@ export default function Account() {
     }
 
     return (
-      <View style={[styles.container, { background: colors.background }]}>
-        <Text style ={{color : colors.text}}>Account Management</Text>
-            <Button title={"Reset password"} onPress={handleResetPassword} color="#3493f9" />
-        <Button title={"Log out"} onPress={handleLogout} color="#3493f9" />
-      </View>
+      <Screen>
+          <CustomText text={"Account Managament"} />
+          <Button title={"Reset password"} onPress={handleResetPassword} color="#3493f9" />
+          <Button title={"Log out"} onPress={handleLogout} color="#3493f9" />
+      </Screen>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: 10
-    },
-
-    information_text: {
-        fontSize: 17,
-        textAlign: "center"
-    },
-})

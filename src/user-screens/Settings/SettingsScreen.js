@@ -4,35 +4,52 @@ import Appearance from './Appearance.js';
 import Help from './Help';
 import Support from './Support';
 import Acknowledgements from './Acknowledgements';
-import { Text, StyleSheet, View, ScrollView } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import Screen from '../../../misc_components/Screen';
+import CustomText from '../../../misc_components/CustomText';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useTheme } from '@react-navigation/native';
 
 function Settings({ navigation }) {
-    const { colors } = useTheme();
+  const settingsOptions = [
+    {
+      title: "Account Management",
+      subTitle: "Change Account, Delete Account",
+      onPress: () => {navigation.navigate("Account")}
+    },
+    {
+      title: "Appearance",
+      subTitle: "Dark Mode",
+      onPress: () => {navigation.navigate("Appearance")}
+    },
+    {
+      title: "Help",
+      subTitle: "Tutorial",
+      onPress: () => {navigation.navigate("Help")}
+    },
+    {
+      title: "Support",
+      subTitle: "Feedback",
+      onPress: () => {navigation.navigate("Support")}
+    },
+    {
+      title: "Acknowledgements",
+      subTitle: null,
+      onPress: () => {navigation.navigate("Acknowledgements")}
+    }
+  ];
 
-    const settingsOptions = [ 
-        {title: "Account Management", icon: " ", subTitle: "Change Account, Delete Account",
-          onPress: () => {navigation.navigate("Account")}},
-        {title: "Appearance", subTitle: "Dark Mode", onPress: () => {navigation.navigate("Appearance")}},
-        {title: "Help", subTitle: "Tutorial", onPress: () => {navigation.navigate("Help")}},
-        {title: "Support", subTitle: "Feedback", onPress: () => {navigation.navigate("Support")}},
-        {title: "Acknowledgements", subTitle: null, onPress: () => {navigation.navigate("Acknowledgements")}}
-    ];
-
-    return (
-        <View style={[styles.container, { background: colors.background }]}>
-            <ScrollView style = {{color: colors.background}} contentContainerStyle = {styles.scroll_view_container_style}>
-            {settingsOptions.map( ({title, subTitle, onPress}, index) =>
-              <TouchableOpacity key={title} onPress = {onPress} style={styles.settings_options}>
-                  <Text style={{fontSize:17, color: colors.text}}>{title}</Text>
-                  {subTitle && <Text style={styles.subtitle_text}>{subTitle}</Text>}
-              </TouchableOpacity>
-            )}
-          </ScrollView>
-        </View>
-    );
+  return (
+    <Screen scrollable={true}>
+      {
+        settingsOptions.map(({ title, subTitle, onPress }, index) => (
+          <TouchableOpacity key={title} onPress={onPress} style={styles.settings_options}>
+            <CustomText text={title} textStyle={{ fontSize: 17 }} />
+            {subTitle && <CustomText text={subTitle} style={styles.subtitle_text} />}
+          </TouchableOpacity>
+        ))
+      }
+    </Screen>
+  );
 }
 
 const SettingsStack = createStackNavigator();
@@ -50,18 +67,6 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-
-    scroll_view_container_style: {
-      flex: 1,
-      alignItems: 'stretch',
-      justifyContent: 'space-evenly'
-    },
-
     settings_options: {
         height: 45,
         borderBottomWidth: 1,
