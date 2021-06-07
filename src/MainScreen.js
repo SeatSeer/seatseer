@@ -1,29 +1,30 @@
 import React, { useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { setOnAuthStateChanged } from '../api/auth'
+import { useDispatch } from 'react-redux';
+import { setStateToLoggedIn, setStateToLoggedOut, setStateToEmailNotVerified } from '../store/slices/authSlice';
+import { setOnAuthStateChanged, setOnUserEmailVerifiedChanged } from '../api/auth';
 
-export default function MainScreen({ navigation }) {
+export default function MainScreen() {
+    const dispatch = useDispatch();
+
     useEffect(() => {
         setOnAuthStateChanged(
             // onUserAuthenticated callback function
             (user) => {
-                if (user.emailVerified) {
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: "MainTabs", params: { name: user.displayName, email: user.email } }]
-                    })
-                } else {
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: "VerifyEmail" }]
-                    })
-                }
+                setOnUserEmailVerifiedChanged(
+                    () => {
+                        dispatch(setStateToLoggedIn({ displayName: user.displayName, email: user.email }));
+                    },
+                    () => {
+                        dispatch(setStateToEmailNotVerified());
+                    }
+                )
+                
             },
             // onUserNotFound callback function
-            () => navigation.reset({
-                index: 0,
-                routes: [{ name: "Login" }]
-            })
+            () => {
+                dispatch(setStateToLoggedOut());
+            }
         );
     });
 

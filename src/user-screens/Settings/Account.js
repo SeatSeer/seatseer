@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
 import { Alert, Button, Text, StyleSheet, View } from 'react-native';
-import { CommonActions } from "@react-navigation/native";
 import { logOut } from '../../../api/auth';
 import { useTheme } from '@react-navigation/native';
 import { setOnPasswordReset } from '../../../api/auth';
+import { setStateToIsLoading } from '../../../store/slices/authSlice';
+import { useDispatch, useSelector} from 'react-redux';
 
-export default function Account({ route, navigation }) {
+export default function Account() {
     const { colors } = useTheme();
-    const { email } = route.params;
+    const currentUserEmail = useSelector((state) => state.auth.currentUserEmail);
     const [isPasswordResetEmailSent, setIsPasswordResetEmailSent] = useState(false);
+
+    const dispatch = useDispatch();
 
     function handleResetPassword() {
         setOnPasswordReset(
-            email,
+            currentUserEmail,
             // onSuccessfulResetPasswordEmailSent callback function
             () => {
                 Alert.alert(
                     "Reset Password",
-                    `An email has been sent to ${email} for you to reset your password`,
+                    `An email has been sent to ${currentUserEmail} for you to reset your password`,
                     [{
                         text: "OK"
                     }],
@@ -35,12 +38,7 @@ export default function Account({ route, navigation }) {
     function handleLogout() {
         logOut(
             // onSuccess callback function
-            () => {
-                navigation.dispatch(CommonActions.reset({
-                    index: 0,
-                    routes: [{ name: "MainScreen" }]
-                }))
-            },
+            () => dispatch(setStateToIsLoading()),
             // onError callback function
             console.error
         );

@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Account from './Account';
 import Appearance from './Appearance.js';
 import Help from './Help';
 import Support from './Support';
 import Acknowledgements from './Acknowledgements';
-import { Button, Text, StyleSheet, View, ScrollView } from 'react-native';
+import { Text, StyleSheet, View, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
@@ -36,13 +36,11 @@ function Settings({ navigation }) {
 }
 
 const SettingsStack = createStackNavigator();
-export default function SettingsScreen({ route }) {
-    const { email } = route.params;
-
+export default function SettingsScreen() {
     return (
         <SettingsStack.Navigator initialRouteName="Settings">
             <SettingsStack.Screen name="Settings" component={Settings} />
-            <SettingsStack.Screen name="Account" component={Account} initialParams={{ email }} />
+            <SettingsStack.Screen name="Account" component={Account} />
             <SettingsStack.Screen name="Appearance" component={Appearance} />
             <SettingsStack.Screen name="Help" component={Help} />
             <SettingsStack.Screen name="Support" component={Support} />

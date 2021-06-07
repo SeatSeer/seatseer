@@ -1,23 +1,32 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, TouchableOpacity, Text, View } from 'react-native';
-import { CommonActions } from "@react-navigation/native";
-import { setOnUserEmailVerifiedChanged } from '../../api/auth';
+import { setOnUserEmailVerifiedChanged, logOut } from '../../api/auth';
+import { setStateToIsLoading } from '../../store/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
-export default function VerifyEmailScreen({ navigation }) {
+export default function VerifyEmailScreen() {
     const [tellUserToVerifyEmail, setTellUserToVerifyEmail] = useState(false);
+
+    const dispatch = useDispatch();
 
     function handleVerify() {
         setOnUserEmailVerifiedChanged(
             // onUserEmailVerified callback function
             (user) => {
                 setTellUserToVerifyEmail(false);
-                navigation.dispatch(CommonActions.reset({
-                    index: 0,
-                    routes: [{ name: "MainTabs", params: { name: user.displayName, email: user.email } }]
-                }));
+                dispatch(setStateToIsLoading());
             },
             // onUserEmailNotVerified callback function
             () => setTellUserToVerifyEmail(true)
+        );
+    }
+
+    function handleLogOut() {
+        logOut(
+            // onSuccess callback function
+            () => dispatch(setStateToIsLoading()),
+            // onError callback function
+            console.error
         );
     }
 
@@ -43,7 +52,11 @@ export default function VerifyEmailScreen({ navigation }) {
             </Text>}
 
             <TouchableOpacity style={styles.start_using_button} onPress={handleVerify}>
-                <Text style={styles.login_text}>Start using SeatSeer!</Text>
+                <Text>Start using SeatSeer!</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.log_out_button} onPress={handleLogOut}>
+                <Text>Log Out</Text>
             </TouchableOpacity>
         </View>
     );
@@ -93,5 +106,15 @@ const styles = StyleSheet.create({
         color: 'red',
         fontSize: 10,
         textAlign: 'left'
+    },
+
+    log_out_button: {
+        width: "80%",
+        borderRadius: 25,
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 10,
+        backgroundColor: "#ff6961",
     }
 });

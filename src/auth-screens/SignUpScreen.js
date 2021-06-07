@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   Image,
@@ -11,9 +11,10 @@ import {
   KeyboardAvoidingView
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { CommonActions } from "@react-navigation/native";
 import DismissKeyboard from '../DismissKeyboard';
 import { createAccount } from '../../api/auth';
+import { setStateToIsLoading } from '../../store/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 export default function SignUpScreen({ navigation }) {
     const [name, setName] = useState('');
@@ -22,16 +23,15 @@ export default function SignUpScreen({ navigation }) {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isRegisterLoading, setIsRegisterLoading] = useState(false);
 
+    const dispatch = useDispatch();
+
     function handleSignUp() {
         Keyboard.dismiss();
         setIsRegisterLoading(true);
-        createAccount( {name, email, password },
+        createAccount({ name, email, password },
             // onSuccess callback function
             (user) => {
-                navigation.dispatch(CommonActions.reset({
-                    index: 0,
-                    routes: [{ name: "MainScreen", params: { name: user.displayName }}]
-                }));
+                dispatch(setStateToIsLoading());
             },
             // onError callback function
             (error) => {

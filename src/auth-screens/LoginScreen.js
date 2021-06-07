@@ -12,28 +12,25 @@ import {
   KeyboardAvoidingView
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { CommonActions } from "@react-navigation/native";
 import DismissKeyboard from '../DismissKeyboard';
 import { logIn } from '../../api/auth';
+import { setStateToIsLoading } from '../../store/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isLoginLoading, setIsLoginLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   function handleLogin() {
     Keyboard.dismiss();
-    setIsLoginLoading(true);
     logIn({ email, password },
       // onSuccess callback function
-      (user) => navigation.dispatch(CommonActions.reset({
-        index: 0,
-        routes: [{ name: "MainScreen" }]
-      })),
+      (user) => dispatch(setStateToIsLoading()),
       // onError callback function
       (error) => {
-        setIsLoginLoading(false);
         /** @todo Update text inputs to respond to each error */
         let errorCode = error.code;
         let errorMessage = error.message;

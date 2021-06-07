@@ -9,9 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
-export default function MainTabs({ route }) {
-    const { name, email } = route.params;
-
+export default function MainTabs() {
     return (
         <Tab.Navigator
         initialRouteName="Home"
@@ -47,11 +45,11 @@ export default function MainTabs({ route }) {
           inactiveTintColor: 'gray'
         }}
         >
-          <Tab.Screen name="Home" component={Home} initialParams={{ name }}/>
+          <Tab.Screen name="Home" component={Home} />
           <Tab.Screen name="Search" component={Search} />
           <Tab.Screen name="Camera" component={Camera} />
           <Tab.Screen name="Notifications" component={Notifications} options={{ tabBarBadge: 3 }} />
-          <Tab.Screen name="Settings" component={SettingsScreen} initialParams={{ email }} />
+          <Tab.Screen name="Settings" component={SettingsScreen} />
         </Tab.Navigator>
     );
 }
