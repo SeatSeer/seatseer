@@ -77,7 +77,7 @@ export default function LoginScreen({ navigation }) {
 
   function goToForgotPasswordScreen() {
     Keyboard.dismiss();
-    navigation.navigate("ResetPassword");
+    navigation.navigate("ForgotPassword");
   }
 
   function goToSignUpScreen() {

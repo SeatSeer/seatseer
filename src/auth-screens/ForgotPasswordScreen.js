@@ -12,7 +12,7 @@ import {
 import DismissKeyboard from '../DismissKeyboard';
 import { setOnPasswordReset } from '../../api/auth';
 
-export default function ResetPasswordScreen({ navigation }) {
+export default function ForgotPasswordScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [isPasswordResetEmailSent, setIsPasswordResetEmailSent] = useState(false);
 
