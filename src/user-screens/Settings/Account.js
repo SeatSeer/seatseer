@@ -30,7 +30,27 @@ export default function Account() {
             },
             // onPasswordEmailFailedToSend callback function
             (error) => {
-                console.error(error);
+                let errorCode = error.code;
+                let errorMessage = error.message;
+                if (errorCode == 'auth/invalid-email') {
+                    Alert.alert(
+                      "Invalid email",
+                      'Please enter a valid email.', 
+                      [{
+                        text: "OK"
+                      }],
+                      { cancelable: true }
+                    )
+                } else if (errorCode == 'auth/user-not-found') {
+                    Alert.alert(
+                      "User not found",
+                      `The email you have entered is not registered.`,
+                      [{
+                        text: "OK"
+                      }],
+                      { cancelable: true }
+                    )
+                }
             }
         )
     }

@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import {
-  Image,
-  Keyboard,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  KeyboardAvoidingView
+    Alert,
+    Image,
+    Keyboard,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+    KeyboardAvoidingView
 } from 'react-native';
 import DismissKeyboard from '../../misc_components/DismissKeyboard';
 import { setOnPasswordReset } from '../../api/auth';
@@ -21,11 +22,39 @@ export default function ForgotPasswordScreen({ navigation }) {
             email,
             // onSuccessfulResetPasswordEmailSent callback function
             () => {
+                Alert.alert(
+                    "Reset Password",
+                    `An email has been sent to ${email} for you to reset your password`,
+                    [{
+                        text: "OK"
+                    }],
+                    { cancelable: true }
+                )
                 setIsPasswordResetEmailSent(true);
             },
             // onPasswordEmailFailedToSend callback function
             (error) => {
-                console.error(error);
+                let errorCode = error.code;
+                let errorMessage = error.message;
+                if (errorCode == 'auth/invalid-email') {
+                    Alert.alert(
+                      "Invalid email",
+                      'Please enter a valid email.', 
+                      [{
+                        text: "OK"
+                      }],
+                      { cancelable: true }
+                    )
+                } else if (errorCode == 'auth/user-not-found') {
+                    Alert.alert(
+                      "User not found",
+                      `The email you have entered is not registered.`,
+                      [{
+                        text: "OK"
+                      }],
+                      { cancelable: true }
+                    )
+                }
             }
         );
     }
@@ -36,34 +65,31 @@ export default function ForgotPasswordScreen({ navigation }) {
     }
 
     return (
-        <KeyboardAvoidingView behavior = {Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={1} style={styles.scrollview_container} contentContainerStyle={styles.content_container}>
+        <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={1}
+        style={styles.scrollview_container}
+        contentContainerStyle={styles.content_container}>
             <DismissKeyboard>
                 <View style={styles.container}>
                     <Image style={styles.image} source={require('../../assets/logo.png')} />
 
-                    {!isPasswordResetEmailSent
-                        ? (<View style={styles.email_input_view}>
-                            <TextInput
-                                style={styles.email_text_input}
-                                label="Email"
-                                keyboardType="email-address"
-                                autoCapitalize="none"
-                                returnKeyType="next"
-                                placeholder="e.g. janedoe@example.com"
-                                placeholderTextColor="#003f5c"
-                                onChangeText={setEmail}
-                            />
-                        </View>)
-                        : (<View>
-                            <Text style={styles.information_text}>An email has been sent to {email} for you to reset your password.</Text>
-                        </View>)}
+                    <View style={styles.email_input_view}>
+                        <TextInput
+                            style={styles.email_text_input}
+                            label="Email"
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            returnKeyType="next"
+                            placeholder="e.g. janedoe@example.com"
+                            placeholderTextColor="#003f5c"
+                            onChangeText={setEmail}
+                        />
+                    </View>
 
-                    {!isPasswordResetEmailSent
-                        ? (<TouchableOpacity style={styles.reset_password_button} onPress={handleResetPassword}>
-                            <Text style={styles.login_text}>Reset password</Text>
-                        </TouchableOpacity>)
-                        : (<View />)
-                    }
+                    <TouchableOpacity style={styles.reset_password_button} onPress={handleResetPassword}>
+                        <Text style={styles.login_text}>Reset password</Text>
+                    </TouchableOpacity>
 
                     <TouchableOpacity style={styles.back_to_login_button} onPress={goToLoginScreen}>
                         <Text style={styles.register_text}>Back to login</Text>

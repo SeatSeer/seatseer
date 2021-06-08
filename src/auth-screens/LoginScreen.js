@@ -31,7 +31,6 @@ export default function LoginScreen({ navigation }) {
       (user) => dispatch(setStateToIsLoading()),
       // onError callback function
       (error) => {
-        /** @todo Update text inputs to respond to each error */
         let errorCode = error.code;
         let errorMessage = error.message;
         if (errorCode == 'auth/invalid-email') {
@@ -39,7 +38,7 @@ export default function LoginScreen({ navigation }) {
             "Invalid email",
             'Please enter a valid email.', 
             [{
-              text: "OK"//, onPress: () => console.error("Please enter a valid email address")
+              text: "OK"
             }],
             { cancelable: true }
           )
@@ -48,7 +47,7 @@ export default function LoginScreen({ navigation }) {
             "User disabled",
             'Your account has been disabled.',
             [{
-              text: "OK"//, onPress: () => console.error("Your account has been disabled :P")
+              text: "OK"
             }],
             { cancelable: true }
           )
@@ -57,7 +56,7 @@ export default function LoginScreen({ navigation }) {
             "User not found",
             `The email you have entered is not registered.`,
             [{
-              text: "OK"//, onPress: () => console.error(errorMessage)
+              text: "OK"
             }],
             { cancelable: true }
           )
@@ -66,7 +65,7 @@ export default function LoginScreen({ navigation }) {
             "Wrong password",
             "The password you have entered is wrong.",
             [{
-              text: "OK"//, onPress: () => console.error("Wrong password")
+              text: "OK"
             }],
             { cancelable: true }
           )
@@ -86,7 +85,11 @@ export default function LoginScreen({ navigation }) {
   }
 
   return (
-    <KeyboardAvoidingView behavior = {Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={70} style={styles.scrollview_container} contentContainerStyle={styles.content_container}>
+    <KeyboardAvoidingView
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+    keyboardVerticalOffset={70}
+    style={styles.scrollview_container}
+    contentContainerStyle={styles.content_container}>
       <DismissKeyboard>
         <View style={styles.view_container}>            
           <StatusBar style="auto" />
