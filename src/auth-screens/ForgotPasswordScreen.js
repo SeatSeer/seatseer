@@ -9,7 +9,7 @@ import {
   View,
   KeyboardAvoidingView
 } from 'react-native';
-import DismissKeyboard from '../DismissKeyboard';
+import DismissKeyboard from '../../misc_components/DismissKeyboard';
 import { setOnPasswordReset } from '../../api/auth';
 
 export default function ForgotPasswordScreen({ navigation }) {

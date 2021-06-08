@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import DismissKeyboard from '../DismissKeyboard';
+import DismissKeyboard from '../../misc_components/DismissKeyboard';
 import { createAccount } from '../../api/auth';
 import { setStateToIsLoading } from '../../store/slices/authSlice';
 import { useDispatch } from 'react-redux';
