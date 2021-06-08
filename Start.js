@@ -1,5 +1,5 @@
 import React from 'react';
-import MainScreen from './src/MainScreen';
+import LoadingScreen from './src/LoadingScreen';
 import MainTabs from './src/user-screens/MainTabs';
 import VerifyEmailScreen from './src/auth-screens/VerifyEmailScreen';
 import { NavigationContainer } from '@react-navigation/native';
@@ -19,20 +19,20 @@ export default function Start() {
     const theme = darkTheme ? CustomDarkTheme : CustomDefaultTheme;
 
     return (
-            <NavigationContainer theme={theme}>
-                <Stack.Navigator
-                headerMode="none"
-                initialRouteName="MainScreen">
-                    {
-                    isLoading
-                        ? (<Stack.Screen name="MainScreen" component={MainScreen} />)
-                        : isLoggedIn
-                        ? (isEmailVerified
-                            ? (<Stack.Screen name="MainTabs" component={MainTabs} />)
-                            : (<Stack.Screen name="VerifyEmail" component={VerifyEmailScreen} />))
-                        : (<Stack.Screen name="AuthStack" component={AuthStack} />)
-                    }
-                </Stack.Navigator>
-            </NavigationContainer>
+        <NavigationContainer theme={theme}>
+            <Stack.Navigator
+            headerMode="none"
+            initialRouteName="LoadingScreen">
+                {
+                isLoading
+                    ? (<Stack.Screen name="LoadingScreen" component={LoadingScreen} />)
+                    : isLoggedIn
+                    ? (isEmailVerified
+                        ? (<Stack.Screen name="MainTabs" component={MainTabs} />)
+                        : (<Stack.Screen name="VerifyEmail" component={VerifyEmailScreen} />))
+                    : (<Stack.Screen name="AuthStack" component={AuthStack} />)
+                }
+            </Stack.Navigator>
+        </NavigationContainer>
     )
 }
