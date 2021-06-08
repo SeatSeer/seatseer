@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import {
-  Alert,
-  Image,
-  Keyboard,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  KeyboardAvoidingView
+    Alert,
+    Image,
+    Keyboard,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+    KeyboardAvoidingView
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../../misc_components/DismissKeyboard';
