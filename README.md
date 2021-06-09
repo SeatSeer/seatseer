@@ -29,7 +29,6 @@ yarn install
 4. Create a [Firebase](https://firebase.google.com/) project and web application
 
 5. Obtain the configuration info of your web application from _Add Firebase SDK_
-
 If you missed this, go to _Project Overview_ > _Project Settings_, then scroll down to your app. Under _SDK setup and configuration_, choose _Config_. The configuration info will be given in the form `const firebaseConfig = { ... };`
 
 6. Create a `.env` file in the project root directory
