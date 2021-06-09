@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, StyleSheet, Platform } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import Screen from '../../misc_components/Screen';
 import CustomText from '../../misc_components/CustomText';
 import { BarCodeScanner } from 'expo-barcode-scanner';
