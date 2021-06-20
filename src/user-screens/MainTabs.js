@@ -3,7 +3,6 @@ import Home from './Home';
 import Search from './Search';
 import Camera from './Camera';
 import Notifications from './Notifications';
-import SettingsScreen from './Settings/SettingsScreen';
 import SettingsTab from './Settings/SettingsTab';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
