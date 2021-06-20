@@ -30,7 +30,6 @@ export default function Camera() {
             [
                 {
                     text: "OK",
-                    /** @todo Callback function to bring user to webpage */
                     onPress: () => {
                         openBrowserAsync(data, { enableBarCollapsing: true })
                         .then(() => setScanned(false))

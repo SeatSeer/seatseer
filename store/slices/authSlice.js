@@ -7,7 +7,8 @@ export const authSlice = createSlice({
         currentUserDisplayName: "",
         currentUserEmail: "",
         isEmailVerified: false,
-        isLoading: true
+        isLoading: true,
+        accountDeleted: false
     },
     reducers: {
         setStateToLoggedIn: (state, action) => {
@@ -16,6 +17,7 @@ export const authSlice = createSlice({
             state.currentUserEmail = action.payload.email;
             state.isEmailVerified = true;
             state.isLoading = false;
+            state.accountDeleted = false;
         },
         setStateToLoggedOut: (state) => {
             state.isLoggedIn = false;
@@ -33,10 +35,45 @@ export const authSlice = createSlice({
             state.currentUserDisplayName = "";
             state.currentUserEmail = "";
             state.isEmailVerified = false;
+            state.accountDeleted = false;
+        },
+        changeCurrentUserEmail: (state, action) => {
+            state.currentUserEmail = action.payload;
+            state.isEmailVerified = false;
+            state.accountDeleted = false;
+        },
+        loadAccountDeleted: (state) => {
+            state.isLoading = true,
+            state.isLoggedIn = false;
+            state.isEmailVerified = false;
+            state.currentUserDisplayName = "";
+            state.currentUserEmail = "";
+            state.accountDeleted = true;
+        },
+        setAccountDeleted: (state) => {
+            state.isLoading = false,
+            state.isLoggedIn = false;
+            state.isEmailVerified = false;
+            state.currentUserDisplayName = "";
+            state.currentUserEmail = "";
+            state.accountDeleted = true;
+        },
+        loadAuthStack: (state) => {
+            state.isLoading = true;
+            state.accountDeleted = false;
         }
     }
 });
 
-export const { setStateToLoggedIn, setStateToLoggedOut, setStateToIsLoading, setStateToEmailNotVerified } = authSlice.actions;
+export const {
+    setStateToLoggedIn,
+    setStateToLoggedOut,
+    setStateToIsLoading,
+    setStateToEmailNotVerified,
+    changeCurrentUserEmail,
+    loadAccountDeleted,
+    setAccountDeleted,
+    loadAuthStack
+} = authSlice.actions;
 
 export default authSlice.reducer;

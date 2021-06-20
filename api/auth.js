@@ -1,4 +1,6 @@
 import firebaseApp from "./firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
 
 const auth = firebaseApp.auth();
 
@@ -63,4 +65,29 @@ export const setOnPasswordReset = async (email, onSuccessfulResetPasswordEmailSe
     await auth.sendPasswordResetEmail(email)
     .then(onSuccessfulResetPasswordEmailSent)
     .catch((error) => onPasswordEmailFailedToSend(error));
+}
+
+export const reauthenticateUser = async (email, password, onSuccessfulReauthentication, onFailedReauthentication) => {
+    let credentials = firebase.auth.EmailAuthProvider.credential(email, password);
+    await auth.currentUser.reauthenticateWithCredential(credentials)
+    .then(onSuccessfulReauthentication)
+    .catch((error) => onFailedReauthentication(error));
+}
+
+export const setOnUserEmailChanged = async (email, password, newEmail, onUserEmailChanged, onUserEmailFailedToChange) => {
+    try {
+        let credentials = firebase.auth.EmailAuthProvider.credential(email, password);
+        await auth.currentUser.reauthenticateWithCredential(credentials);
+        await auth.currentUser.updateEmail(newEmail);
+        await auth.currentUser.sendEmailVerification();
+        return onUserEmailChanged();
+    } catch (error) {
+        return onUserEmailFailedToChange(error);
+    }
+}
+
+export const deleteCurrentUser = async (onSuccessfulDeletion, onFailedDeletion) => {
+    await auth.currentUser.delete()
+    .then(onSuccessfulDeletion)
+    .catch((error) => onFailedDeletion(error));
 }
