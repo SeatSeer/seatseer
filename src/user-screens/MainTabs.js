@@ -4,6 +4,7 @@ import Search from './Search';
 import Camera from './Camera';
 import Notifications from './Notifications';
 import SettingsScreen from './Settings/SettingsScreen';
+import SettingsTab from './Settings/SettingsTab';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -49,7 +50,7 @@ export default function MainTabs() {
           <Tab.Screen name="Search" component={Search} />
           <Tab.Screen name="Camera" component={Camera} />
           <Tab.Screen name="Notifications" component={Notifications} options={{ tabBarBadge: 3 }} />
-          <Tab.Screen name="Settings" component={SettingsScreen} />
+          <Tab.Screen name="Settings" component={SettingsTab} />
         </Tab.Navigator>
     );
 }

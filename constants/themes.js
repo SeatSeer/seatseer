@@ -6,7 +6,8 @@ export const CustomDefaultTheme = {
       ...DefaultTheme.colors,
       primary: 'rgb(255, 45, 85)',
       background: '#ffffff',
-      text: '#333333'
+      text: '#333333',
+      settings: '#f1f1f1'
     },
 };
 
@@ -15,6 +16,7 @@ export const CustomDarkTheme = {
     colors: {
       ...DarkTheme.colors,
       background: '#333333',
-      text: '#ffffff'
+      text: '#ffffff',
+      settings: '#0c0c0c'
     },
 };
