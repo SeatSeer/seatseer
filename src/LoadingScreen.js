@@ -15,7 +15,7 @@ export default function MainScreen() {
             (user) => {
                 setOnUserEmailVerifiedChanged(
                     () => {
-                        dispatch(setStateToLoggedIn({ displayName: user.displayName, email: user.email }));
+                        dispatch(setStateToLoggedIn({ displayName: user.displayName, email: user.email, userId: user.uid }));
                     },
                     () => {
                         dispatch(setStateToEmailNotVerified());

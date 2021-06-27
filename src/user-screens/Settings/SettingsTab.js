@@ -4,6 +4,8 @@ import ChangePassword from './ChangePassword';
 import UpdateEmail from './UpdateEmail';
 import DeleteAccountAuthentication from './DeleteAccountAuthentication';
 import Tutorial from './Tutorial';
+import Feedback from './Feedback';
+import ReportFaultySeat from './ReportFaultySeat';
 import { createStackNavigator } from '@react-navigation/stack';
 
 const SettingsStack = createStackNavigator();
@@ -16,6 +18,8 @@ export default function SettingsTab() {
             <SettingsStack.Screen name="UpdateEmail" component={UpdateEmail} />
             <SettingsStack.Screen name="DeleteAccountAuthentication" component={DeleteAccountAuthentication} />
             <SettingsStack.Screen name="Tutorial" component={Tutorial} />
+            <SettingsStack.Screen name="Feedback" component={Feedback} />
+            <SettingsStack.Screen name="ReportFaultySeat" component={ReportFaultySeat} />
         </SettingsStack.Navigator>
     );
 }
