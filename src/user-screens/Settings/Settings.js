@@ -14,7 +14,7 @@ import { logOut, setOnPasswordReset } from '../../../api/auth';
 export default function Settings({ navigation }) {
     const theme = useTheme();
     const currentUserDisplayName = useSelector((state) => state.auth.currentUserDisplayName);
-    const currentUserEmail = useSelector((state) =>state.auth.currentUserEmail);
+    const currentUserEmail = useSelector((state) => state.auth.currentUserEmail);
     const dispatch = useDispatch();
 
     // Array containing the details of all settings options
@@ -85,12 +85,14 @@ export default function Settings({ navigation }) {
                     subtitle: "Feedback",
                     onPress: () => {
                         /** @todo Open up browser to feedback form website. */
+                        navigation.navigate("Feedback");
                     }
                 },
                 {
                     subtitle: "Report a faulty seat",
                     onPress: () => {
                         /** @todo Open up browser to report faulty seat form website. */
+                        navigation.navigate("ReportFaultySeat");
                     }
                 }
             ]

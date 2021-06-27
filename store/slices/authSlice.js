@@ -6,6 +6,7 @@ export const authSlice = createSlice({
         isLoggedIn: false,
         currentUserDisplayName: "",
         currentUserEmail: "",
+        currentUserId: "",
         isEmailVerified: false,
         isLoading: true,
         accountDeleted: false
@@ -15,6 +16,7 @@ export const authSlice = createSlice({
             state.isLoggedIn = true;
             state.currentUserDisplayName = action.payload.displayName;
             state.currentUserEmail = action.payload.email;
+            state.currentUserId = action.payload.userId;
             state.isEmailVerified = true;
             state.isLoading = false;
             state.accountDeleted = false;
@@ -23,6 +25,7 @@ export const authSlice = createSlice({
             state.isLoggedIn = false;
             state.currentUserDisplayName = "";
             state.currentUserEmail = "";
+            state.currentUserId = "";
             state.isEmailVerified = false;
             state.isLoading = false;
         },
@@ -34,6 +37,7 @@ export const authSlice = createSlice({
             state.isLoggedIn = true;
             state.currentUserDisplayName = "";
             state.currentUserEmail = "";
+            state.currentUserId = "";
             state.isEmailVerified = false;
             state.accountDeleted = false;
         },
@@ -48,6 +52,7 @@ export const authSlice = createSlice({
             state.isEmailVerified = false;
             state.currentUserDisplayName = "";
             state.currentUserEmail = "";
+            state.currentUserId = "";
             state.accountDeleted = true;
         },
         setAccountDeleted: (state) => {
@@ -56,6 +61,7 @@ export const authSlice = createSlice({
             state.isEmailVerified = false;
             state.currentUserDisplayName = "";
             state.currentUserEmail = "";
+            state.currentUserId = "";
             state.accountDeleted = true;
         },
         loadAuthStack: (state) => {

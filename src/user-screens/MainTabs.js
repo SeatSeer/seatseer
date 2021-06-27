@@ -1,6 +1,6 @@
 import React from 'react';
 import Home from './Home';
-import Search from './Search';
+import Search from './Search/Search';
 import Camera from './Camera';
 import Notifications from './Notifications';
 import SettingsTab from './Settings/SettingsTab';

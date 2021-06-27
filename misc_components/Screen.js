@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     },
 
     scroll_view_container_style: {
+        flexGrow: 1
         // flex: 1,
         // alignItems: 'center',
         // justifyContent: 'center',
