@@ -1,9 +1,8 @@
 import React, { useState, useCallback, useRef, useEffect, useReducer } from 'react';
-// import { Avatar, ListItem } from 'react-native-elements';
 import Screen from '../../../misc_components/Screen';
 import CustomText from '../../../misc_components/CustomText';
 import Panel from "../../../misc_components/Panel";
-import { StyleSheet, TextInput, View, Keyboard } from 'react-native';
+import { StyleSheet, TextInput, View, Keyboard, Dimensions, Platform, KeyboardAvoidingView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
 import { Button, CheckBox, Slider, Overlay } from 'react-native-elements';
@@ -67,36 +66,55 @@ export default function SearchTab(props) {
     // })
 
     function handleQuery() {
-        console.log(state["minRating"].toString())
-        const filtersArray = [{ "range": { "rating": { "gte": state["minRating"].toString() } } }];
         Keyboard.dismiss();
+        setFiltersAreVisible(false);
+        const filtersArray = [{ "range": { "rating": { "gte": state["minRating"].toString() } } }];
         const url = `http://44.194.92.99:9200/seats/_search`
-        const body = {
-            "query": {
-                "bool": {
-                    // "filter": [
-                    //     { "range": { "rating": { "gte": "_value_" } } },
-                    //     { "term": { "features": "_filterA_" } },
-                    //     { "term": { "features": "_filterB_" } }
-                    // ],
-                    "filter": filtersArray
-                        .concat(Object.entries(state)
-                            .filter(entry => entry[1] === true)
-                            .map(entry => {
-                                return { "term": { "features": entry[0] } }
-                            })),
-                    "must": {
-                        "dis_max": {
-                            "queries": [
-                                { "match_phrase_prefix": { "name": query } },
-                                { "match": { "related": query } }
-                            ]
+        let body;
+        if (query === "") {
+            body = {
+                "query": {
+                    "bool": {
+                        "filter": filtersArray
+                            .concat(Object.entries(state)
+                                .filter(entry => entry[1] === true)
+                                .map(entry => {
+                                    return { "term": { "features": entry[0] } }
+                                })),
+                    }
+                },
+                "sort": {
+                    "vacant_seats": "desc"
+                }
+            }
+        } else {
+            body = {
+                "query": {
+                    "bool": {
+                        // "filter": [
+                        //     { "range": { "rating": { "gte": "_value_" } } },
+                        //     { "term": { "features": "_filterA_" } },
+                        //     { "term": { "features": "_filterB_" } }
+                        // ],
+                        "filter": filtersArray
+                            .concat(Object.entries(state)
+                                .filter(entry => entry[1] === true)
+                                .map(entry => {
+                                    return { "term": { "features": entry[0] } }
+                                })),
+                        "must": {
+                            "dis_max": {
+                                "queries": [
+                                    { "match_phrase_prefix": { "name": query } },
+                                    { "match": { "related": query } }
+                                ]
+                            }
                         }
                     }
+                },
+                "sort": {
+                    "vacant_seats": "desc"
                 }
-            },
-            "sort": {
-                "vacant_seats": "desc"
             }
         }
         const otherParams = {
@@ -176,6 +194,7 @@ export default function SearchTab(props) {
                     step={1}
                     thumbStyle={{width: 30, height: 30}}
                 />
+                <Button title="Search" titleStyle={{fontSize: 12}} containerStyle={{paddingVertical: 15}} onPress={handleQuery} />
             </Overlay>
             
             <Screen scrollable={true}>
@@ -190,6 +209,8 @@ export default function SearchTab(props) {
         </Screen>
     );
 }
+
+const { width, height } = Dimensions.get("window")
 
 const styles = StyleSheet.create({
     search_bar: {
@@ -212,6 +233,6 @@ const styles = StyleSheet.create({
 
     filters_overlay: {
         width: '100%',
-        height: '65%'
+        height: '80%'
     }
 })

@@ -37,7 +37,7 @@ export default function SearchTabs(props) {
             showLabel: false
         }}
         >
-            <SearchScreenTabs.Screen name="NearbyTab" children={() => <NearbyTab setMarkers={props.setMarkers} currentCoords={props.currentCoords} />} />
+            <SearchScreenTabs.Screen name="NearbyTab" children={() => <NearbyTab setMarkers={props.setMarkers} currentCoords={props.currentCoords} permission={props.permission} />} />
             <SearchScreenTabs.Screen name="FavouritesTab" children={() => <FavouritesTab setMarkers={props.setMarkers} />} />
             <SearchScreenTabs.Screen name="SearchTab" children={() => <SearchTab setMarkers={props.setMarkers} />} />
         </SearchScreenTabs.Navigator>

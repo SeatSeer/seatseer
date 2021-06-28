@@ -98,11 +98,13 @@ export default function NearbyTab(props) {
      */
     useEffect(() => {
         (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                // Handle what to do when user doesn't allow location tracking
-                return;
-            } else {
+            if (props.permission) {
+
+            // let { status } = await Location.requestForegroundPermissionsAsync();
+            // if (status !== 'granted') {
+            //     // Handle what to do when user doesn't allow location tracking
+            //     return;
+            // } else {
                 // let { coords } = await Location.getLastKnownPositionAsync({});
                 const url = `http://44.194.92.99:9200/seats/_search`
                 const body = {
