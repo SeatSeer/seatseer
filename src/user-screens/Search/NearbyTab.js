@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Panel from "../../../misc_components/Panel";
 import Screen from '../../../misc_components/Screen';
 
@@ -10,7 +10,6 @@ import Screen from '../../../misc_components/Screen';
  */
 export default function NearbyTab(props) {
     const [panels, setPanels] = useState(null);
-    let isInitialMount = useRef(true);
 
     /**
      * Checks whether the coordinates of the location retrieved from backend is within the current 
@@ -38,9 +37,7 @@ export default function NearbyTab(props) {
      * b) Set the panels in the Nearby tab
      */
     useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else if (props.permission) {
+        if (props.permission) {
             const url = `http://44.194.92.99:9200/seats/_search`
             const body = {
                 "sort": [ {
