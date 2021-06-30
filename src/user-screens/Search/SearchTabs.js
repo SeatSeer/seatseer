@@ -36,8 +36,10 @@ export default function SearchTabs(props) {
             showIcon: true,
             showLabel: false
         }}
+        lazy={true}
+        swipeEnabled={false}
         >
-            <SearchScreenTabs.Screen name="NearbyTab" children={() => <NearbyTab setMarkers={props.setMarkers} currentCoords={props.currentCoords} permission={props.permission} />} />
+            <SearchScreenTabs.Screen name="NearbyTab" children={() => <NearbyTab setMarkers={props.setMarkers} currentRegion={props.currentRegion} permission={props.permission} />} />
             <SearchScreenTabs.Screen name="FavouritesTab" children={() => <FavouritesTab setMarkers={props.setMarkers} />} />
             <SearchScreenTabs.Screen name="SearchTab" children={() => <SearchTab setMarkers={props.setMarkers} />} />
         </SearchScreenTabs.Navigator>
