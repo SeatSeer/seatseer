@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Panel from "../../../misc_components/Panel";
 import Screen from '../../../misc_components/Screen';
+import { useIsFocused } from '@react-navigation/native';
 
 /**
  * props contains 3 fields passed from the main search tab
@@ -10,12 +11,12 @@ import Screen from '../../../misc_components/Screen';
  */
 export default function NearbyTab(props) {
     const [panels, setPanels] = useState(null);
+    const isFocused = useIsFocused();
 
     /**
      * Checks whether the coordinates of the location retrieved from backend is within the current 
      */
-    function isWithinBoundary({ _source: { location } }) {       // Use this header to destructure the data and obtain the location object straight away
-    // function isWithinBoundary(data) {
+    function isWithinBoundary({ _source: { location } }) {
         /** @todo Make the boundary coordinates the actual visible map view (top half) that is not blocked by the 3 sub-tabs. */
         const latLeftLimit = props.currentRegion.latitude - props.currentRegion.latitudeDelta;
         const latRightLimit = props.currentRegion.latitude + props.currentRegion.latitudeDelta;
@@ -66,7 +67,7 @@ export default function NearbyTab(props) {
                 const dataArray = hits.hits;
                 // Filter out all of the locations that are not visible in the current region
                 const visibleLocationsArray = dataArray.filter(isWithinBoundary);
-                console.log(visibleLocationsArray);
+                // console.log(visibleLocationsArray);
                 // Set the markers on the map
                 props.setMarkers(visibleLocationsArray.map((data, index) => {
                     return {
@@ -103,7 +104,7 @@ export default function NearbyTab(props) {
     return (
         <Screen scrollable={true}>
             {
-                panels
+                isFocused && panels
                     ? panels.map((panel, index) => (
                         <Panel key={index} panel={panel} />
                     ))

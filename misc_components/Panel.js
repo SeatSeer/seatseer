@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, SectionList, StyleSheet, Platform } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar, ListItem } from "react-native-elements";
 import CrowdednessIndicator from "./CrowdednessIndicator";
 import { useTheme } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import { addFavourite, removeFavourite, checkAndSetFavourite, subscribeToFavouritesChanges } from "../api/rtdb";
+import { addFavourite, removeFavourite, checkAndSetFavourite } from "../api/rtdb";
 import CustomText from "./CustomText";
 import { Button } from "react-native-elements";
-
-const Item = ({ title }) => (
-    <View style={styles.item}>
-        <CustomText text={title} textStyle={styles.title} />
-    </View>
-);
 
 export default function Panel(props, { navigation }) {
     /**
@@ -48,29 +42,13 @@ export default function Panel(props, { navigation }) {
         }
     ]
 
+    /**
+     * On mounting a panel, we check to see if it is contained in the user's favourite locations by checking Firebase Realtime Database.
+     * Once checked, we set the heart icon to be selected or unselected based on the result.
+     */
     useEffect(() => {
         // Determines whether a panel's heart icon is initially selected or not
         checkAndSetFavourite(currentUserId, props.panel.locationId, setFavourite)
-    }, []);
-
-    useEffect(() => {
-        // Listens for a change in favourites so that the heart icon auto deselects if the location is
-        // removed from favourites, and auto selects the heart icon if the location is added to favourites
-        // More for syncing up the panels across each tab
-
-        // Should unsubscribe upon unmounting (return the unsubscription callback)
-        subscribeToFavouritesChanges(currentUserId,
-            // onValueChanged callback
-            (locations) => {
-                // locations is in the form { locationId1: locationName1, locationId2, locationName2, ... }
-                const locationId = props.panel.locationId
-                if (locations && locations[locationId]) {
-                    setFavourite(true);
-                } else {
-                    setFavourite(false);
-                }
-            }
-        )
     }, []);
 
     function toggleFavourite() {
@@ -165,29 +143,6 @@ export default function Panel(props, { navigation }) {
                             />
                         </ListItem.Content>)
                 }
-                {/* <ListItem.Content>
-                    <ListItem.Title style={{ color: colors.text, textDecorationLine: 'underline', paddingTop: 10 }}>Additional Information</ListItem.Title>
-                    
-                    <CustomText text={"Floorplan (Coming soon in Milestone 3!)"} textStyle={{paddingVertical: 5, fontWeight: 'bold'}} />
-                    <CustomText text={"Comments:"} textStyle={{paddingVertical: 5, fontWeight: 'bold'}} />
-                    {
-                        props.panel.comments.map((comment, index) => (
-                            <View key={index} style={{width: '100%'}}>
-                                <CustomText text={comment} />
-                                <View style={{height: 0.5, width: '100%', backgroundColor: "grey", marginVertical: 5}} />
-                            </View>
-                        ))
-                    }
-                    <CustomText text={`Rating: ${props.panel.rating}/5 stars`} textStyle={{paddingVertical: 5, fontWeight: 'bold'}} />
-
-                    <Button 
-                        title="Report a faulty seat" 
-                        titleStyle={{fontSize: 12}} 
-                        buttonStyle={{backgroundColor: 'red'}} 
-                        containerStyle={{alignSelf: 'center'}}
-                        onPress={() => navigation.navigate("ReportFaultySeat")}
-                    />
-                </ListItem.Content> */}
             </ListItem>
         </ListItem.Accordion>
     );

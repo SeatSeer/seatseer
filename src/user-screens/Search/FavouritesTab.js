@@ -1,34 +1,22 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
 import Screen from '../../../misc_components/Screen';
 import Panel from "../../../misc_components/Panel";
 import { useSelector } from "react-redux";
 import { subscribeToFavouritesChanges } from "../../../api/rtdb";
-import { useFocusEffect } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function FavouritesTab(props) {
     const [panels, setPanels] = useState(null);
     const currentUserId = useSelector((state) => state.auth.currentUserId);
+    const isFocused = useIsFocused();
 
-    // useEffect(() => {
-    //     if (panels) {
-    //         props.setMarkers(panels.map((panel, index) => {
-    //             return {
-    //                 title: panel.avatar,
-    //                 description: panel.name,
-    //                 coordinates: panel.coordinates
-    //             }
-    //         }))
-    //     } else {
-    //         props.setMarkers(null);
-    //     }
-    // })
-
+    /**
+     * On mounting the Favourites tab, we subscribe to changes in Firebase Realtime Database at the favourites section of the user.
+     * Everytime a user's favourites change, re-map the panels so that they show the user's most recent favourites.
+     */
     useEffect(() => {
-        /**
-         * Everytime a user's favourites change, re-map the panels so that they show the user's most recent favourites
-         */
-        subscribeToFavouritesChanges(currentUserId,
+        return subscribeToFavouritesChanges(currentUserId,
             // onValueChanged callback
             (locations) => {
                 // locations is in the form { locationId1: locationName1, locationId2, locationName2, ... }
@@ -51,7 +39,7 @@ export default function FavouritesTab(props) {
                     fetch(url, otherParams).then(res => res.json())
                     .then(({ hits }) => {
                         const dataArray = hits.hits;
-                        console.log(dataArray);
+                        // console.log(dataArray);
                         setPanels(dataArray.map((data, index) => {
                             return {
                                 locationId: data._source.ID,
@@ -79,7 +67,7 @@ export default function FavouritesTab(props) {
     return (
         <Screen scrollable={true}>
             {
-                panels
+                isFocused && panels
                     ? panels.map((panel, index) => (
                         <Panel key={index} panel={panel} />
                     ))

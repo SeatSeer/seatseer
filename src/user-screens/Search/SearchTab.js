@@ -1,10 +1,10 @@
-import React, { useState, useCallback, useRef, useEffect, useReducer } from 'react';
+import React, { useState, useRef, useReducer } from 'react';
 import Screen from '../../../misc_components/Screen';
 import CustomText from '../../../misc_components/CustomText';
 import Panel from "../../../misc_components/Panel";
-import { StyleSheet, TextInput, View, Keyboard, Dimensions, Platform, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, TextInput, View, Keyboard, Dimensions } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useFocusEffect } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import { Button, CheckBox, Slider, Overlay } from 'react-native-elements';
 
 const initialFilterState = {
@@ -44,26 +44,13 @@ export default function SearchTab(props) {
     const [panels, setPanels] = useState(null);
     const [filtersAreVisible, setFiltersAreVisible] = useState(false);
     const [state, dispatch] = useReducer(reducer, initialFilterState);
+    const isFocused = useIsFocused();
 
     // useFocusEffect(useCallback(() => {
     //     /** @todo Fix bug where keyboard keeps popping up after search result is submitted */
     //     searchBox.current.focus();
     //     return () => searchBox.current.blur();
     // }))
-
-    // useEffect(() => {
-    //     if (panels) {
-    //         props.setMarkers(panels.map((panel, index) => {
-    //             return {
-    //                 title: panel.avatar,
-    //                 description: panel.name,
-    //                 coordinates: panel.coordinates
-    //             }
-    //         }))
-    //     } else {
-    //         props.setMarkers(null);
-    //     }
-    // })
 
     function handleQuery() {
         Keyboard.dismiss();
@@ -127,7 +114,7 @@ export default function SearchTab(props) {
         fetch(url, otherParams).then(res => res.json())
         .then(({ hits }) => {
             const dataArray = hits.hits;
-            console.log(dataArray);
+            // console.log(dataArray);
             props.setMarkers(dataArray.map((data, index) => {
                 return {
                     title: data._source.avatar,
@@ -199,7 +186,7 @@ export default function SearchTab(props) {
             
             <Screen scrollable={true}>
             {
-                panels
+                isFocused && panels
                     ? panels.map((panel, index) => (
                         <Panel key={index} panel={panel} />
                     ))
