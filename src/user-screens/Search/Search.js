@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Screen from '../../../misc_components/Screen';
 import MapView, { Marker } from 'react-native-maps';
+import { Avatar } from 'react-native-elements';
 import SearchTabs from './SearchTabs';
 import { StyleSheet, View, Dimensions, Platform } from 'react-native';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
@@ -63,7 +64,18 @@ export default function Search() {
                 {
                     markers
                         ? markers.map((marker, index) => (
-                            <Marker key={`key_${marker.coordinates.longitude}_${marker.coordinates.latitude}`} coordinate={marker.coordinates} title={marker.title} description={marker.description} />
+                            <Marker 
+                                key={`key_${marker.coordinates.longitude}_${marker.coordinates.latitude}`}
+                                coordinate={marker.coordinates} 
+                                title={marker.title}
+                                description={marker.description}
+                            >
+                            {
+                                Platform.OS === "ios"
+                                    ? <Avatar size="small" rounded title={marker.title} containerStyle={{backgroundColor: '#b0b0b0'}} />
+                                    : <Avatar size="small" rounded title={marker.title} titleStyle={{ fontSize: 10 }} containerStyle={{backgroundColor: '#b0b0b0'}} />
+                            }
+                            </Marker>
                         ))
                         : (<></>)
                 }
