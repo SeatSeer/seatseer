@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar, ListItem } from "react-native-elements";
 import CrowdednessIndicator from "./CrowdednessIndicator";
 import { useTheme } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import { addFavourite, removeFavourite, checkAndSetFavourite, subscribeToFavouritesChanges } from "../api/rtdb";
+import { addFavourite, removeFavourite, checkAndSetFavourite } from "../api/rtdb";
 import CustomText from "./CustomText";
 import { Button } from "react-native-elements";
 
@@ -27,27 +27,28 @@ export default function Panel(props, { navigation }) {
     const [favourite, setFavourite] = useState(false);
     const { colors } = useTheme();
 
+    const additionalInfo = [
+        {
+            title: "Floorplan (Coming soon in Milestone 3!)",
+            data: []
+        },
+        {
+            title: "Comments:",
+            data: props.panel.comments
+        },
+        {
+            title: `Rating: ${props.panel.rating}/5 stars`,
+            data: []
+        }
+    ]
+
+    /**
+     * On mounting a panel, we check to see if it is contained in the user's favourite locations by checking Firebase Realtime Database.
+     * Once checked, we set the heart icon to be selected or unselected based on the result.
+     */
     useEffect(() => {
         // Determines whether a panel's heart icon is initially selected or not
         checkAndSetFavourite(currentUserId, props.panel.locationId, setFavourite)
-    }, []);
-
-    useEffect(() => {
-        // Listens for a change in favourites so that the heart icon auto deselects if the location is
-        // removed from favourites, and auto selects the heart icon if the location is added to favourites
-        // More for syncing up the panels across each tab
-        subscribeToFavouritesChanges(currentUserId,
-            // onValueChanged callback
-            (locations) => {
-                // locations is in the form { locationId1: locationName1, locationId2, locationName2, ... }
-                const locationId = props.panel.locationId
-                if (locations && locations[locationId]) {
-                    setFavourite(true);
-                } else {
-                    setFavourite(false);
-                }
-            }
-        )
     }, []);
 
     function toggleFavourite() {
@@ -74,7 +75,12 @@ export default function Panel(props, { navigation }) {
         <ListItem.Accordion bottomDivider noIcon containerStyle={{ backgroundColor: colors.background }}
             content={
                 <>
-                    <Avatar size="small" rounded title={props.panel.avatar} containerStyle={{backgroundColor: '#b0b0b0'}} />
+                    {
+                        Platform.OS === "ios"
+                            ? <Avatar size="small" rounded title={props.panel.avatar} containerStyle={{backgroundColor: '#b0b0b0'}} />
+                            : <Avatar size="small" rounded title={props.panel.avatar} titleStyle={{ fontSize: 10}} containerStyle={{backgroundColor: '#b0b0b0'}} />
+                    }
+
                     <ListItem.Content style={{ paddingLeft: 10 }}>
                         <ListItem.Title style={{ color: colors.text }}>{props.panel.name}</ListItem.Title>
                         <ListItem.Subtitle style={{ color: colors.text }}>{`Seats available: ${props.panel.seats}`}</ListItem.Subtitle>
@@ -88,30 +94,70 @@ export default function Panel(props, { navigation }) {
             onPress={() => setExpanded(!expanded)}
         >
             <ListItem bottomDivider containerStyle={{ backgroundColor: colors.background }}>
-                <ListItem.Content>
-                    <ListItem.Title style={{ color: colors.text, textDecorationLine: 'underline', paddingTop: 10 }}>Additional Information</ListItem.Title>
-                    
-                    <CustomText text={"Floorplan (Coming soon in Milestone 3!)"} textStyle={{paddingVertical: 5, fontWeight: 'bold'}} />
-                    <CustomText text={"Comments:"} textStyle={{paddingVertical: 5, fontWeight: 'bold'}} />
-                    {
-                        props.panel.comments.map((comment, index) => (
-                            <View key={index} style={{width: '100%'}}>
-                                <CustomText text={comment} />
-                                <View style={{height: 0.5, width: '100%', backgroundColor: "grey", marginVertical: 5}} />
-                            </View>
-                        ))
-                    }
-                    <CustomText text={`Rating: ${props.panel.rating}/5 stars`} textStyle={{paddingVertical: 5, fontWeight: 'bold'}} />
-                    <Button 
-                        title="Report a faulty seat" 
-                        titleStyle={{fontSize: 12}} 
-                        buttonStyle={{backgroundColor: 'red'}} 
-                        containerStyle={{alignSelf: 'center'}}
-                        onPress={() => navigation.navigate("ReportFaultySeat")}
-                    />
-                </ListItem.Content>
+                {
+                    Platform.OS === "ios"
+                        ? (<ListItem.Content>
+                            <ListItem.Title style={{ color: colors.text, textDecorationLine: 'underline', paddingTop: 10 }}>Additional Information</ListItem.Title>
+                            
+                            <CustomText text={"Floorplan (Coming soon in Milestone 3!)"} textStyle={{paddingVertical: 5, fontWeight: 'bold'}} />
+                            <CustomText text={"Comments:"} textStyle={{paddingVertical: 5, fontWeight: 'bold'}} />
+                            {
+                                props.panel.comments.map((comment, index) => (
+                                    <View key={index} style={{width: '100%'}}>
+                                        <CustomText text={comment} />
+                                        <View style={{height: 0.5, width: '100%', backgroundColor: "grey", marginVertical: 5}} />
+                                    </View>
+                                ))
+                            }
+                            <CustomText text={`Rating: ${props.panel.rating.toFixed(2)}/5 stars`} textStyle={{paddingVertical: 5, fontWeight: 'bold'}} />
+        
+                            <Button 
+                                title="Report a faulty seat" 
+                                titleStyle={{fontSize: 12}} 
+                                buttonStyle={{backgroundColor: 'red'}} 
+                                containerStyle={{alignSelf: 'center'}}
+                                onPress={() => navigation.navigate("ReportFaultySeat")}
+                            />
+                        </ListItem.Content>)
+                        : (<ListItem.Content>
+                            <ListItem.Title style={{ color: colors.text, textDecorationLine: 'underline', paddingTop: 10, fontSize: 10 }}>Additional Information</ListItem.Title>
+                            
+                            <CustomText text={"Floorplan (Coming soon in Milestone 3!)"} textStyle={{paddingVertical: 5, fontWeight: 'bold', fontSize: 10}} />
+                            <CustomText text={"Comments:"} textStyle={{paddingVertical: 5, fontWeight: 'bold', fontSize: 10}} />
+                            {
+                                props.panel.comments.map((comment, index) => (
+                                    <View key={index} style={{width: '100%'}}>
+                                        <CustomText text={comment} textStyle={{fontSize: 10}} />
+                                        <View style={{height: 0.5, width: '100%', backgroundColor: "grey", marginVertical: 5}} />
+                                    </View>
+                                ))
+                            }
+                            <CustomText text={`Rating: ${props.panel.rating}/5 stars`} textStyle={{paddingVertical: 5, fontWeight: 'bold'}} />
+        
+                            <Button 
+                                title="Report a faulty seat" 
+                                titleStyle={{fontSize: 12}} 
+                                buttonStyle={{backgroundColor: 'red'}} 
+                                containerStyle={{alignSelf: 'center'}}
+                                onPress={() => navigation.navigate("ReportFaultySeat")}
+                            />
+                        </ListItem.Content>)
+                }
             </ListItem>
         </ListItem.Accordion>
     );
 }
 
+const styles = StyleSheet.create({
+    item: {
+      backgroundColor: "#f9c2ff",
+      padding: 20,
+      marginVertical: 8
+    },
+    header: {
+      fontSize: 32,
+    },
+    title: {
+      fontSize: 24
+    }
+});

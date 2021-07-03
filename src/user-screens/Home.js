@@ -8,7 +8,7 @@ export default function Home() {
     const currentUserDisplayName = useSelector((state) => state.auth.currentUserDisplayName);
     return (
         <Screen>
-            <CustomText text={`Welcome home, ${currentUserDisplayName}`} textStyle={{fontSize: 30, fontWeight: 'bold', paddingVertical: 10}} />
+            <CustomText text={`Welcome home, ${currentUserDisplayName}`} textStyle={{fontSize: 30, fontWeight: 'bold', paddingVertical: 20}} />
             <Image source={require('../../assets/logo-without-text-with-transparency.png')} style={styles.image} />
         </Screen>
     );
