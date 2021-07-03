@@ -7,7 +7,7 @@ import { subscribeToFavouritesChanges } from "../../../api/rtdb";
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 import { idSearch, transformToMarkers, transformToPanels } from "../../../backend/ElasticSearch";
 
-export default function FavouritesTab(props) {
+export default function FavouritesSubTab(props) {
     const [panels, setPanels] = useState(null);
     const currentUserId = useSelector((state) => state.auth.currentUserId);
     const isFocused = useIsFocused();

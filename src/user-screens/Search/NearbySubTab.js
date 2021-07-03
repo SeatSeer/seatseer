@@ -10,7 +10,7 @@ import { geoSearch } from "../../../backend/ElasticSearch";
  * props.currentRegion
  * props.permission
  */
-export default function NearbyTab(props) {
+export default function NearbySubTab(props) {
     const [panels, setPanels] = useState(null);
     const isFocused = useIsFocused();
 

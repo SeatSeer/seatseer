@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Screen from '../../../misc_components/Screen';
 import MapView, { Marker } from 'react-native-maps';
 import { Avatar } from 'react-native-elements';
-import SearchTabs from './SearchTabs';
+import SearchTab from './SearchTab';
 import { StyleSheet, View, Dimensions, Platform } from 'react-native';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import * as Location from 'expo-location';
@@ -82,7 +82,7 @@ export default function Search() {
             </MapView>
 
             <View style={{ ...styles.search_tabs, height: 3 * height / 5 - bottomTabBarHeight, bottom: 0 }}>
-                <SearchTabs setMarkers={setMarkers} currentRegion={currentRegion} permission={permission} />
+                <SearchTab setMarkers={setMarkers} currentRegion={currentRegion} permission={permission} />
             </View>
         </Screen>
     );
