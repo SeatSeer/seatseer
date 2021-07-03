@@ -63,7 +63,7 @@ export default function Search() {
                 {
                     markers
                         ? markers.map((marker, index) => (
-                            <Marker key={index} coordinate={marker.coordinates} title={marker.title} description={marker.description} />
+                            <Marker key={`key_${marker.coordinates.longitude}_${marker.coordinates.latitude}`} coordinate={marker.coordinates} title={marker.title} description={marker.description} />
                         ))
                         : (<></>)
                 }
