@@ -5,6 +5,7 @@ import Panel from "../../../misc_components/Panel";
 import { useSelector } from "react-redux";
 import { subscribeToFavouritesChanges } from "../../../api/rtdb";
 import { useIsFocused } from '@react-navigation/native';
+import { idSearch, transformToMarkers, transformToPanels } from "../../../backend/ElasticSearch";
 
 export default function FavouritesTab(props) {
     const [panels, setPanels] = useState(null);
@@ -21,43 +22,19 @@ export default function FavouritesTab(props) {
             (locations) => {
                 // locations is in the form { locationId1: locationName1, locationId2, locationName2, ... }
                 if (locations) {
-                    const url = `http://44.194.92.99:9200/seats/_search`
-                    const body = {
-                        "query": {
-                            "terms": {
-                                "ID": Object.keys(locations)
-                            }
-                        }
-                    }
-                    const otherParams = {
-                        headers: {
-                            "Content-Type": "application/json",
+                    idSearch(Object.keys(locations),
+                        // onSuccess callback
+                        (results) => {
+                            // Set the markers on the map
+                            props.setMarkers(transformToMarkers(results));
+                            // Set the panels in the favourites tab
+                            setPanels(transformToPanels(results));
                         },
-                        body: JSON.stringify(body),
-                        method: "POST"
-                    }
-                    fetch(url, otherParams).then(res => res.json())
-                    .then(({ hits }) => {
-                        const dataArray = hits.hits;
-                        // console.log(dataArray);
-                        setPanels(dataArray.map((data, index) => {
-                            return {
-                                locationId: data._source.ID,
-                                name: data._source.name,
-                                avatar: data._source.avatar,
-                                seats: data._source.vacant_seats,
-                                vacancyPercentage: data._source.vacant_seats / data._source.total_seats,
-                                coordinates: {
-                                    latitude: parseFloat(data._source.location.lat),
-                                    longitude: parseFloat(data._source.location.lon)
-                                },
-                                rating: data._source.rating_total / data._source.rating_number,
-                                comments: data._source.comments
-                            }
-                        }));
-                    })
-                    .catch(console.error);
+                        // onFailure callback
+                        console.error
+                    )
                 } else {
+                    props.setMarkers(null);
                     setPanels(null);
                 }
             }

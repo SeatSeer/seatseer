@@ -6,6 +6,7 @@ import { StyleSheet, TextInput, View, Keyboard, Dimensions } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useIsFocused } from '@react-navigation/native';
 import { Button, CheckBox, Slider, Overlay } from 'react-native-elements';
+import { filteredTextSearch, transformToMarkers, transformToPanels } from '../../../backend/ElasticSearch';
 
 const initialFilterState = {
     "aircon": false,
@@ -55,93 +56,27 @@ export default function SearchTab(props) {
     function handleQuery() {
         Keyboard.dismiss();
         setFiltersAreVisible(false);
-        const filtersArray = [{ "range": { "rating": { "gte": state["minRating"].toString() } } }];
-        const url = `http://44.194.92.99:9200/seats/_search`
-        let body;
-        if (query === "") {
-            body = {
-                "query": {
-                    "bool": {
-                        "filter": filtersArray
-                            .concat(Object.entries(state)
-                                .filter(entry => entry[1] === true)
-                                .map(entry => {
-                                    return { "term": { "features": entry[0] } }
-                                })),
-                    }
-                },
-                "sort": {
-                    "vacant_seats": "desc"
-                }
-            }
-        } else {
-            body = {
-                "query": {
-                    "bool": {
-                        // "filter": [
-                        //     { "range": { "rating": { "gte": "_value_" } } },
-                        //     { "term": { "features": "_filterA_" } },
-                        //     { "term": { "features": "_filterB_" } }
-                        // ],
-                        "filter": filtersArray
-                            .concat(Object.entries(state)
-                                .filter(entry => entry[1] === true)
-                                .map(entry => {
-                                    return { "term": { "features": entry[0] } }
-                                })),
-                        "must": {
-                            "dis_max": {
-                                "queries": [
-                                    { "match_phrase_prefix": { "name": query } },
-                                    { "match": { "related": query } }
-                                ]
-                            }
-                        }
-                    }
-                },
-                "sort": {
-                    "vacant_seats": "desc"
-                }
-            }
-        }
-        const otherParams = {
-            headers: {
-                "Content-Type": "application/json",
+
+        // Here, we create the rating filter first, then we concatenate all the filters that the user has selected
+        // by filtering out all the filters that are false, then mapping them into the correct format
+        const filters = [{ "range": { "rating": { "gte": state["minRating"] } } }].concat(
+            Object.entries(state)
+            .filter(entry => entry[1] === true)
+            .map(entry => {
+                return { "term": { "features": entry[0] } }
+            })
+        );
+        filteredTextSearch(query, filters,
+            // onSuccess callback
+            (results) => {
+                // Set the markers on the map
+                props.setMarkers(transformToMarkers(results));
+                // Set the panels in the search tab
+                setPanels(transformToPanels(results));
             },
-            body: JSON.stringify(body),
-            method: "POST"
-        }
-        fetch(url, otherParams).then(res => res.json())
-        .then(({ hits }) => {
-            const dataArray = hits.hits;
-            // console.log(dataArray);
-            props.setMarkers(dataArray.map((data, index) => {
-                return {
-                    title: data._source.avatar,
-                    description: data._source.name,
-                    coordinates: {
-                        latitude: parseFloat(data._source.location.lat),
-                        longitude: parseFloat(data._source.location.lon)
-                    }
-                }
-            }))
-            setPanels(dataArray.map((data, index) => {
-                return {
-                    locationId: data._source.ID,
-                    name: data._source.name,
-                    avatar: data._source.avatar,
-                    seats: data._source.vacant_seats,
-                    vacancyPercentage: data._source.vacant_seats / data._source.total_seats,
-                    coordinates: {
-                        latitude: parseFloat(data._source.location.lat),
-                        longitude: parseFloat(data._source.location.lon)
-                    },
-                    rating: data._source.rating_total / data._source.rating_number,
-                    comments: data._source.comments
-                }
-            }));
-        })
-        .catch(console.error);
+            // onFailure callback
+            console.error
+        )
     }
 
     function toggleFilterOverlay() {
