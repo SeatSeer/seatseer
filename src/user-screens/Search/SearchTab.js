@@ -1,10 +1,10 @@
-import React, { useState, useRef, useReducer } from 'react';
+import React, { useState, useRef, useReducer, useCallback } from 'react';
 import Screen from '../../../misc_components/Screen';
 import CustomText from '../../../misc_components/CustomText';
 import Panel from "../../../misc_components/Panel";
 import { StyleSheet, TextInput, View, Keyboard, Dimensions } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 import { Button, CheckBox, Slider, Overlay } from 'react-native-elements';
 import { filteredTextSearch, transformToMarkers, transformToPanels } from '../../../backend/ElasticSearch';
 
@@ -52,6 +52,28 @@ export default function SearchTab(props) {
     //     searchBox.current.focus();
     //     return () => searchBox.current.blur();
     // }))
+
+    /**
+     * Each time the Search sub-tab comes into focus, we update the markers to reflect whatever panels were shown in the Search sub-tab most recently.
+     */
+    useFocusEffect(
+        useCallback(() => {
+            if (panels !== null) {
+                props.setMarkers(panels.map((panel, index) => {
+                    return {
+                        title: panel.avatar,
+                        description: panel.name,
+                        coordinates: {
+                            latitude: panel.coordinates.latitude,
+                            longitude: panel.coordinates.longitude
+                        }
+                    }
+                }));
+            } else {
+                props.setMarkers(null);
+            }
+        }, [panels])
+    );
 
     function handleQuery() {
         Keyboard.dismiss();
