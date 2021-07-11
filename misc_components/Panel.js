@@ -46,7 +46,7 @@ function ReviewsTab(props) {
                 color='#46f583'
                 uppercase={false}
                 titleStyle={{fontSize: 12}}
-                style={{marginVertical: 10, width: '80%', alignSelf: 'center', marginTop: 10}}
+                style={{marginVertical: 10, width: '80%', alignSelf: 'center'}}
                 onPress={() => {}}
             >Leave a review!</Button>
         </ScrollView>
@@ -85,7 +85,7 @@ function AboutTab(props) {
                 color='#ff6961'
                 uppercase={false}
                 titleStyle={{fontSize: 12}}
-                style={{marginTop: 10, width: '80%', alignSelf: 'center', marginTop: 10}}
+                style={{marginTop: 10, width: '80%', alignSelf: 'center'}}
                 onPress={() => navigation.navigate('Settings', { screen: 'ReportFaultySeat', initial: false })}
             >Report a faulty seat</Button>
         </ScrollView>
