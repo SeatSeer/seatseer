@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import Screen from './Screen';
 import CustomText from './CustomText';
 
 export default function CrowdednessIndicator(props) {
@@ -26,14 +25,14 @@ export default function CrowdednessIndicator(props) {
     }
 
     return (
-        <Screen screenStyle={styles.container}>
+        <View style={styles.container}>
             <CustomText text={"Crowdedness: "} />
             {
                 [...Array(numberOfPeopleIcons).keys()].map((index) => (
                     <Icon key={index} name="male" color={color} size={17} style={{paddingHorizontal: 2}} />
                 ))
             }
-        </Screen>
+        </View>
     );
 }
 
@@ -41,6 +40,6 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     }
 })

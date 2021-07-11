@@ -10,7 +10,7 @@ import { geoSearch } from "../../../backend/ElasticSearch";
  * props.currentRegion
  * props.permission
  */
-export default function NearbySubTab(props) {
+export default function NearbySubTab(props, { navigation }) {
     const [panels, setPanels] = useState(null);
     const isFocused = useIsFocused();
 
@@ -19,10 +19,12 @@ export default function NearbySubTab(props) {
      */
     function isWithinBoundary({ _source: { location } }) {
         /** @todo Make the boundary coordinates the actual visible map view (top half) that is not blocked by the 3 sub-tabs. */
-        const latLeftLimit = props.currentRegion.latitude - props.currentRegion.latitudeDelta;
-        const latRightLimit = props.currentRegion.latitude + props.currentRegion.latitudeDelta;
-        const lonLeftLimit = props.currentRegion.longitude - props.currentRegion.longitudeDelta;
-        const lonRightLimit = props.currentRegion.longitude + props.currentRegion.longitudeDelta;
+        // const modifiedLatitudeDelta = props.currentRegion.latitudeDelta * 0.2;
+        const latLeftLimit = props.currentRegion.latitude - props.currentRegion.latitudeDelta / 4;
+        const latRightLimit = props.currentRegion.latitude + props.currentRegion.latitudeDelta / 4;
+        // const modifiedLongitudeDelta = props.currentRegion.longitudeDelta * 0.6;
+        const lonLeftLimit = props.currentRegion.longitude - props.currentRegion.longitudeDelta / 3;
+        const lonRightLimit = props.currentRegion.longitude + props.currentRegion.longitudeDelta / 3;
         const latitude = parseFloat(location.lat);
         const longitude = parseFloat(location.lon);
         return (latitude > latLeftLimit && latitude < latRightLimit
@@ -57,6 +59,42 @@ export default function NearbySubTab(props) {
                                 }
                             }
                         }));
+                        // .concat(
+                        //     [
+                        //         {
+                        //             title: 'TL',
+                        //             description: 'Top left',
+                        //             coordinates: {
+                        //                 latitude: props.currentRegion.latitude + props.currentRegion.latitudeDelta/4,
+                        //                 longitude: props.currentRegion.longitude - props.currentRegion.longitudeDelta/3
+                        //             }
+                        //         },
+                        //         {
+                        //             title: 'BL',
+                        //             description: 'Bottom left',
+                        //             coordinates: {
+                        //                 latitude: props.currentRegion.latitude - props.currentRegion.latitudeDelta/4,
+                        //                 longitude: props.currentRegion.longitude - props.currentRegion.longitudeDelta/3
+                        //             }
+                        //         },
+                        //         {
+                        //             title: 'TR',
+                        //             description: 'Top right',
+                        //             coordinates: {
+                        //                 latitude: props.currentRegion.latitude + props.currentRegion.latitudeDelta/4,
+                        //                 longitude: props.currentRegion.longitude + props.currentRegion.longitudeDelta/3
+                        //             }
+                        //         },
+                        //         {
+                        //             title: 'BR',
+                        //             description: 'Bottom right',
+                        //             coordinates: {
+                        //                 latitude: props.currentRegion.latitude - props.currentRegion.latitudeDelta/4,
+                        //                 longitude: props.currentRegion.longitude + props.currentRegion.longitudeDelta/3
+                        //             }
+                        //         },
+                        //     ]
+                        // ));
                         // Set the panels in the nearby tab
                         setPanels(visibleLocationsArray.map((data, index) => {
                             return {
@@ -70,7 +108,9 @@ export default function NearbySubTab(props) {
                                     longitude: parseFloat(data._source.location.lon)
                                 },
                                 rating: data._source.rating_total / data._source.rating_number,
-                                comments: data._source.comments
+                                comments: data._source.comments,
+                                filters: data._source.features,
+                                related: data._source.related
                             }
                         }));
                     },

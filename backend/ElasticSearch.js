@@ -164,7 +164,9 @@ export const transformToPanels = (results) => {
                 longitude: parseFloat(data._source.location.lon)
             },
             rating: data._source.rating_total / data._source.rating_number,
-            comments: data._source.comments
+            comments: data._source.comments,
+            filters: data._source.features,
+            related: data._source.related
         }
     })
 }
