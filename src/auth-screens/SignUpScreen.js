@@ -1,210 +1,228 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     Alert,
-    Image,
     Keyboard,
     StyleSheet,
     Text,
     TextInput,
-    TouchableOpacity,
     View,
+    SafeAreaView,
     KeyboardAvoidingView
 } from 'react-native';
+import { Button } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../../misc_components/DismissKeyboard';
 import { createAccount } from '../../api/auth';
+import { initializeDarkTheme } from '../../api/rtdb';
 import { setStateToIsLoading } from '../../store/slices/authSlice';
 import { useDispatch } from 'react-redux';
 
-export default function SignUpScreen({ navigation }) {
+export default function SignUpScreen() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [reEnterPassword, setReEnterPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const [isRegisterLoading, setIsRegisterLoading] = useState(false);
+    const [isReEnterPasswordVisible, setIsReEnterPasswordVisible] = useState(false);
+    const usernameTextInput = useRef();
+    const emailTextInput = useRef();
+    const passwordTextInput = useRef();
+    const reEnterPasswordTextInput = useRef();
 
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        usernameTextInput.current.focus();
+    }, []);
+
     function handleSignUp() {
         Keyboard.dismiss();
-        setIsRegisterLoading(true);
-        createAccount({ name, email, password },
-            // onSuccess callback function
-            (user) => {
-                dispatch(setStateToIsLoading());
-            },
-            // onError callback function
-            (error) => {
-                setIsRegisterLoading(false);
-                /** @todo Update text inputs to respond to each error */
-                let errorCode = error.code;
-                let errorMessage = error.message;
-                if (errorCode == 'auth/email-already-in-use') {
-                    Alert.alert(
-                        "Email already in use",
-                        `This email is already associated with an account.`,
-                        [{
-                            text: "OK"//, onPress: () => console.error("Email already used")
-                        }],
-                        { cancelable: true }
-                    )
-                } else if (errorCode == 'auth/invalid-email') {
-                    Alert.alert(
-                        "Invalid email",
-                        `Please enter a valid email`,
-                        [{
-                            text: "OK"//, onPress: () => console.error("Invalid email")
-                        }],
-                        { cancelable: true }
-                    )
-                } else if (errorCode == 'auth/weak-password') {
-                    Alert.alert(
-                        "Password too weak",
-                        `Please enter a password that is at least 6 characters long`,
-                        [{
-                            text: "OK"//, onPress: () => console.error(errorMessage)
-                        }],
-                        { cancelable: true }
-                    )
-                } else {
-                    Alert.alert(
-                        "ILLEGAL",
-                        `Please don't hack us :(`,
-                        [{
-                            text: "OK"//, onPress: () => console.error(error)
-                        }],
-                        { cancelable: true }
-                    )
+        if (password !== reEnterPassword) {
+            Alert.alert(
+                "Passwords don't match",
+                `The password you have re-entered is not the same as the password you initially keyed in.`,
+                [{
+                    text: "OK"
+                }],
+                { cancelable: true }
+            )
+        } else {
+            createAccount({ name, email, password },
+                // onSuccess callback function
+                async (user) => {
+                    await initializeDarkTheme(user.uid, () => {}, console.error);
+                    dispatch(setStateToIsLoading());
+                },
+                // onError callback function
+                (error) => {
+                    setIsRegisterLoading(false);
+                    let errorCode = error.code;
+                    if (errorCode == 'auth/email-already-in-use') {
+                        Alert.alert(
+                            "Email already in use",
+                            `This email is already associated with an account.`,
+                            [{
+                                text: "OK"//, onPress: () => console.error("Email already used")
+                            }],
+                            { cancelable: true }
+                        )
+                    } else if (errorCode == 'auth/invalid-email') {
+                        Alert.alert(
+                            "Invalid email",
+                            `Please enter a valid email`,
+                            [{
+                                text: "OK"//, onPress: () => console.error("Invalid email")
+                            }],
+                            { cancelable: true }
+                        )
+                    } else if (errorCode == 'auth/weak-password') {
+                        Alert.alert(
+                            "Password too weak",
+                            `Please enter a password that is at least 6 characters long`,
+                            [{
+                                text: "OK"//, onPress: () => console.error(errorMessage)
+                            }],
+                            { cancelable: true }
+                        )
+                    } else {
+                        Alert.alert(
+                            "ILLEGAL",
+                            `Please don't hack us :(`,
+                            [{
+                                text: "OK"//, onPress: () => console.error(error)
+                            }],
+                            { cancelable: true }
+                        )
+                    }
                 }
-            }
-        );
-    }
-
-    function goToLoginScreen() {
-        Keyboard.dismiss();
-        navigation.navigate("Login");
+            );
+        }
     }
 
     return (
         <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={80}
-        style={styles.scrollview_container}
-        contentContainerStyle={styles.content_container}>
+        style={{flex: 1}}>
             <DismissKeyboard>
-                <View style={styles.container}>
-                    <Image style={styles.image} source={require('../../assets/logo.png')} />
+                <SafeAreaView style={styles.container}>
+                    <Text style={{fontWeight: 'bold', fontSize: 35}}>
+                        Registration is easy!
+                    </Text>
 
-                    <View style={styles.email_input_view}>
-                        <TextInput
-                            style={styles.text_input}
-                            label="Enter your name"
-                            placeholder="e.g. Jane"
-                            placeholderTextColor="#003f5c"
-                            onChangeText={setName}
-                        />
+                    <Text style={{fontSize: 15}}>
+                        Just key in the following details!
+                    </Text>
+
+                    <View style={{marginTop: 15, width: '80%', alignItems: 'center'}}>
+                        <View style={styles.email_input_view}>
+                            <TextInput
+                                ref={usernameTextInput}
+                                style={styles.text_input}
+                                placeholder="Username"
+                                returnKeyType="next"
+                                placeholderTextColor="#003f5c"
+                                onChangeText={setName}
+                                onSubmitEditing={() => emailTextInput.current.focus()}
+                            />
+                        </View>
+
+                        <View style={styles.email_input_view}>
+                            <TextInput
+                                ref={emailTextInput}
+                                style={styles.text_input}
+                                autoCapitalize="none"
+                                returnKeyType="next"
+                                keyboardType="email-address"
+                                placeholder="Email"
+                                placeholderTextColor="#003f5c"
+                                onChangeText={setEmail}
+                                onSubmitEditing={() => passwordTextInput.current.focus()}
+                            />
+                        </View>
+
+                        <View style={styles.password_input_view}>
+                            <TextInput
+                                ref={passwordTextInput}
+                                style={styles.password_text_input}
+                                placeholder="Password"
+                                returnKeyType="next"
+                                placeholderTextColor="#003f5c"
+                                secureTextEntry={!isPasswordVisible}
+                                onChangeText={setPassword}
+                                onSubmitEditing={() => reEnterPasswordTextInput.current.focus()}
+                            />
+                            <Ionicons name={isPasswordVisible ? "eye-off" : "eye"} size={20} color="gray" onPress={() => setIsPasswordVisible(!isPasswordVisible)} style={{flex: 1}} />
+                        </View>
+
+                        <View style={styles.password_input_view}>
+                            <TextInput
+                                ref={reEnterPasswordTextInput}
+                                style={styles.password_text_input}
+                                placeholder="Re-enter password"
+                                returnKeyType="go"
+                                placeholderTextColor="#003f5c"
+                                secureTextEntry={!isReEnterPasswordVisible}
+                                onChangeText={setReEnterPassword}
+                                onSubmitEditing={handleSignUp}
+                            />
+                            <Ionicons name={isReEnterPasswordVisible ? "eye-off" : "eye"} size={20} color="gray" onPress={() => setIsReEnterPasswordVisible(!isReEnterPasswordVisible)} style={{flex: 1}} />
+                        </View>
                     </View>
 
-                    <View style={styles.email_input_view}>
-                        <TextInput
-                            style={styles.text_input}
-                            label="Enter email"
-                            autoCapitalize="none"
-                            keyboardType="email-address"
-                            placeholder="e.g. janedoe@example.com"
-                            placeholderTextColor="#003f5c"
-                            onChangeText={setEmail}
-                        />
-                    </View>
-
-                    <View style={styles.password_input_view}>
-                        <TextInput
-                            style={styles.password_text_input}
-                            label="Enter password"
-                            placeholder="e.g. password1234"
-                            placeholderTextColor="#003f5c"
-                            secureTextEntry={!isPasswordVisible}
-                            onChangeText={setPassword}
-                        />
-                        <Ionicons name={isPasswordVisible ? "eye" : "eye-off"} size={20} color="gray" onPress={() => setIsPasswordVisible(!isPasswordVisible)} />
-                    </View>
-
-                    <TouchableOpacity style={styles.register_button} onPress={handleSignUp}>
-                        <Text style={styles.register_text}>Register</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.back_to_login_button} onPress={goToLoginScreen}>
-                        <Text style={styles.back_to_login_text}>Return to login</Text>
-                    </TouchableOpacity>
-                </View>
+                    <Button
+                        mode="contained"
+                        onPress={handleSignUp}
+                        color='#46f583'
+                        uppercase={false}
+                        style={{marginTop: 10, width: '80%'}}
+                    >Register</Button>
+                </SafeAreaView>
             </DismissKeyboard>
         </KeyboardAvoidingView>
     )
 }
 
 const styles = StyleSheet.create ({
-    scrollview_container: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-
-    content_container: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: 10
-    },
-
-    image: {
-        resizeMode: "contain",
-        height: 175,
-        width: 175,
-        marginBottom: 20
+        justifyContent: 'flex-start',
     },
 
     email_input_view: {
         backgroundColor: "#dbd6d2",
         borderRadius: 5,
-        width: "80%",
+        width: "100%",
         height: 45,
-        marginBottom: 10,
-        alignItems: "center",
-        justifyContent: "center"
+        marginBottom: 10
     },
-
+    
     text_input: {
         height: 45,
-        width: "80%",
-        alignItems: "center",
-        justifyContent: "center",
-        textAlign: "left"
+        width: "100%",
+        textAlign: "left",
+        paddingHorizontal: 10
     },
     
     password_input_view: {
         flexDirection: "row",
         backgroundColor: "#dbd6d2",
         borderRadius: 5,
-        width: "80%",
+        width: "100%",
         height: 45,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "space-evenly",
+        marginBottom: 10,
     },
-
+    
     password_text_input: {
+        flex: 9,
         height: 45,
-        width: "80%",
         alignItems: "center",
         justifyContent: "center",
         textAlign: "left",
-        borderLeftWidth: 10,
-        /** @todo Come up with a better way to align the email and password text */
-        borderColor: "#dbd6d2"
+        paddingHorizontal: 10
     },
 
     register_button: {

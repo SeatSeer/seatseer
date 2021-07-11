@@ -1,5 +1,6 @@
 import React from 'react';
-import { Image, StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import { Image, SafeAreaView, StyleSheet, Text, Dimensions } from 'react-native';
+import { Button } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { loadAuthStack } from '../store/slices/authSlice';
 
@@ -10,36 +11,42 @@ export default function AccountDeleted() {
         dispatch(loadAuthStack());
     }
 
-    return (<View style={styles.container}>
-        <Image style={styles.image} source={require('../assets/logo-without-text.png')} />
+    return (
+        <SafeAreaView style={styles.container}>
+            <Image style={styles.image} source={require('../assets/logo-without-text-with-transparency.png')} />
 
-        <Text style={styles.text_header}>
-            Your account has been deleted.
-        </Text>
+            <Text style={styles.text_header}>
+                Your account has been deleted.
+            </Text>
 
-        <Text style={styles.text_body}>
-            Thank you for using SeatSeer!
-        </Text>
+            <Text style={styles.text_body}>
+                Thank you for using SeatSeer!
+            </Text>
 
-        <TouchableOpacity style={styles.done_button} onPress={done}>
-            <Text>Done</Text>
-        </TouchableOpacity>
-    </View>);
+            <Button
+                mode="contained"
+                onPress={done}
+                color='#46f583'
+                uppercase={false}
+                style={{marginTop: 10, width: '80%'}}
+            >Done</Button>
+        </SafeAreaView>
+    );
 }
+
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: 10
     },
 
     image: {
         resizeMode: "contain",
-        height: 200,
-        width: 200,
+        height: 0.7 * width,
+        width: 0.7 * width,
         marginBottom: 20
     },
 
@@ -57,14 +64,4 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 20,
     },
-
-    done_button: {
-        width: "80%",
-        borderRadius: 25,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 10,
-        backgroundColor: "#ff6961",
-    }
 });

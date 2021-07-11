@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { setDarkTheme } from '../../api/rtdb';
 
 export const themeSlice = createSlice({
     name: 'theme',
@@ -7,11 +8,17 @@ export const themeSlice = createSlice({
     },
     reducers: {
         toggleDarkTheme: (state, action) => {
+            // payload will contain the current userId
+            setDarkTheme(action.payload, !state.darkTheme, () => {}, () => {});
             state.darkTheme = !state.darkTheme;
+        },
+        displayDarkTheme: (state, action) => {
+            // payload will contain the current userId
+            state.darkTheme = action.payload;
         }
     }
 });
 
-export const { toggleDarkTheme } = themeSlice.actions;
+export const { toggleDarkTheme, displayDarkTheme } = themeSlice.actions;
 
 export default themeSlice.reducer;

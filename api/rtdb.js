@@ -59,3 +59,32 @@ export const addReport = async (userId, location, seatNumber, details, onSuccess
         return onError(error);
     }
 }
+
+export const initializeDarkTheme = async (userId, onSuccess, onError) => {
+    try {
+        const userSettings = db.ref(`settings`).child(userId);
+        await userSettings.set({darkTheme: false});
+        return onSuccess(userSettings);
+    } catch (error) {
+        return onError(error);
+    }
+}
+
+export const getDarkTheme = async (userId, onSuccess, onError) => {
+    try {
+        const settingsSnapshot = await db.ref(`settings/${userId}`).get();
+        return onSuccess(settingsSnapshot.val());
+    } catch (error) {
+        onError(error);
+    }
+}
+
+export const setDarkTheme = async (userId, darkTheme, onSuccess, onError) => {
+    try {
+        const userSettings = db.ref(`settings`).child(userId);
+        await userSettings.set({darkTheme: darkTheme});
+        return onSuccess(userSettings);
+    } catch (error) {
+        return onError(error);
+    }
+}

@@ -15,11 +15,11 @@ export default function SettingsTab() {
         <SettingsStack.Navigator initialRouteName="Settings">
             <SettingsStack.Screen name="Settings" component={Settings} />
             <SettingsStack.Screen name="ChangePassword" component={ChangePassword} />
-            <SettingsStack.Screen name="UpdateEmail" component={UpdateEmail} />
-            <SettingsStack.Screen name="DeleteAccountAuthentication" component={DeleteAccountAuthentication} />
+            <SettingsStack.Screen name="UpdateEmail" component={UpdateEmail} options={{title: ""}} />
+            <SettingsStack.Screen name="DeleteAccountAuthentication" component={DeleteAccountAuthentication} options={{title: ""}} />
             <SettingsStack.Screen name="Tutorial" component={Tutorial} />
-            <SettingsStack.Screen name="Feedback" component={Feedback} />
-            <SettingsStack.Screen name="ReportFaultySeat" component={ReportFaultySeat} />
+            <SettingsStack.Screen name="Feedback" component={Feedback} options={{title: ""}} />
+            <SettingsStack.Screen name="ReportFaultySeat" component={ReportFaultySeat} options={{title: ""}} />
         </SettingsStack.Navigator>
     );
 }

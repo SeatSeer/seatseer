@@ -1,15 +1,113 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Platform } from "react-native";
+import { View, StyleSheet, Platform, TouchableOpacity, ScrollView, Dimensions } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Avatar, ListItem } from "react-native-elements";
+import { Avatar, Overlay, Rating } from "react-native-elements";
+import { Button, Badge } from "react-native-paper";
 import CrowdednessIndicator from "./CrowdednessIndicator";
-import { useTheme } from '@react-navigation/native';
+import { useTheme, useNavigation } from '@react-navigation/native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useSelector } from 'react-redux';
 import { addFavourite, removeFavourite, checkAndSetFavourite } from "../api/rtdb";
 import CustomText from "./CustomText";
-import { Button } from "react-native-elements";
 
-export default function Panel(props, { navigation }) {
+const PanelTabs = createMaterialTopTabNavigator();
+
+function FloorPlanTab(props) {
+    return (
+        <ScrollView style={{flex: 1, paddingHorizontal: 5}}>
+            <CustomText text={"Coming soon in Milestone 3!"} />
+        </ScrollView>
+    )
+}
+
+function ReviewsTab(props) {
+    const { colors } = useTheme();
+
+    return (
+        <ScrollView style={{flex: 1, paddingHorizontal: 5}}>
+            <CustomText text={`Rating: ${props.rating.toFixed(2)}/5`} textStyle={{paddingVertical: 5, fontWeight: 'bold', fontSize: 30, alignSelf: 'center'}} />
+            <Rating type='custom' imageSize={30} readonly fractions={2} startingValue={props.rating} tintColor={colors.background} ratingBackgroundColor='#b0b0b0' />
+
+            <View style={{height: 0.5, width: '100%', backgroundColor: "grey", marginVertical: 5}} />
+
+            <CustomText text={"Comments:"} textStyle={{paddingVertical: 5, fontWeight: 'bold', fontSize: 20}} />
+            <View style={{height: 0.5, width: '100%', backgroundColor: "grey", marginVertical: 5}} />
+            {
+                props.comments.map((comment, index) => (
+                    <View key={index} style={{width: '100%'}}>
+                        <CustomText text={comment} textStyle={{fontSize: 17}} />
+                        <View style={{height: 0.5, width: '100%', backgroundColor: "grey", marginVertical: 5}} />
+                    </View>
+                ))
+            }
+            
+            <Button
+                mode="contained"
+                color='#46f583'
+                uppercase={false}
+                titleStyle={{fontSize: 12}}
+                style={{marginVertical: 10, width: '80%', alignSelf: 'center', marginTop: 10}}
+                onPress={() => {}}
+            >Leave a review!</Button>
+        </ScrollView>
+    );
+}
+
+function AboutTab(props) {
+    const navigation = useNavigation();
+
+    return (
+        <ScrollView style={{flex: 1, paddingHorizontal: 5}}>
+            <CustomText text={"People who search for this location also search for"} textStyle={{fontSize: 16, paddingVertical: 5}} />
+            <View style={{flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap', }}>
+                {
+                    props.related.map((tag, index) => (
+                        <Badge key={tag} size={30} style={{margin: 2, backgroundColor: '#b0b0b0'}}>{tag}</Badge>
+                    ))
+                }
+            </View>
+
+            <View style={{height: 0.5, width: '100%', backgroundColor: "grey", marginVertical: 5}} />
+
+            <CustomText text={"Filters"} textStyle={{fontSize: 16, paddingVertical: 5}} />
+            <View style={{flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap'}}>
+                {
+                    props.filters.map((tag, index) => (
+                        <Badge key={tag} size={30} style={{margin: 2, backgroundColor: '#b0b0b0'}}>{tag}</Badge>
+                    ))
+                }
+            </View>
+
+            <View style={{height: 0.5, width: '100%', backgroundColor: "grey", marginVertical: 5}} />
+
+            <Button
+                mode="contained"
+                color='#ff6961'
+                uppercase={false}
+                titleStyle={{fontSize: 12}}
+                style={{marginTop: 10, width: '80%', alignSelf: 'center', marginTop: 10}}
+                onPress={() => navigation.navigate('Settings', { screen: 'ReportFaultySeat', initial: false })}
+            >Report a faulty seat</Button>
+        </ScrollView>
+    );
+}
+
+function AdditionalInfo(props) {
+    return (
+        <PanelTabs.Navigator
+            tabBarOptions={{
+                activeTintColor: 'tomato',
+                inactiveTintColor: 'gray',
+            }}
+        >
+            <PanelTabs.Screen name="FloorPlan" children={() => <FloorPlanTab />} />
+            <PanelTabs.Screen name="Reviews" children={() => <ReviewsTab comments={props.comments} rating={props.rating} />} />
+            <PanelTabs.Screen name="About" children={() => <AboutTab filters={props.filters} related={props.related} />} />
+        </PanelTabs.Navigator>
+    );
+}
+
+export default function Panel(props) {
     /**
      * props.panel contains the following properties:
      * locationId -> locationId (string)
@@ -20,12 +118,16 @@ export default function Panel(props, { navigation }) {
      * coordinates -> { latitude: (float), longitude: (float) }
      * rating -> Out of 5 (float)
      * comments -> Array of strings
+     * filters -> filters that can be applied to the location
+     * related -> keywords that are related to the location
      */
     const currentUserId = useSelector((state) => state.auth.currentUserId);
     const [expanded, setExpanded] = useState(false);
     const [alert, setAlert] = useState(false);
     const [favourite, setFavourite] = useState(false);
+    const [additionalInfoVisible, setAdditionalInfoVisible] = useState(false);
     const { colors } = useTheme();
+    const navigation = useNavigation();
 
     const additionalInfo = [
         {
@@ -71,93 +173,138 @@ export default function Panel(props, { navigation }) {
         }
     }
 
+    function toggleAdditionalInfoVisibility() {
+        setAdditionalInfoVisible(!additionalInfoVisible);
+    }
+
     return (
-        <ListItem.Accordion bottomDivider noIcon containerStyle={{ backgroundColor: colors.background }}
-            content={
-                <>
+        <View style={styles.container}>
+            <TouchableOpacity onPress={toggleAdditionalInfoVisibility} style={styles.panel}>
+                <View style={styles.avatar_view}>
+                {
+                    Platform.OS === "ios"
+                        ? <Avatar size="small" rounded title={props.panel.avatar} containerStyle={{backgroundColor: '#b0b0b0'}} />
+                        : <Avatar size="small" rounded title={props.panel.avatar} titleStyle={{fontSize: 10}} containerStyle={{backgroundColor: '#b0b0b0'}} />
+                }
+                </View>
+                
+                <View style={styles.panel_text_view}>
+                    <CustomText text={props.panel.name} textStyle={{fontWeight: 'bold', fontSize: 20}} />
+                    <CustomText text={`Seats available: ${props.panel.seats}`} textStyle={{fontSize: 15}} />
+                    <CrowdednessIndicator vacancyPercentage={props.panel.vacancyPercentage} />
+                </View>
+
+                <View style={styles.heart}>
+                    <Ionicons name={favourite ? "heart" : "heart-outline"} size={30} color="red" onPress={toggleFavourite} />
+                </View>
+
+                <View style={styles.bell}>
+                    <Ionicons name={alert ? "notifications" : "notifications-outline"} size={30} color="gold" onPress={() => setAlert(!alert)} />
+                </View>
+            </TouchableOpacity>
+
+            <Overlay isVisible={additionalInfoVisible} onBackdropPress={toggleAdditionalInfoVisibility} overlayStyle={{...styles.additional_info, backgroundColor: colors.background}} >
+                <View style={styles.header}>
+                    <View style={styles.avatar_view}>
                     {
                         Platform.OS === "ios"
                             ? <Avatar size="small" rounded title={props.panel.avatar} containerStyle={{backgroundColor: '#b0b0b0'}} />
-                            : <Avatar size="small" rounded title={props.panel.avatar} titleStyle={{ fontSize: 10}} containerStyle={{backgroundColor: '#b0b0b0'}} />
+                            : <Avatar size="small" rounded title={props.panel.avatar} titleStyle={{fontSize: 10}} containerStyle={{backgroundColor: '#b0b0b0'}} />
                     }
-
-                    <ListItem.Content style={{ paddingLeft: 10 }}>
-                        <ListItem.Title style={{ color: colors.text }}>{props.panel.name}</ListItem.Title>
-                        <ListItem.Subtitle style={{ color: colors.text }}>{`Seats available: ${props.panel.seats}`}</ListItem.Subtitle>
+                    </View>
+                    
+                    <View style={styles.panel_text_view}>
+                        <CustomText text={props.panel.name} textStyle={{fontWeight: 'bold', fontSize: 20}} />
+                        <CustomText text={`Seats available: ${props.panel.seats}`} textStyle={{fontSize: 15}} />
                         <CrowdednessIndicator vacancyPercentage={props.panel.vacancyPercentage} />
-                    </ListItem.Content>
-                    <Ionicons name={favourite ? "heart" : "heart-outline"} size={30} color="red" onPress={toggleFavourite} />
-                    <Ionicons name={alert ? "notifications" : "notifications-outline"} size={30} color="gold" onPress={() => setAlert(!alert)} />
-                </>
-            }
-            isExpanded={expanded}
-            onPress={() => setExpanded(!expanded)}
-        >
-            <ListItem bottomDivider containerStyle={{ backgroundColor: colors.background }}>
-                {
-                    Platform.OS === "ios"
-                        ? (<ListItem.Content>
-                            <ListItem.Title style={{ color: colors.text, textDecorationLine: 'underline', paddingTop: 10 }}>Additional Information</ListItem.Title>
-                            
-                            <CustomText text={"Floorplan (Coming soon in Milestone 3!)"} textStyle={{paddingVertical: 5, fontWeight: 'bold'}} />
-                            <CustomText text={"Comments:"} textStyle={{paddingVertical: 5, fontWeight: 'bold'}} />
-                            {
-                                props.panel.comments.map((comment, index) => (
-                                    <View key={index} style={{width: '100%'}}>
-                                        <CustomText text={comment} />
-                                        <View style={{height: 0.5, width: '100%', backgroundColor: "grey", marginVertical: 5}} />
-                                    </View>
-                                ))
-                            }
-                            <CustomText text={`Rating: ${props.panel.rating.toFixed(2)}/5 stars`} textStyle={{paddingVertical: 5, fontWeight: 'bold'}} />
-        
-                            <Button 
-                                title="Report a faulty seat" 
-                                titleStyle={{fontSize: 12}} 
-                                buttonStyle={{backgroundColor: 'red'}} 
-                                containerStyle={{alignSelf: 'center'}}
-                                onPress={() => navigation.navigate("ReportFaultySeat")}
-                            />
-                        </ListItem.Content>)
-                        : (<ListItem.Content>
-                            <ListItem.Title style={{ color: colors.text, textDecorationLine: 'underline', paddingTop: 10, fontSize: 10 }}>Additional Information</ListItem.Title>
-                            
-                            <CustomText text={"Floorplan (Coming soon in Milestone 3!)"} textStyle={{paddingVertical: 5, fontWeight: 'bold', fontSize: 10}} />
-                            <CustomText text={"Comments:"} textStyle={{paddingVertical: 5, fontWeight: 'bold', fontSize: 10}} />
-                            {
-                                props.panel.comments.map((comment, index) => (
-                                    <View key={index} style={{width: '100%'}}>
-                                        <CustomText text={comment} textStyle={{fontSize: 10}} />
-                                        <View style={{height: 0.5, width: '100%', backgroundColor: "grey", marginVertical: 5}} />
-                                    </View>
-                                ))
-                            }
-                            <CustomText text={`Rating: ${props.panel.rating}/5 stars`} textStyle={{paddingVertical: 5, fontWeight: 'bold'}} />
-        
-                            <Button 
-                                title="Report a faulty seat" 
-                                titleStyle={{fontSize: 12}} 
-                                buttonStyle={{backgroundColor: 'red'}} 
-                                containerStyle={{alignSelf: 'center'}}
-                                onPress={() => navigation.navigate("ReportFaultySeat")}
-                            />
-                        </ListItem.Content>)
-                }
-            </ListItem>
-        </ListItem.Accordion>
+                    </View>
+
+                    <View style={styles.heart}>
+                        <Ionicons name={favourite ? "heart" : "heart-outline"} size={30} color="red" onPress={toggleFavourite} />
+                    </View>
+
+                    <View style={styles.bell}>
+                        <Ionicons name={alert ? "notifications" : "notifications-outline"} size={30} color="gold" onPress={() => setAlert(!alert)} />
+                    </View>
+                </View>
+
+                <View style={{flex: 1}}>
+                    <AdditionalInfo comments={props.panel.comments} rating={props.panel.rating} filters={props.panel.filters} related={props.panel.related} />
+                </View>
+            </Overlay>
+        </View>
     );
 }
 
+const { width, height } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
-    item: {
-      backgroundColor: "#f9c2ff",
-      padding: 20,
-      marginVertical: 8
+    container: {
+        width: width,
+        height: 0.12 * height,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: 'darkgrey'
     },
+
+    panel: {
+        flexDirection: 'row',
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        paddingVertical: 5
+    },
+
+    avatar_view: {
+        flex: 1,
+        // width: '10%',
+        // height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 10,
+    },
+
+    panel_text_view: {
+        flex: 7,
+        // width: '70%',
+        // height: '100%',
+        alignItems: 'flex-start',
+        justifyContent: 'center'
+    },
+
+    heart: {
+        flex: 1,
+        // width: '10%',
+        // height: '100%',
+        // backgroundColor: 'black',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+
+    bell: {
+        flex: 1,
+        // width: '10%',
+        // height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+
+    additional_info: {
+        width: width,
+        height: 0.8 * height,
+        padding: 0
+    },
+
     header: {
-      fontSize: 32,
-    },
-    title: {
-      fontSize: 24
+        flexDirection: 'row',
+        width: '100%',
+        height: 0.12 * height,
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        paddingVertical: 5,
+        borderBottomWidth: 1,
+        borderBottomColor: 'darkgrey'
     }
 });

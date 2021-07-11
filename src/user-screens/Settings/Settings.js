@@ -1,5 +1,6 @@
 import React from 'react';
 import { Alert, StyleSheet, Image, TouchableOpacity, View, Dimensions } from 'react-native';
+import { Button } from 'react-native-paper';
 import SwitchToggle from "react-native-switch-toggle";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
@@ -15,6 +16,7 @@ export default function Settings({ navigation }) {
     const theme = useTheme();
     const currentUserDisplayName = useSelector((state) => state.auth.currentUserDisplayName);
     const currentUserEmail = useSelector((state) => state.auth.currentUserEmail);
+    const currentUserId = useSelector((state) => state.auth.currentUserId);
     const dispatch = useDispatch();
 
     // Array containing the details of all settings options
@@ -61,7 +63,7 @@ export default function Settings({ navigation }) {
                 {
                     subtitle: "Dark mode",
                     onPress: () => {
-                        dispatch(toggleDarkTheme());
+                        dispatch(toggleDarkTheme(currentUserId));
                     },
                     type: "Switch"
                 }
@@ -163,12 +165,12 @@ export default function Settings({ navigation }) {
                                         <SwitchToggle
                                             containerStyle={styles.containerStyle}
                                             circleStyle={styles.circleStyle}
-                                            backgroundColorOn="white"
+                                            backgroundColorOn="#53d769"
                                             backgroundColorOff="#a9a9a9"
                                             switchOn={theme.dark}
                                             onPress={onPress}
                                             circleColorOff="white"
-                                            circleColorOn="#a9a9a9"
+                                            circleColorOn="white"
                                         />
                                     </View>);
                                 } else {
@@ -183,11 +185,13 @@ export default function Settings({ navigation }) {
                 ))
             }
 
-            <Screen screenStyle={{flex: 1, alignItems: 'center'}}>
-                <TouchableOpacity style={styles.logout_button} onPress={handleLogout}>
-                    <CustomText text={"Log Out"} />
-                </TouchableOpacity>
-            </Screen>
+            <Button
+                mode="contained"
+                onPress={handleLogout}
+                color='#ff6961'
+                uppercase={false}
+                style={{marginTop: 10, width: '80%', alignSelf: 'center', marginTop: 20}}
+            >Log out</Button>
 
             <CustomText text={"Powered by:"} textStyle={{paddingTop: 30, alignSelf: 'center'}} />
 

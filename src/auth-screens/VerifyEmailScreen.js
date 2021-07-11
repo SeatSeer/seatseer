@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, SafeAreaView, Dimensions } from 'react-native';
+import { Button } from 'react-native-paper';
 import { setOnUserEmailVerifiedChanged, logOut } from '../../api/auth';
 import { setStateToIsLoading } from '../../store/slices/authSlice';
 import { useDispatch } from 'react-redux';
@@ -31,7 +32,7 @@ export default function VerifyEmailScreen() {
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Image style={styles.image} source={require('../../assets/logo-without-text.png')} />
 
             <Text style={styles.text_header}>
@@ -51,30 +52,39 @@ export default function VerifyEmailScreen() {
                 Please verify your email before proceeding!
             </Text>}
 
-            <TouchableOpacity style={styles.start_using_button} onPress={handleVerify}>
-                <Text>Start using SeatSeer!</Text>
-            </TouchableOpacity>
+            <Button
+                mode="contained"
+                onPress={handleVerify}
+                color='#46f583'
+                uppercase={false}
+                contentStyle={{width: 0.8 * width}}
+            >Start using SeatSeer!</Button>
 
-            <TouchableOpacity style={styles.log_out_button} onPress={handleLogOut}>
-                <Text>Log Out</Text>
-            </TouchableOpacity>
-        </View>
+            <Button
+                mode="contained"
+                onPress={handleLogOut}
+                color='#ff6961'
+                uppercase={false}
+                contentStyle={{width: 0.8 * width}}
+                style={{marginTop: 20}}
+            >Log Out</Button>
+        </SafeAreaView>
     );
 }
+
+const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: 10
     },
 
     image: {
         resizeMode: "contain",
-        height: 200,
-        width: 200,
+        height: 0.5 * width,
+        width: 0.5 * width,
         marginBottom: 20
     },
 
@@ -93,28 +103,9 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
 
-    start_using_button: {
-        width: "80%",
-        borderRadius: 25,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#46f583",
-    },
-
     error_message: {
         color: 'red',
         fontSize: 10,
         textAlign: 'left'
     },
-
-    log_out_button: {
-        width: "80%",
-        borderRadius: 25,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 10,
-        backgroundColor: "#ff6961",
-    }
 });
