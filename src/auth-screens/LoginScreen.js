@@ -1,38 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   Alert,
-  Image,
-  Keyboard,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  KeyboardAvoidingView
+  SafeAreaView
 } from 'react-native';
+import { Button } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../../misc_components/DismissKeyboard';
-import { logIn } from '../../api/auth';
+import { logIn, setOnPasswordReset } from '../../api/auth';
 import { setStateToIsLoading } from '../../store/slices/authSlice';
 import { useDispatch } from 'react-redux';
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isPasswordResetEmailSent, setIsPasswordResetEmailSent] = useState(false);
+  const [emailFieldError, setEmailFieldError] = useState(null);
+  const [passwordFieldError, setPasswordFieldError] = useState(null);
+  const emailTextInput = useRef();
+  const passwordTextInput = useRef();
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    emailTextInput.current.focus();
+  }, []);
+
   function handleLogin() {
-    Keyboard.dismiss();
+    setEmailFieldError(null);
+    setPasswordFieldError(null);
     logIn({ email, password },
       // onSuccess callback function
       (user) => dispatch(setStateToIsLoading()),
       // onError callback function
       (error) => {
         let errorCode = error.code;
-        let errorMessage = error.message;
         if (errorCode == 'auth/invalid-email') {
           Alert.alert(
             "Invalid email",
@@ -42,6 +49,7 @@ export default function LoginScreen({ navigation }) {
             }],
             { cancelable: true }
           )
+          setEmailFieldError('Please enter a valid email.');
         } else if (errorCode == 'auth/user-disabled') {
           Alert.alert(
             "User disabled",
@@ -51,6 +59,7 @@ export default function LoginScreen({ navigation }) {
             }],
             { cancelable: true }
           )
+          setEmailFieldError('Your account has been disabled.');
         } else if (errorCode == 'auth/user-not-found') {
           Alert.alert(
             "User not found",
@@ -60,6 +69,7 @@ export default function LoginScreen({ navigation }) {
             }],
             { cancelable: true }
           )
+          setEmailFieldError('Email not registered yet.');
         } else if (errorCode == 'auth/wrong-password') {
           Alert.alert(
             "Wrong password",
@@ -69,145 +79,172 @@ export default function LoginScreen({ navigation }) {
             }],
             { cancelable: true }
           )
+          setPasswordFieldError('Wrong password.')
         }
       }
     );
   }
 
-  function goToForgotPasswordScreen() {
-    Keyboard.dismiss();
-    navigation.navigate("ForgotPassword");
-  }
-
-  function goToSignUpScreen() {
-    Keyboard.dismiss();
-    navigation.navigate("SignUp");
+  function handleResetPassword() {
+    setEmailFieldError(null);
+    setPasswordFieldError(null);
+    setOnPasswordReset(email,
+      // onSuccessfulResetPasswordEmailSent callback function
+      () => {
+        Alert.alert(
+            "Reset Password",
+            `An email has been sent to ${email} for you to reset your password`,
+            [{
+                text: "OK"
+            }],
+            { cancelable: true }
+        )
+        setIsPasswordResetEmailSent(true);
+      },
+      // onPasswordEmailFailedToSend callback function
+      (error) => {
+        let errorCode = error.code;
+        if (errorCode == 'auth/invalid-email') {
+          Alert.alert(
+            "Invalid email",
+            'Please enter a valid email.', 
+            [{
+              text: "OK"
+            }],
+            { cancelable: true }
+          )
+          setEmailFieldError('Please enter a valid email.');
+        } else if (errorCode == 'auth/user-not-found') {
+          Alert.alert(
+            "User not found",
+            `The email you have entered is not registered.`,
+            [{
+              text: "OK"
+            }],
+            { cancelable: true }
+          )
+          setEmailFieldError('Email not registered yet.');
+        }
+      }
+    );
   }
 
   return (
-    <KeyboardAvoidingView
-    behavior={Platform.OS === "ios" ? "padding" : "height"}
-    keyboardVerticalOffset={70}
-    style={styles.scrollview_container}
-    contentContainerStyle={styles.content_container}>
       <DismissKeyboard>
-        <View style={styles.view_container}>            
-          <StatusBar style="auto" />
+        <SafeAreaView style={styles.view_container}>
+          <Text style={{fontWeight: 'bold', fontSize: 35}}>
+            Welcome back!
+          </Text>
 
-          <Image style={styles.image} source={require('../../assets/logo.png')} />
-        
-          <View style={styles.email_input_view}>
-            <TextInput
-              style={styles.email_text_input}
-              label="Email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              returnKeyType="next"
-              placeholder="e.g. janedoe@example.com"
-              placeholderTextColor="#003f5c"
-              onChangeText={setEmail}
-            />
+          <Text style={{fontSize: 15}}>
+            We're so excited to see you again!
+          </Text>
+
+          <View style={{marginTop: 30, width: '80%', alignItems: 'center'}}>
+            <Text style={{marginBottom: 5, fontSize: 10, alignSelf: 'flex-start'}}>
+              ACCOUNT INFORMATION
+            </Text>
+
+            <View style={{...styles.email_input_view, borderWidth: emailFieldError ? 1 : 0, borderColor: 'red', marginBottom: emailFieldError ? 0 : 10}}>
+              <TextInput
+                ref={emailTextInput}
+                style={styles.email_text_input}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                returnKeyType="next"
+                placeholder="Email"
+                placeholderTextColor="#003f5c"
+                onChangeText={setEmail}
+                onSubmitEditing={() => passwordTextInput.current.focus()}
+              />
+            </View>
+            {
+              emailFieldError
+                ? <Text style={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}}>{emailFieldError}</Text>
+                : <></>
+            }
+
+            <View style={{...styles.password_input_view, borderWidth: passwordFieldError ? 1 : 0, borderColor: 'red'}}>
+              <TextInput
+                ref={passwordTextInput}
+                style={styles.password_text_input}
+                autoCapitalize="none"
+                returnKeyType="go"
+                placeholder="Password"
+                placeholderTextColor="#003f5c"
+                secureTextEntry={!isPasswordVisible}
+                onChangeText={setPassword}
+                onSubmitEditing={handleLogin}
+              />
+              <Ionicons name={isPasswordVisible ? "eye-off" : "eye"} size={20} color="gray" onPress={() => setIsPasswordVisible(!isPasswordVisible)} style={{flex: 1}} />
+            </View>
+            {
+              passwordFieldError
+                ? <Text style={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}}>{passwordFieldError}</Text>
+                : <></>
+            }
+            
+            <TouchableOpacity style={styles.forgot_button} onPress={handleResetPassword}>
+              <Text style={styles.forgot_text}>Forgot your password?</Text>
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.password_input_view}>
-            <TextInput
-              style={styles.password_text_input}
-              label="Password"
-              autoCapitalize="none"
-              placeholder="e.g. password1234"
-              placeholderTextColor="#003f5c"
-              secureTextEntry={!isPasswordVisible}
-              onChangeText={setPassword}
-            />
-            <Ionicons name={isPasswordVisible ? "eye" : "eye-off"} size={20} color="gray" onPress={() => setIsPasswordVisible(!isPasswordVisible)} />
-          </View>
+          <Button
+            mode="contained"
+            onPress={handleLogin}
+            color='#46f583'
+            uppercase={false}
+            style={{marginTop: 10, width: '80%'}}
+          >Login</Button>
           
-          <TouchableOpacity style={styles.forgot_button} onPress={goToForgotPasswordScreen}>
-            <Text style={styles.forgot_text}>Forgot your password?</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.login_button} onPress={handleLogin}>
-            <Text style={styles.login_text}>Login</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.register_button} onPress={goToSignUpScreen}>
-            <Text style={styles.register_text}>Sign up for a SeatSeer account</Text>
-          </TouchableOpacity>
-        </View>
+        </SafeAreaView>
       </DismissKeyboard>
-    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollview_container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-
-  content_container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
   view_container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingHorizontal: 10,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  image: {
-    resizeMode: "contain",
-    height: 175,
-    width: 175,
-    marginBottom: 20
+    justifyContent: 'flex-start',
   },
 
   email_input_view: {
-    flexDirection: "row",
     backgroundColor: "#dbd6d2",
     borderRadius: 5,
-    width: "80%",
+    width: "100%",
     height: 45,
-    marginBottom: 10,
-    alignItems: "center",
-    justifyContent: "center"
   },
 
   email_text_input: {
     height: 45,
-    width: "80%",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "left"
+    width: "100%",
+    textAlign: "left",
+    paddingHorizontal: 10
   },
 
   password_input_view: {
     flexDirection: "row",
     backgroundColor: "#dbd6d2",
     borderRadius: 5,
-    width: "80%",
+    width: "100%",
     height: 45,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "space-evenly",
   },
 
   password_text_input: {
+    flex: 9,
     height: 45,
-    width: "80%",
     alignItems: "center",
     justifyContent: "center",
     textAlign: "left",
-    borderLeftWidth: 10,
-    /** @todo Come up with a better way to align the email and password text */
-    borderColor: "#dbd6d2"
+    paddingHorizontal: 10
   },
 
   forgot_button: {
     height: 40,
-    marginBottom: 10,
+    alignSelf: 'flex-start',
     alignItems: "center",
     justifyContent: "center",
     marginRight: "40%"

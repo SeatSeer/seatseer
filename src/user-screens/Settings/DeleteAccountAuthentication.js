@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Alert, StyleSheet, View, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, Image, StyleSheet, View, Text, TextInput, Dimensions } from 'react-native';
+import { Button } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../../../misc_components/DismissKeyboard';
 import Screen from '../../../misc_components/Screen';
@@ -12,9 +13,16 @@ export default function DeleteAccountAuthentication() {
     const currentUserEmail = useSelector((state) => state.auth.currentUserEmail);
     const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [passwordFieldError, setPasswordFieldError] = useState(null);
+    const passwordTextInput = useRef();
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        passwordTextInput.current.focus();
+    }, []);
+
     function handleDeleteAccount() {
+        setPasswordFieldError(null);
         reauthenticateUser(currentUserEmail, password,
             // onSuccessfulReauthentication callback
             () => {
@@ -62,6 +70,7 @@ export default function DeleteAccountAuthentication() {
                             [{ text: "OK" }],
                             { cancelable: true }
                         );
+                        setPasswordFieldError('Invalid password.');
                         break;
                     default:
                         Alert.alert(
@@ -77,75 +86,75 @@ export default function DeleteAccountAuthentication() {
     }
 
     return (
-        <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={50}
-        style={styles.container}
-        contentContainerStyle={styles.content_container}>
-            <DismissKeyboard>
-                <Screen style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    
-                    <View>
-                        <CustomText text={"Enter your password:"} textStyle={{textAlign: 'left'}} />
-                        
-                        <View style={styles.password_input_view}>
-                            <TextInput
-                                style={styles.password_text_input}
-                                label="Enter your password"
-                                placeholderTextColor="#003f5c"
-                                secureTextEntry={!isPasswordVisible}
-                                onChangeText={setPassword}
-                            />
-                            <Ionicons name={isPasswordVisible ? "eye" : "eye-off"} size={20} color="gray" onPress={() => setIsPasswordVisible(!isPasswordVisible)} />
-                        </View>
+        <DismissKeyboard>
+            <Screen screenStyle={styles.container}>
+                <Image source={require('../../../assets/logo-without-text-with-transparency.png')} style={styles.image} />
+                <CustomText text={"We're sad to see you go."} textStyle={{fontWeight: 'bold', fontSize: 25}} />
+                <View style={{marginTop: 10, width: '80%', alignItems: 'center'}}>
+                    <CustomText text={"Enter your password (just to make sure it's you):"} textStyle={{alignSelf: 'flex-start', fontSize: 12, marginBottom: 2}} />
+                    <View style={{...styles.password_input_view, borderWidth: passwordFieldError ? 1 : 0, borderColor: 'red'}}>
+                        <TextInput
+                            ref={passwordTextInput}
+                            style={styles.password_text_input}
+                            autoCapitalize="none"
+                            returnKeyType="go"
+                            placeholder="Password"
+                            placeholderTextColor="#003f5c"
+                            secureTextEntry={!isPasswordVisible}
+                            onChangeText={setPassword}
+                            onSubmitEditing={handleDeleteAccount}
+                        />
+                        <Ionicons name={isPasswordVisible ? "eye-off" : "eye"} size={20} color="gray" onPress={() => setIsPasswordVisible(!isPasswordVisible)} style={{flex: 1}} />
+                    </View>
+                    {
+                        passwordFieldError
+                            ? <Text style={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}}>{passwordFieldError}</Text>
+                            : <></>
+                    }
                     </View>
 
-                    <TouchableOpacity style={styles.delete_button} onPress={handleDeleteAccount}>
-                        <CustomText text={"Delete Account"} />
-                    </TouchableOpacity>
-                </Screen>
-            </DismissKeyboard>
-        </KeyboardAvoidingView>
+                    <Button
+                        mode="contained"
+                        onPress={handleDeleteAccount}
+                        color='#46f583'
+                        uppercase={false}
+                        style={{marginTop: 10, width: '80%'}}
+                    >Delete account</Button>
+            </Screen>
+        </DismissKeyboard>
     );
 }
 
+const { width, height } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'flex-start'
     },
 
-    content_container: {
-        alignItems: 'center',
-        justifyContent: 'center',
+    image: {
+        resizeMode: 'contain',
+        width: 0.35 * width,
+        height: 0.35 * width
     },
 
     password_input_view: {
         flexDirection: "row",
         backgroundColor: "#dbd6d2",
-        width: "80%",
+        borderRadius: 5,
+        width: "100%",
         height: 45,
         alignItems: "center",
-        justifyContent: 'space-evenly',
-        paddingHorizontal: 10
+        justifyContent: "space-evenly",
     },
 
     password_text_input: {
-        backgroundColor: "#dbd6d2",
+        flex: 9,
         height: 45,
-        width: "100%",
         alignItems: "center",
         justifyContent: "center",
         textAlign: "left",
-        paddingLeft: 10        
-    },
-
-    delete_button: {
-        width: "80%",
-        borderRadius: 25,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 10,
-        backgroundColor: "#46f583",
+        paddingHorizontal: 10
     },
 })

@@ -13,12 +13,12 @@ export default function MainScreen() {
     const theme = useSelector((state) => state.theme.darkTheme);
 
     useEffect(() => {
-        setOnAuthStateChanged(
+        return setOnAuthStateChanged(
             // onUserAuthenticated callback function
             (user) => {
                 getDarkTheme(user.uid, 
-                    (darkTheme) => {
-                        dispatch(displayDarkTheme(darkTheme.darkTheme));
+                    (settings) => {
+                        dispatch(displayDarkTheme(settings ? settings.darkTheme : false));
                     }, 
                     console.error
                 );
@@ -38,7 +38,7 @@ export default function MainScreen() {
                 dispatch(setStateToLoggedOut());
             }
         );
-    });
+    }, []);
 
     return (
         <Screen screenStyle={{justifyContent: 'center', alignItems: 'center'}}>

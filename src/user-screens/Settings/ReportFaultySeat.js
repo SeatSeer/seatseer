@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Alert, StyleSheet, View, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../../../misc_components/DismissKeyboard';
 import Screen from '../../../misc_components/Screen';
 import CustomText from '../../../misc_components/CustomText';
@@ -47,6 +46,7 @@ export default function ReportFaultySeat({ navigation }) {
         )
     }
 
+    /** @todo Make faulty seat location and seat number drop downs that show options to be selected. */
     return (
         <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Alert, Image, StyleSheet, View, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { Alert, StyleSheet, Text, View, TextInput } from 'react-native';
+import { Button } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../../../misc_components/DismissKeyboard';
 import Screen from '../../../misc_components/Screen';
@@ -14,15 +15,26 @@ export default function UpdateEmail() {
     const [newEmail, setNewEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [emailFieldError, setEmailFieldError] = useState(null);
+    const [passwordFieldError, setPasswordFieldError] = useState(null);
+    const emailTextInput = useRef();
+    const passwordTextInput = useRef();
+
+    useEffect(() => {
+        emailTextInput.current.focus();
+    }, []);
 
     function handleUpdateEmail() {
+        setEmailFieldError(null);
+        setPasswordFieldError(null);
         if (newEmail === currentUserEmail) {
             Alert.alert(
                 "Invalid email",
-                'Please enter a different email', 
+                'Please enter a different email.', 
                 [{ text: "OK" }],
                 { cancelable: true }
             );
+            setEmailFieldError('Please enter a different email.');
         } else {
             setOnUserEmailChanged(
                 currentUserEmail, password, newEmail,
@@ -47,6 +59,7 @@ export default function UpdateEmail() {
                                 [{ text: "OK" }],
                                 { cancelable: true }
                             );
+                            setEmailFieldError('Please enter a valid email.');
                             break;
                         case 'auth/email-already-in-use':
                             Alert.alert(
@@ -55,14 +68,16 @@ export default function UpdateEmail() {
                                 [{ text: "OK" }],
                                 { cancelable: true }
                             );
+                            setEmailFieldError('Email already in use.');
                             break;
                         case 'auth/wrong-password':
                             Alert.alert(
                                 "Invalid password",
-                                'The password you have entered is wrong. Please eeter the correct password to correctly identify yourself.', 
+                                'The password you have entered is wrong. Please enter the correct password to correctly identify yourself.', 
                                 [{ text: "OK" }],
                                 { cancelable: true }
                             );
+                            setPasswordFieldError('Invalid password.')
                             break;
                         default: 
                             Alert.alert(
@@ -78,115 +93,99 @@ export default function UpdateEmail() {
     }
 
     return (
-        <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={90}
-        style={styles.container}
-        contentContainerStyle={styles.content_container}>
-            <DismissKeyboard>
-                <Screen style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    <Image style={styles.image} source={require('../../../assets/logo.png')} />
-
-                    
-                    <View style={styles.email_input_view}>
-                        <CustomText text={"Enter your new email:"} textStyle={{alignSelf: 'flex-start'}} />
+        <DismissKeyboard>
+            <Screen screenStyle={styles.container}>
+                <View style={{marginTop: 30, width: '80%', alignItems: 'center'}}>
+                    <CustomText text={"Enter your new email:"} textStyle={{alignSelf: 'flex-start', fontSize: 12}} />
+                    <View style={{...styles.email_input_view, borderWidth: emailFieldError ? 1 : 0, borderColor: 'red', marginBottom: emailFieldError ? 0 : 10}}>
                         <TextInput
-                            style={styles.text_input}
-                            label="Enter your new email address"
-                            autoCapitalize="none"
+                            ref={emailTextInput}
+                            style={styles.email_text_input}
                             keyboardType="email-address"
-                            placeholder="e.g. janedoenew@example.com"
+                            autoCapitalize="none"
+                            returnKeyType="next"
+                            placeholder="New Email"
                             placeholderTextColor="#003f5c"
                             onChangeText={setNewEmail}
+                            onSubmitEditing={() => passwordTextInput.current.focus()}
                         />
                     </View>
+                    {
+                        emailFieldError
+                            ? <Text style={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}}>{emailFieldError}</Text>
+                            : <></>
+                    }
 
-                    <View>
-                        <CustomText text={"Enter your password:"} textStyle={{alignSelf: 'flex-start'}} />
-                        <View style={styles.password_input_view}>
-                            <TextInput
-                                style={styles.password_text_input}
-                                label="Enter your password"
-                                placeholderTextColor="#003f5c"
-                                secureTextEntry={!isPasswordVisible}
-                                onChangeText={setPassword}
-                            />
-                            <Ionicons name={isPasswordVisible ? "eye" : "eye-off"} size={20} color="gray" onPress={() => setIsPasswordVisible(!isPasswordVisible)} />
-                        </View>
+                    <CustomText text={"Enter your password (just to make sure it's you):"} textStyle={{alignSelf: 'flex-start', fontSize: 12}} />
+                    <View style={{...styles.password_input_view, borderWidth: passwordFieldError ? 1 : 0, borderColor: 'red'}}>
+                        <TextInput
+                            ref={passwordTextInput}
+                            style={styles.password_text_input}
+                            autoCapitalize="none"
+                            returnKeyType="go"
+                            placeholder="Password"
+                            placeholderTextColor="#003f5c"
+                            secureTextEntry={!isPasswordVisible}
+                            onChangeText={setPassword}
+                            onSubmitEditing={handleUpdateEmail}
+                        />
+                        <Ionicons name={isPasswordVisible ? "eye-off" : "eye"} size={20} color="gray" onPress={() => setIsPasswordVisible(!isPasswordVisible)} style={{flex: 1}} />
                     </View>
+                    {
+                        passwordFieldError
+                            ? <Text style={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}}>{passwordFieldError}</Text>
+                            : <></>
+                    }
+                </View>
 
-                    <TouchableOpacity style={styles.update_button} onPress={handleUpdateEmail}>
-                        <CustomText text={"Update email"} />
-                    </TouchableOpacity>
-                </Screen>
-            </DismissKeyboard>
-        </KeyboardAvoidingView>
+                <Button
+                    mode="contained"
+                    onPress={handleUpdateEmail}
+                    color='#46f583'
+                    uppercase={false}
+                    style={{marginTop: 10, width: '80%'}}
+                >Update email</Button>
+            </Screen>
+        </DismissKeyboard>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-
-    content_container: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    image: {
-        resizeMode: "contain",
-        height: 175,
-        width: 175,
-        marginBottom: 20
+        justifyContent: 'flex-start',
+        alignItems: 'center'
     },
 
     email_input_view: {
-        width: "80%",
+        backgroundColor: "#dbd6d2",
+        borderRadius: 5,
+        width: "100%",
         height: 45,
-        marginBottom: 10,
-        alignItems: "center",
-        justifyContent: "center"
     },
 
-    text_input: {
-        backgroundColor: "#dbd6d2",
+    email_text_input: {
         height: 45,
         width: "100%",
-        alignItems: "center",
-        justifyContent: "center",
         textAlign: "left",
-        paddingLeft: '5%'
+        paddingHorizontal: 10
     },
 
     password_input_view: {
         flexDirection: "row",
         backgroundColor: "#dbd6d2",
-        width: "80%",
+        borderRadius: 5,
+        width: "100%",
         height: 45,
         alignItems: "center",
-        justifyContent: 'space-evenly',
-        paddingHorizontal: 10
+        justifyContent: "space-evenly",
     },
 
     password_text_input: {
-        backgroundColor: "#dbd6d2",
+        flex: 9,
         height: 45,
-        width: "100%",
         alignItems: "center",
         justifyContent: "center",
         textAlign: "left",
-        paddingLeft: 10        
-    },
-
-    update_button: {
-        width: "80%",
-        borderRadius: 25,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 10,
-        backgroundColor: "#46f583",
+        paddingHorizontal: 10
     },
 })
