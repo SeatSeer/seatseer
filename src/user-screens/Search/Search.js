@@ -19,7 +19,7 @@ export default function Search() {
     const bottomTabBarHeight = useBottomTabBarHeight();
     const { width, height } = Dimensions.get('window');
     // Markers will be an array of objects with title and coordinates fields
-    const [markers, setMarkers] = useState(null);
+    const [markers, setMarkers] = useState([]);
     const [currentRegion, setCurrentRegion] = useState(nusRegion);
     const [permission, setPermission] = useState(null);
     const [isAtMyLocation, setIsAtMyLocation] = useState(false);
@@ -66,16 +66,25 @@ export default function Search() {
 
     async function handleGoToMyLocation() {
         if (permission) {
-            setIsAtMyLocation(true);
-            let { coords } = await getLastKnownPositionAsync({});
-            const mapRegion = {
-                latitude: coords.latitude,
-                latitudeDelta: currentRegion.latitudeDelta,
-                longitude: coords.longitude,
-                longitudeDelta: currentRegion.longitudeDelta
+            try {
+                setIsAtMyLocation(true);
+                let { coords } = await getLastKnownPositionAsync({});
+                const mapRegion = {
+                    latitude: coords.latitude,
+                    latitudeDelta: currentRegion.latitudeDelta,
+                    longitude: coords.longitude,
+                    longitudeDelta: currentRegion.longitudeDelta
+                }
+                mapRef.current.animateToRegion(mapRegion, 10);
+                setCurrentRegion(mapRegion);
+            } catch (error) {
+                Alert.alert(
+                    "Oops, something went wrong!",
+                    "We are unable to obtain your last known position.",
+                    [{ text: "OK" }],
+                    { cancelable: true }
+                )
             }
-            mapRef.current.animateToRegion(mapRegion, 10);
-            setCurrentRegion(mapRegion);
         } else {
             // Alert the user that to use this feature, they have to give the app permission to access their location
             Alert.alert(
@@ -100,11 +109,11 @@ export default function Search() {
             >
                 <Marker key={`key_${currentRegion.longitude}_${currentRegion.latitude}`} coordinate={{latitude: currentRegion.latitude, longitude: currentRegion.longitude}} />
                 {
-                    markers
+                    markers.length 
                         ? markers.map((marker, index) => (
-                            <Marker 
+                            <Marker
                                 key={`key_${marker.coordinates.longitude}_${marker.coordinates.latitude}`}
-                                coordinate={marker.coordinates} 
+                                coordinate={marker.coordinates}
                                 title={marker.title}
                                 description={marker.description}
                             >

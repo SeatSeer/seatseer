@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import { FlatList } from "react-native";
 import Panel from "../../../misc_components/Panel";
 import Screen from '../../../misc_components/Screen';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
@@ -10,8 +11,8 @@ import { geoSearch } from "../../../backend/ElasticSearch";
  * props.currentRegion
  * props.permission
  */
-export default function NearbySubTab(props, { navigation }) {
-    const [panels, setPanels] = useState(null);
+export default function NearbySubTab(props) {
+    const [panels, setPanels] = useState([]);
     const isFocused = useIsFocused();
 
     /**
@@ -19,12 +20,12 @@ export default function NearbySubTab(props, { navigation }) {
      */
     function isWithinBoundary({ _source: { location } }) {
         /** @todo Make the boundary coordinates the actual visible map view (top half) that is not blocked by the 3 sub-tabs. */
-        // const modifiedLatitudeDelta = props.currentRegion.latitudeDelta * 0.2;
-        const latLeftLimit = props.currentRegion.latitude - props.currentRegion.latitudeDelta / 4;
-        const latRightLimit = props.currentRegion.latitude + props.currentRegion.latitudeDelta / 4;
-        // const modifiedLongitudeDelta = props.currentRegion.longitudeDelta * 0.6;
-        const lonLeftLimit = props.currentRegion.longitude - props.currentRegion.longitudeDelta / 3;
-        const lonRightLimit = props.currentRegion.longitude + props.currentRegion.longitudeDelta / 3;
+        const modifiedLatitudeDelta = props.currentRegion.latitudeDelta / 4;
+        const latLeftLimit = props.currentRegion.latitude - modifiedLatitudeDelta;
+        const latRightLimit = props.currentRegion.latitude + modifiedLatitudeDelta;
+        const modifiedLongitudeDelta = props.currentRegion.longitudeDelta / 3;
+        const lonLeftLimit = props.currentRegion.longitude - modifiedLongitudeDelta;
+        const lonRightLimit = props.currentRegion.longitude + modifiedLongitudeDelta;
         const latitude = parseFloat(location.lat);
         const longitude = parseFloat(location.lon);
         return (latitude > latLeftLimit && latitude < latRightLimit
@@ -36,7 +37,6 @@ export default function NearbySubTab(props, { navigation }) {
      * we trigger a geo search where the centre of the map is used as the coordinates for the query.
      * The locations retrieved from ElasticSearch will be filtered to obtain locations currently visible to the user on the map.
      * Markers and panels are then updated using the filtered locations.
-     * @todo Calculate the proper center of the map based on the visible part of the map.
      */
     useFocusEffect(
         useCallback(() => {
@@ -48,17 +48,6 @@ export default function NearbySubTab(props, { navigation }) {
                         // Filter out all of the locations that are not visible in the current region
                         /** @todo Let backend handle the filtering, then use the methods defined in ElasticSearch.js to set markers and panels */
                         const visibleLocationsArray = results.hits.hits.filter(isWithinBoundary);
-                        // Set the markers on the map
-                        props.setMarkers(visibleLocationsArray.map((data, index) => {
-                            return {
-                                title: data._source.avatar,
-                                description: data._source.name,
-                                coordinates: {
-                                    latitude: parseFloat(data._source.location.lat),
-                                    longitude: parseFloat(data._source.location.lon)
-                                }
-                            }
-                        }));
                         // .concat(
                         //     [
                         //         {
@@ -95,10 +84,11 @@ export default function NearbySubTab(props, { navigation }) {
                         //         },
                         //     ]
                         // ));
+
                         // Set the panels in the nearby tab
                         setPanels(visibleLocationsArray.map((data, index) => {
                             return {
-                                locationId: data._source.ID,
+                                id: data._source.ID,
                                 name: data._source.name,
                                 avatar: data._source.avatar,
                                 seats: data._source.vacant_seats,
@@ -113,6 +103,7 @@ export default function NearbySubTab(props, { navigation }) {
                                 related: data._source.related
                             }
                         }));
+                        
                     },
                     // onFailure callback
                     console.error
@@ -121,15 +112,33 @@ export default function NearbySubTab(props, { navigation }) {
         }, [props.permission, props.currentRegion])
     );
 
+    /**
+     * Set the markers on the map only when this tab is in focus, and everytime the panels on this map change
+     */
+    useFocusEffect(
+        useCallback(() => {
+            props.setMarkers(panels.map((panel, index) => {
+                return {
+                    title: panel.avatar,
+                    description: panel.name,
+                    coordinates: {
+                        latitude: panel.coordinates.latitude,
+                        longitude: panel.coordinates.longitude
+                    }
+                }
+            }));
+        }, [panels])
+    );
+
+    const renderPanel = ({ item, index, separators }) => {
+        return (
+            <Panel data={item} />
+        );
+    }
+
     return (
-        <Screen scrollable={true}>
-            {
-                isFocused && panels
-                    ? panels.map((panel, index) => (
-                        <Panel key={index} panel={panel} />
-                    ))
-                    : (<></>)
-            }
+        <Screen>
+            {isFocused && <FlatList data={panels} renderItem={renderPanel} keyExtractor={(item, index) => item.id} />}
         </Screen>
     );
 }

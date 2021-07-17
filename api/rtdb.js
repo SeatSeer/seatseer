@@ -15,9 +15,9 @@ export const addFavourite = async (userId, locationName, locationId, onSuccess, 
     }
 }
 
-export const removeFavourite = (userId, locationId, onSuccess, onError) => {
+export const removeFavourite = async (userId, locationId, onSuccess, onError) => {
     try {
-        const favourite = db.ref(`favourites/${userId}/${locationId}`).remove();
+        await db.ref(`favourites/${userId}/${locationId}`).remove();
         return onSuccess();
     } catch (error) {
         return onError(error);
@@ -30,13 +30,13 @@ export const subscribeToFavouritesChanges = (userId, onValueChanged) => {
     return () => favourites.off("value");
 }
 
-export const checkAndSetFavourite = async (userId, locationId, setFavourite) => {
+export const checkFavourite = async (userId, locationId, onSuccess, onError) => {
     try {
         const favouritesSnapshot = await db.ref(`favourites/${userId}`).get();
         const favourite = favouritesSnapshot.child(`${locationId}`).exists();
-        setFavourite(favourite);
+        return onSuccess(favourite);
     } catch (error) {
-        console.error(error);
+        return onError(error);
     }
 }
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Alert, StyleSheet, Text, View, TextInput } from 'react-native';
+import { Alert, StyleSheet, View, TextInput } from 'react-native';
 import { Button } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../../../misc_components/DismissKeyboard';
@@ -108,11 +108,12 @@ export default function UpdateEmail() {
                             placeholderTextColor="#003f5c"
                             onChangeText={setNewEmail}
                             onSubmitEditing={() => passwordTextInput.current.focus()}
+                            allowFontScaling={false}
                         />
                     </View>
                     {
                         emailFieldError
-                            ? <Text style={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}}>{emailFieldError}</Text>
+                            ? <CustomText text={emailFieldError} textStyle={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}} />
                             : <></>
                     }
 
@@ -128,12 +129,13 @@ export default function UpdateEmail() {
                             secureTextEntry={!isPasswordVisible}
                             onChangeText={setPassword}
                             onSubmitEditing={handleUpdateEmail}
+                            allowFontScaling={false}
                         />
                         <Ionicons name={isPasswordVisible ? "eye-off" : "eye"} size={20} color="gray" onPress={() => setIsPasswordVisible(!isPasswordVisible)} style={{flex: 1}} />
                     </View>
                     {
                         passwordFieldError
-                            ? <Text style={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}}>{passwordFieldError}</Text>
+                            ? <CustomText text={emailFieldError} textStyle={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}} />
                             : <></>
                     }
                 </View>

@@ -154,7 +154,7 @@ export const transformToMarkers = (results) => {
 export const transformToPanels = (results) => {
     return results.hits.hits.map((data, index) => {
         return {
-            locationId: data._source.ID,
+            id: data._source.ID,
             name: data._source.name,
             avatar: data._source.avatar,
             seats: data._source.vacant_seats,

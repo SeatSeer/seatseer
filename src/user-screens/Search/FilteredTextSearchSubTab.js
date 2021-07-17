@@ -2,11 +2,11 @@ import React, { useState, useRef, useReducer, useCallback } from 'react';
 import Screen from '../../../misc_components/Screen';
 import CustomText from '../../../misc_components/CustomText';
 import Panel from "../../../misc_components/Panel";
-import { StyleSheet, TextInput, View, Keyboard, Dimensions } from 'react-native';
+import { FlatList, StyleSheet, TextInput, View, Keyboard, Dimensions } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useIsFocused, useFocusEffect, useTheme } from '@react-navigation/native';
 import { CheckBox, Slider, Overlay, Button } from 'react-native-elements';
-import { filteredTextSearch, transformToMarkers, transformToPanels } from '../../../backend/ElasticSearch';
+import { filteredTextSearch, transformToPanels } from '../../../backend/ElasticSearch';
 
 const initialFilterState = {
     "aircon": false,
@@ -42,7 +42,7 @@ function reducer(state, action) {
 export default function FilteredTextSearchSubTab(props) {
     const [query, setQuery] = useState('');
     const searchBox = useRef(null);
-    const [panels, setPanels] = useState(null);
+    const [panels, setPanels] = useState([]);
     const [filtersAreVisible, setFiltersAreVisible] = useState(false);
     const [state, dispatch] = useReducer(reducer, initialFilterState);
     const isFocused = useIsFocused();
@@ -55,24 +55,20 @@ export default function FilteredTextSearchSubTab(props) {
     // }))
 
     /**
-     * Each time the Search sub-tab comes into focus, we update the markers to reflect whatever panels were shown in the Search sub-tab most recently.
+     * Set the markers on the map only when this tab is in focus, and everytime the panels on this map change
      */
     useFocusEffect(
         useCallback(() => {
-            if (panels !== null) {
-                props.setMarkers(panels.map((panel, index) => {
-                    return {
-                        title: panel.avatar,
-                        description: panel.name,
-                        coordinates: {
-                            latitude: panel.coordinates.latitude,
-                            longitude: panel.coordinates.longitude
-                        }
+            props.setMarkers(panels.map((panel, index) => {
+                return {
+                    title: panel.avatar,
+                    description: panel.name,
+                    coordinates: {
+                        latitude: panel.coordinates.latitude,
+                        longitude: panel.coordinates.longitude
                     }
-                }));
-            } else {
-                props.setMarkers(null);
-            }
+                }
+            }));
         }, [panels])
     );
 
@@ -92,8 +88,6 @@ export default function FilteredTextSearchSubTab(props) {
         filteredTextSearch(query, filters,
             // onSuccess callback
             (results) => {
-                // Set the markers on the map
-                props.setMarkers(transformToMarkers(results));
                 // Set the panels in the search tab
                 setPanels(transformToPanels(results));
             },
@@ -104,6 +98,12 @@ export default function FilteredTextSearchSubTab(props) {
 
     function toggleFilterOverlay() {
         setFiltersAreVisible(!filtersAreVisible);
+    }
+
+    const renderPanel = ({ item, index, separators }) => {
+        return (
+            <Panel data={item} />
+        );
     }
 
     return (
@@ -161,15 +161,10 @@ export default function FilteredTextSearchSubTab(props) {
                     <Button title="Search" titleStyle={{fontSize: 12}} containerStyle={{paddingVertical: 15}} onPress={handleQuery} />
                 </View>
             </Overlay>
-            
-            <Screen scrollable={true}>
-            {
-                isFocused && panels
-                    ? panels.map((panel, index) => (
-                        <Panel key={index} panel={panel} />
-                    ))
-                    : (<></>)
-            }
+
+            <Screen>
+                {/* {isFocused && <SectionList sections={sectionedPanels} renderItem={renderPanel} keyExtractor={(item, index) => item.locationId} />} */}
+                {isFocused && <FlatList data={panels} renderItem={renderPanel} keyExtractor={(item, index) => item.id} />}
             </Screen>
         </Screen>
     );

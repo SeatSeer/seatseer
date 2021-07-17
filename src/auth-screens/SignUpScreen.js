@@ -9,6 +9,8 @@ import {
     SafeAreaView,
     KeyboardAvoidingView
 } from 'react-native';
+import Screen from '../../misc_components/Screen';
+import CustomText from '../../misc_components/CustomText';
 import { Button } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../../misc_components/DismissKeyboard';
@@ -102,17 +104,12 @@ export default function SignUpScreen() {
     return (
         <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={80}
         style={{flex: 1}}>
             <DismissKeyboard>
-                <SafeAreaView style={styles.container}>
-                    <Text style={{fontWeight: 'bold', fontSize: 35}}>
-                        Registration is easy!
-                    </Text>
+                <Screen screenStyle={styles.container}>
+                    <CustomText text="Registration is easy!" textStyle={{fontWeight: 'bold', fontSize: 35}} />
 
-                    <Text style={{fontSize: 15}}>
-                        Just key in the following details!
-                    </Text>
+                    <CustomText text="Just key in the following details!" textStyle={{fontSize: 15}} />
 
                     <View style={{marginTop: 15, width: '80%', alignItems: 'center'}}>
                         <View style={styles.email_input_view}>
@@ -124,6 +121,7 @@ export default function SignUpScreen() {
                                 placeholderTextColor="#003f5c"
                                 onChangeText={setName}
                                 onSubmitEditing={() => emailTextInput.current.focus()}
+                                allowFontScaling={false}
                             />
                         </View>
 
@@ -138,6 +136,7 @@ export default function SignUpScreen() {
                                 placeholderTextColor="#003f5c"
                                 onChangeText={setEmail}
                                 onSubmitEditing={() => passwordTextInput.current.focus()}
+                                allowFontScaling={false}
                             />
                         </View>
 
@@ -151,6 +150,7 @@ export default function SignUpScreen() {
                                 secureTextEntry={!isPasswordVisible}
                                 onChangeText={setPassword}
                                 onSubmitEditing={() => reEnterPasswordTextInput.current.focus()}
+                                allowFontScaling={false}
                             />
                             <Ionicons name={isPasswordVisible ? "eye-off" : "eye"} size={20} color="gray" onPress={() => setIsPasswordVisible(!isPasswordVisible)} style={{flex: 1}} />
                         </View>
@@ -165,6 +165,7 @@ export default function SignUpScreen() {
                                 secureTextEntry={!isReEnterPasswordVisible}
                                 onChangeText={setReEnterPassword}
                                 onSubmitEditing={handleSignUp}
+                                allowFontScaling={false}
                             />
                             <Ionicons name={isReEnterPasswordVisible ? "eye-off" : "eye"} size={20} color="gray" onPress={() => setIsReEnterPasswordVisible(!isReEnterPasswordVisible)} style={{flex: 1}} />
                         </View>
@@ -176,8 +177,8 @@ export default function SignUpScreen() {
                         color='#46f583'
                         uppercase={false}
                         style={{marginTop: 10, width: '80%'}}
-                    >Register</Button>
-                </SafeAreaView>
+                    >Create an account</Button>
+                </Screen>            
             </DismissKeyboard>
         </KeyboardAvoidingView>
     )
@@ -224,24 +225,4 @@ const styles = StyleSheet.create ({
         textAlign: "left",
         paddingHorizontal: 10
     },
-
-    register_button: {
-        width: "80%",
-        borderRadius: 25,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 10,
-        backgroundColor: "#46f583",
-    },
-    
-    back_to_login_button: {
-        width: "80%",
-        borderRadius: 25,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 10,
-        backgroundColor: "#ff6961",
-    }
 })
