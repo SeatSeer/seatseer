@@ -1,14 +1,14 @@
-import React, { useState, useCallback } from "react";
-import { StyleSheet } from "react-native";
+import React, { useState, useCallback, useEffect } from "react";
+import { FlatList, StyleSheet } from "react-native";
 import Screen from '../../../misc_components/Screen';
 import Panel from "../../../misc_components/Panel";
 import { useSelector } from "react-redux";
 import { subscribeToFavouritesChanges } from "../../../api/rtdb";
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
-import { idSearch, transformToMarkers, transformToPanels } from "../../../backend/ElasticSearch";
+import { idSearch, transformToPanels } from "../../../backend/ElasticSearch";
 
 export default function FavouritesSubTab(props) {
-    const [panels, setPanels] = useState(null);
+    const [panels, setPanels] = useState([]);
     const currentUserId = useSelector((state) => state.auth.currentUserId);
     const isFocused = useIsFocused();
 
@@ -19,42 +19,55 @@ export default function FavouritesSubTab(props) {
      * Markers and panels are then re-mapped with the info retrieved so that they show the user's most recent favourites.
      * When the Favourites tab is out of focus (blurred), we unsubscribe from Firebase Realtime Database.
      */
+    useEffect(() => {
+        return subscribeToFavouritesChanges(currentUserId,
+            // onValueChanged callback
+            (locations) => {
+                // locations is in the form { locationId1: locationName1, locationId2: locationName2, ... }
+                if (locations) {
+                    idSearch(Object.keys(locations),
+                        // onSuccess callback
+                        (results) => {
+                            // Set the panels in the favourites tab
+                            setPanels(transformToPanels(results));
+                        },
+                        // onFailure callback
+                        console.error
+                    );
+                } else {
+                    setPanels([]);
+                }
+            }
+        )
+    }, []);
+
+    /**
+     * Set the markers on the map only when this tab is in focus, and everytime the panels on this map change
+     */
     useFocusEffect(
         useCallback(() => {
-            return subscribeToFavouritesChanges(currentUserId,
-                // onValueChanged callback
-                (locations) => {
-                    // locations is in the form { locationId1: locationName1, locationId2, locationName2, ... }
-                    if (locations) {
-                        idSearch(Object.keys(locations),
-                            // onSuccess callback
-                            (results) => {
-                                // Set the markers on the map
-                                props.setMarkers(transformToMarkers(results));
-                                // Set the panels in the favourites tab
-                                setPanels(transformToPanels(results));
-                            },
-                            // onFailure callback
-                            console.error
-                        )
-                    } else {
-                        props.setMarkers(null);
-                        setPanels(null);
+            props.setMarkers(panels.map((panel, index) => {
+                return {
+                    title: panel.avatar,
+                    description: panel.name,
+                    coordinates: {
+                        latitude: panel.coordinates.latitude,
+                        longitude: panel.coordinates.longitude
                     }
                 }
-            )
-        }, [])
+            }));
+        }, [panels])
     );
-    
+
+    const renderPanel = ({ item, index, separators }) => {
+        return (
+            <Panel data={item} />
+        );
+    }
+
     return (
-        <Screen scrollable={true}>
-            {
-                isFocused && panels
-                    ? panels.map((panel, index) => (
-                        <Panel key={index} panel={panel} />
-                    ))
-                    : (<></>)
-            }
+        <Screen>
+            {isFocused && <FlatList data={panels} renderItem={renderPanel} keyExtractor={(item, index) => item.id} />}
         </Screen>
     );
 }

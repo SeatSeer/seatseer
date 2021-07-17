@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, StyleSheet, Platform, TouchableOpacity, ScrollView, Dimensions } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar, Overlay, Rating } from "react-native-elements";
 import { Button, Badge } from "react-native-paper";
 import CrowdednessIndicator from "./CrowdednessIndicator";
-import { useTheme, useNavigation } from '@react-navigation/native';
+import { useTheme, useNavigation, useRoute } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useSelector } from 'react-redux';
-import { addFavourite, removeFavourite, checkAndSetFavourite } from "../api/rtdb";
+import { addFavourite, removeFavourite, checkFavourite } from "../api/rtdb";
 import CustomText from "./CustomText";
 
 const PanelTabs = createMaterialTopTabNavigator();
@@ -107,10 +107,10 @@ function AdditionalInfo(props) {
     );
 }
 
-export default function Panel(props) {
+export default function Panel({ data }) {
     /**
-     * props.panel contains the following properties:
-     * locationId -> locationId (string)
+     * data contains the following properties:
+     * id -> locationId (string)
      * name -> name of the location (string)
      * avatar -> avatar displayed on the panel (string)
      * seats -> total number of vacant seats (string)
@@ -122,49 +122,36 @@ export default function Panel(props) {
      * related -> keywords that are related to the location
      */
     const currentUserId = useSelector((state) => state.auth.currentUserId);
-    const [expanded, setExpanded] = useState(false);
     const [alert, setAlert] = useState(false);
-    const [favourite, setFavourite] = useState(false);
+    const [favourite, setFavourite] = useState(null);
     const [additionalInfoVisible, setAdditionalInfoVisible] = useState(false);
     const { colors } = useTheme();
-    const navigation = useNavigation();
-
-    const additionalInfo = [
-        {
-            title: "Floorplan (Coming soon in Milestone 3!)",
-            data: []
-        },
-        {
-            title: "Comments:",
-            data: props.panel.comments
-        },
-        {
-            title: `Rating: ${props.panel.rating}/5 stars`,
-            data: []
-        }
-    ]
+    const { name: routeName } = useRoute();
 
     /**
      * On mounting a panel, we check to see if it is contained in the user's favourite locations by checking Firebase Realtime Database.
      * Once checked, we set the heart icon to be selected or unselected based on the result.
      */
     useEffect(() => {
-        // Determines whether a panel's heart icon is initially selected or not
-        checkAndSetFavourite(currentUserId, props.panel.locationId, setFavourite)
+        checkFavourite(currentUserId, data.id, setFavourite, console.error);
     }, []);
 
     function toggleFavourite() {
         if (favourite) {
             // Remove from favourites
-            removeFavourite(currentUserId, props.panel.locationId,
+            removeFavourite(currentUserId, data.id,
                 // onSuccess
-                () => {setFavourite(false)},
+                () => {
+                    if (routeName !== 'FavouritesSubTab') {
+                        setFavourite(false);
+                    }
+                },
                 // onError
                 console.error
             )
         } else {
             // Add to favourites
-            addFavourite(currentUserId, props.panel.name, props.panel.locationId,
+            addFavourite(currentUserId, data.name, data.id,
                 // onSuccess
                 () => {setFavourite(true)},
                 // onError
@@ -183,15 +170,15 @@ export default function Panel(props) {
                 <View style={styles.avatar_view}>
                 {
                     Platform.OS === "ios"
-                        ? <Avatar size="small" rounded title={props.panel.avatar} containerStyle={{backgroundColor: '#b0b0b0'}} />
-                        : <Avatar size="small" rounded title={props.panel.avatar} titleStyle={{fontSize: 10}} containerStyle={{backgroundColor: '#b0b0b0'}} />
+                        ? <Avatar size="small" rounded title={data.avatar} containerStyle={{backgroundColor: '#b0b0b0'}} />
+                        : <Avatar size="small" rounded title={data.avatar} titleStyle={{fontSize: 10}} containerStyle={{backgroundColor: '#b0b0b0'}} />
                 }
                 </View>
                 
                 <View style={styles.panel_text_view}>
-                    <CustomText text={props.panel.name} textStyle={{fontWeight: 'bold', fontSize: 20}} />
-                    <CustomText text={`Seats available: ${props.panel.seats}`} textStyle={{fontSize: 15}} />
-                    <CrowdednessIndicator vacancyPercentage={props.panel.vacancyPercentage} />
+                    <CustomText text={data.name} textStyle={{fontWeight: 'bold', fontSize: 20}} />
+                    <CustomText text={`Seats available: ${data.seats}`} textStyle={{fontSize: 15}} />
+                    <CrowdednessIndicator vacancyPercentage={data.vacancyPercentage} />
                 </View>
 
                 <View style={styles.heart}>
@@ -208,15 +195,15 @@ export default function Panel(props) {
                     <View style={styles.avatar_view}>
                     {
                         Platform.OS === "ios"
-                            ? <Avatar size="small" rounded title={props.panel.avatar} containerStyle={{backgroundColor: '#b0b0b0'}} />
-                            : <Avatar size="small" rounded title={props.panel.avatar} titleStyle={{fontSize: 10}} containerStyle={{backgroundColor: '#b0b0b0'}} />
+                            ? <Avatar size="small" rounded title={data.avatar} containerStyle={{backgroundColor: '#b0b0b0'}} />
+                            : <Avatar size="small" rounded title={data.avatar} titleStyle={{fontSize: 10}} containerStyle={{backgroundColor: '#b0b0b0'}} />
                     }
                     </View>
                     
                     <View style={styles.panel_text_view}>
-                        <CustomText text={props.panel.name} textStyle={{fontWeight: 'bold', fontSize: 20}} />
-                        <CustomText text={`Seats available: ${props.panel.seats}`} textStyle={{fontSize: 15}} />
-                        <CrowdednessIndicator vacancyPercentage={props.panel.vacancyPercentage} />
+                        <CustomText text={data.name} textStyle={{fontWeight: 'bold', fontSize: 20}} />
+                        <CustomText text={`Seats available: ${data.seats}`} textStyle={{fontSize: 15}} />
+                        <CrowdednessIndicator vacancyPercentage={data.vacancyPercentage} />
                     </View>
 
                     <View style={styles.heart}>
@@ -229,7 +216,7 @@ export default function Panel(props) {
                 </View>
 
                 <View style={{flex: 1}}>
-                    <AdditionalInfo comments={props.panel.comments} rating={props.panel.rating} filters={props.panel.filters} related={props.panel.related} />
+                    <AdditionalInfo comments={data.comments} rating={data.rating} filters={data.filters} related={data.related} />
                 </View>
             </Overlay>
         </View>
