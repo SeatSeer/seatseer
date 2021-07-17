@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, StyleSheet, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Dimensions, Platform } from 'react-native';
+import { Alert, StyleSheet, View, TextInput, KeyboardAvoidingView, Dimensions } from 'react-native';
 import { Button } from 'react-native-paper';
 import DismissKeyboard from '../../../misc_components/DismissKeyboard';
 import Screen from '../../../misc_components/Screen';
@@ -76,6 +76,7 @@ export default function Feedback({ navigation }) {
                             onChangeText={setText}
                             multiline={true}
                             onSubmitEditing={handleSubmit}
+                            allowFontScaling={false}
                         />
                     </View>
 

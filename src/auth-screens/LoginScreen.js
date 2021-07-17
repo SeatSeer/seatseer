@@ -8,6 +8,8 @@ import {
   View,
   SafeAreaView
 } from 'react-native';
+import Screen from '../../misc_components/Screen';
+import CustomText from '../../misc_components/CustomText';
 import { Button } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../../misc_components/DismissKeyboard';
@@ -131,19 +133,13 @@ export default function LoginScreen() {
 
   return (
       <DismissKeyboard>
-        <SafeAreaView style={styles.view_container}>
-          <Text style={{fontWeight: 'bold', fontSize: 35}}>
-            Welcome back!
-          </Text>
+        <Screen screenStyle={styles.view_container}>
+          <CustomText text="Welcome back!" textStyle={{fontWeight: 'bold', fontSize: 35}} />
 
-          <Text style={{fontSize: 15}}>
-            We're so excited to see you again!
-          </Text>
+          <CustomText text="We're so excited to see you again!" textStyle={{fontSize: 15}} />
 
           <View style={{marginTop: 30, width: '80%', alignItems: 'center'}}>
-            <Text style={{marginBottom: 5, fontSize: 10, alignSelf: 'flex-start'}}>
-              ACCOUNT INFORMATION
-            </Text>
+            <CustomText text="ACCOUNT INFORMATION" textStyle={{marginBottom: 5, fontSize: 10, alignSelf: 'flex-start'}} />
 
             <View style={{...styles.email_input_view, borderWidth: emailFieldError ? 1 : 0, borderColor: 'red', marginBottom: emailFieldError ? 0 : 10}}>
               <TextInput
@@ -156,11 +152,12 @@ export default function LoginScreen() {
                 placeholderTextColor="#003f5c"
                 onChangeText={setEmail}
                 onSubmitEditing={() => passwordTextInput.current.focus()}
+                allowFontScaling={false}
               />
             </View>
             {
               emailFieldError
-                ? <Text style={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}}>{emailFieldError}</Text>
+                ? <CustomText text={emailFieldError} textStyle={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}} />
                 : <></>
             }
 
@@ -175,16 +172,18 @@ export default function LoginScreen() {
                 secureTextEntry={!isPasswordVisible}
                 onChangeText={setPassword}
                 onSubmitEditing={handleLogin}
+                allowFontScaling={false}
               />
               <Ionicons name={isPasswordVisible ? "eye-off" : "eye"} size={20} color="gray" onPress={() => setIsPasswordVisible(!isPasswordVisible)} style={{flex: 1}} />
             </View>
             {
               passwordFieldError
-                ? <Text style={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}}>{passwordFieldError}</Text>
+                ? <CustomText text={passwordFieldError} textStyle={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}} />
                 : <></>
             }
             
             <TouchableOpacity style={styles.forgot_button} onPress={handleResetPassword}>
+              <CustomText text="Forgot your password?" textStyle={styles.forgot_text} />
               <Text style={styles.forgot_text}>Forgot your password?</Text>
             </TouchableOpacity>
           </View>
@@ -196,8 +195,7 @@ export default function LoginScreen() {
             uppercase={false}
             style={{marginTop: 10, width: '80%'}}
           >Login</Button>
-          
-        </SafeAreaView>
+        </Screen>
       </DismissKeyboard>
   );
 }
@@ -220,7 +218,7 @@ const styles = StyleSheet.create({
     height: 45,
     width: "100%",
     textAlign: "left",
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
 
   password_input_view: {
@@ -239,15 +237,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     textAlign: "left",
-    paddingHorizontal: 10
-  },
-
-  forgot_button: {
-    height: 40,
-    alignSelf: 'flex-start',
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: "40%"
+    paddingHorizontal: 10,
   },
 
   forgot_text: {
@@ -258,24 +248,4 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "flex-start",
   },
-
-  login_button: {
-    width: "80%",
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 10,
-    backgroundColor: "#46f583",
-  },
-
-  register_button: {
-    width: "80%",
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 10,
-    backgroundColor: "#ff6961",
-  }
 });

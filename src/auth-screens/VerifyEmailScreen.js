@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, Text, SafeAreaView, Dimensions } from 'react-native';
+import Screen from '../../misc_components/Screen';
+import CustomText from '../../misc_components/CustomText';
 import { Button } from 'react-native-paper';
 import { setOnUserEmailVerifiedChanged, logOut } from '../../api/auth';
 import { setStateToIsLoading } from '../../store/slices/authSlice';
@@ -32,25 +34,16 @@ export default function VerifyEmailScreen() {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <Screen screenStyle={styles.container}>
             <Image style={styles.image} source={require('../../assets/logo-without-text.png')} />
 
-            <Text style={styles.text_header}>
-                A verification link has been sent to your email account.
-            </Text>
+            <CustomText text="A verification link has been sent to your email account." textStyle={styles.text_header} />
 
-            <Text style={styles.text_body}>
-                Please click on the link sent to your email account to finish your registration and start using SeatSeer.
-            </Text>
+            <CustomText text="Please click on the link sent to your email account to finish your registration and start using SeatSeer." textStyle={styles.text_body} />
 
-            <Text style={styles.text_body}>
-                After verifying your email, click the button below to start using SeatSeer!
-            </Text>
+            <CustomText text="After verifying your email, click the button below to start using SeatSeer!" textStyle={styles.text_body} />
 
-            {tellUserToVerifyEmail &&
-            <Text style={styles.error_message}>
-                Please verify your email before proceeding!
-            </Text>}
+            {tellUserToVerifyEmail && <CustomText text="Please verify your email before proceeding!" textStyle={styles.error_message} />}
 
             <Button
                 mode="contained"
@@ -68,7 +61,7 @@ export default function VerifyEmailScreen() {
                 contentStyle={{width: 0.8 * width}}
                 style={{marginTop: 20}}
             >Log Out</Button>
-        </SafeAreaView>
+        </Screen>
     );
 }
 

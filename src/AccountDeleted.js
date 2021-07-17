@@ -1,5 +1,7 @@
 import React from 'react';
 import { Image, SafeAreaView, StyleSheet, Text, Dimensions } from 'react-native';
+import Screen from '../misc_components/Screen';
+import CustomText from '../misc_components/CustomText';
 import { Button } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { loadAuthStack } from '../store/slices/authSlice';
@@ -12,16 +14,12 @@ export default function AccountDeleted() {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <Screen style={styles.container}>
             <Image style={styles.image} source={require('../assets/logo-without-text-with-transparency.png')} />
 
-            <Text style={styles.text_header}>
-                Your account has been deleted.
-            </Text>
+            <CustomText text="Your account has been deleted." textStyle={styles.text_header} />
 
-            <Text style={styles.text_body}>
-                Thank you for using SeatSeer!
-            </Text>
+            <CustomText text="Thank you for using SeatSeer!" textStyle={styles.text_body} />
 
             <Button
                 mode="contained"
@@ -30,7 +28,7 @@ export default function AccountDeleted() {
                 uppercase={false}
                 style={{marginTop: 10, width: '80%'}}
             >Done</Button>
-        </SafeAreaView>
+        </Screen>
     );
 }
 

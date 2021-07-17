@@ -1,19 +1,17 @@
 import React from 'react';
+import Screen from '../../misc_components/Screen';
+import CustomText from '../../misc_components/CustomText';
 import { Dimensions, Image, SafeAreaView, StyleSheet, Text } from 'react-native';
 import { Button } from 'react-native-paper';
 
 export default function StartScreen({ navigation }) {
     return (
-        <SafeAreaView style={styles.container}>
+        <Screen screenStyle={styles.container}>
             <Image source={require('../../assets/logo-with-transparency.png')} style={styles.logo} />
 
-            <Text style={{marginTop: 10, fontSize: 15, textAlign: 'center'}}>
-                Wasting too much time finding seats?
-            </Text>
+            <CustomText text="Wasting too much time finding seats?" textStyle={{marginTop: 10, fontSize: 15, textAlign: 'center'}} />
 
-            <Text style={{fontSize: 15, textAlign: 'center'}}>
-                Don't worry, we've got you covered.
-            </Text>
+            <CustomText text="Don't worry, we've got you covered." textStyle={{fontSize: 15, textAlign: 'center'}} />
 
             <Button
                 mode="contained"
@@ -32,7 +30,7 @@ export default function StartScreen({ navigation }) {
                 contentStyle={{width: 0.8 * width}}
                 style={{marginTop: 10}}
             >Login</Button>
-        </SafeAreaView>
+        </Screen>
     )
 }
 

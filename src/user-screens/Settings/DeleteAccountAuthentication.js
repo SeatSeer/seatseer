@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Image, StyleSheet, View, Text, TextInput, Dimensions } from 'react-native';
+import { Alert, Image, StyleSheet, View, TextInput, Dimensions } from 'react-native';
 import { Button } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../../../misc_components/DismissKeyboard';
@@ -103,12 +103,13 @@ export default function DeleteAccountAuthentication() {
                             secureTextEntry={!isPasswordVisible}
                             onChangeText={setPassword}
                             onSubmitEditing={handleDeleteAccount}
+                            allowFontScaling={false}
                         />
                         <Ionicons name={isPasswordVisible ? "eye-off" : "eye"} size={20} color="gray" onPress={() => setIsPasswordVisible(!isPasswordVisible)} style={{flex: 1}} />
                     </View>
                     {
                         passwordFieldError
-                            ? <Text style={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}}>{passwordFieldError}</Text>
+                            ? <CustomText text={passwordFieldError} textStyle={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}} />
                             : <></>
                     }
                     </View>
