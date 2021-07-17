@@ -2,11 +2,9 @@ import React, { useRef, useState, useEffect } from 'react';
 import {
   Alert,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
-  SafeAreaView
 } from 'react-native';
 import Screen from '../../misc_components/Screen';
 import CustomText from '../../misc_components/CustomText';
@@ -178,13 +176,12 @@ export default function LoginScreen() {
             </View>
             {
               passwordFieldError
-                ? <CustomText text={passwordFieldError} textStyle={{alignSelf: 'flex-start', color: 'red', fontSize: 10, marginBottom: 10}} />
+                ? <CustomText text={passwordFieldError} textStyle={{alignSelf: 'flex-start', color: 'red', fontSize: 10}} />
                 : <></>
             }
             
-            <TouchableOpacity style={styles.forgot_button} onPress={handleResetPassword}>
+            <TouchableOpacity style={{alignSelf: 'flex-start', marginVertical: 10}} onPress={handleResetPassword}>
               <CustomText text="Forgot your password?" textStyle={styles.forgot_text} />
-              <Text style={styles.forgot_text}>Forgot your password?</Text>
             </TouchableOpacity>
           </View>
 
@@ -193,7 +190,7 @@ export default function LoginScreen() {
             onPress={handleLogin}
             color='#46f583'
             uppercase={false}
-            style={{marginTop: 10, width: '80%'}}
+            style={{width: '80%'}}
           >Login</Button>
         </Screen>
       </DismissKeyboard>
@@ -245,7 +242,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textDecorationLine: "underline",
     textDecorationColor: "#3493f9",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
   },
 });

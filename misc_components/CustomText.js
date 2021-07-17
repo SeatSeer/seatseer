@@ -7,7 +7,7 @@ export default function CustomText(props) {
     const { colors } = useTheme();
 
     return (
-        <Text style={{ ...props.textStyle, color: colors.text }} allowFontScaling={false} {...props}>
+        <Text style={{ color: colors.text, ...props.textStyle }} allowFontScaling={false} {...props}>
             {props.text}
         </Text>
     );
