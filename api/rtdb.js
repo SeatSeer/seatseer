@@ -88,3 +88,14 @@ export const setDarkTheme = async (userId, darkTheme, onSuccess, onError) => {
         return onError(error);
     }
 }
+
+export const deleteAllUserData = async (userId, onSuccess, onError) => {
+    try {
+        await db.ref(`favourites/${userId}`).remove();
+        await db.ref(`settings/${userId}`).remove();
+        await db.ref(`notifications/${userId}`).remove();
+        return onSuccess();
+    } catch (error) {
+        return onError(error);
+    }
+}
