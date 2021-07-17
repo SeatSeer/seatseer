@@ -1,5 +1,6 @@
 import firebaseApp from "./firebase";
 import firebase from "firebase/app";
+import { deleteAllUserData } from "./rtdb";
 import "firebase/auth";
 
 const auth = firebaseApp.auth();
@@ -87,7 +88,11 @@ export const setOnUserEmailChanged = async (email, password, newEmail, onUserEma
 }
 
 export const deleteCurrentUser = async (onSuccessfulDeletion, onFailedDeletion) => {
-    await auth.currentUser.delete()
-    .then(onSuccessfulDeletion)
-    .catch((error) => onFailedDeletion(error));
+    try {
+        await deleteAllUserData(auth.currentUser.uid, () => {}, console.error);
+        await auth.currentUser.delete();
+        return onSuccessfulDeletion();
+    } catch (error) {
+        return onFailedDeletion(error);
+    }
 }
