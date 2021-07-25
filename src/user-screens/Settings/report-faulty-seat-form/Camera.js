@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, StyleSheet } from 'react-native';
-import Screen from '../../misc_components/Screen';
-import CustomText from '../../misc_components/CustomText';
+import { StyleSheet } from 'react-native';
+import Screen from '../../../../misc_components/Screen';
+import CustomText from '../../../../misc_components/CustomText';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { openBrowserAsync } from 'expo-web-browser';
 
-export default function Camera() {
+export default function Camera({ navigation }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
 
@@ -24,27 +23,11 @@ export default function Camera() {
     function handleBarCodeScanned({ type, data }) {
         /** @todo Create separate alert to reject QR codes not designed by us */
         setScanned(true);
-        Alert.alert(
-            "QR code scanned",
-            `Go to ${data}?`,
-            [
-                {
-                    text: "OK",
-                    onPress: () => {
-                        openBrowserAsync(data, { enableBarCollapsing: true })
-                        .then(() => setScanned(false))
-                        .catch((error) => console.error(error));
-                    }
-                },
-                {
-                    text: "Cancel",
-                    onPress: () => {
-                        setScanned(false);
-                    },
-                }
-            ],
-            { cancelable: false }
-        );
+        const seatDetails = JSON.parse(data);
+        navigation.navigate('SeatDetails', {
+            locationId: seatDetails.roomId,
+            seatNumber: seatDetails.seatNumber
+        })
     }
 
     if (hasPermission === null) {

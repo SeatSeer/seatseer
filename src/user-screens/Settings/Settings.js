@@ -69,17 +69,17 @@ export default function Settings({ navigation }) {
                 }
             ]
         },
-        {
-            title: "Help",
-            options: [
-                {
-                    subtitle: "Tutorial",
-                    onPress: () => {
-                        navigation.navigate("Tutorial");
-                    }
-                }
-            ]
-        },
+        // {
+        //     title: "Help",
+        //     options: [
+        //         {
+        //             subtitle: "Tutorial",
+        //             onPress: () => {
+        //                 navigation.navigate("Tutorial");
+        //             }
+        //         }
+        //     ]
+        // },
         {
             title: "Support",
             options: [

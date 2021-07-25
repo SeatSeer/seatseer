@@ -9,8 +9,23 @@ import { idSearch, transformToPanels } from "../../../backend/ElasticSearch";
 
 export default function FavouritesSubTab(props) {
     const [panels, setPanels] = useState([]);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const currentUserId = useSelector((state) => state.auth.currentUserId);
     const isFocused = useIsFocused();
+
+    function handleRefresh() {
+        setIsRefreshing(true);
+        idSearch(panels.map((panel, index) => panel.id),
+            // onSuccess callback
+            (results) => {
+                // Set the panels in the nearby tab
+                setPanels(transformToPanels(results));
+                setIsRefreshing(false);
+            },
+            // onFailure callback
+            console.error
+        )
+    }
 
     /**
      * Each time the Favourites sub-tab comes into focus, we subscribe to changes in Firebase Realtime Database at the favourites section of the user.
@@ -48,7 +63,7 @@ export default function FavouritesSubTab(props) {
         useCallback(() => {
             props.setMarkers(panels.map((panel, index) => {
                 return {
-                    title: panel.avatar,
+                    title: panel.id,
                     description: panel.name,
                     coordinates: {
                         latitude: panel.coordinates.latitude,
@@ -61,13 +76,22 @@ export default function FavouritesSubTab(props) {
 
     const renderPanel = ({ item, index, separators }) => {
         return (
-            <Panel data={item} />
+            <Panel data={item} handleRefresh={handleRefresh} />
         );
     }
 
     return (
         <Screen>
-            {isFocused && <FlatList data={panels} renderItem={renderPanel} keyExtractor={(item, index) => item.id} />}
+            {
+                isFocused && 
+                <FlatList
+                    refreshing={isRefreshing}
+                    onRefresh={handleRefresh}
+                    data={panels}
+                    renderItem={renderPanel}
+                    keyExtractor={(item, index) => item.id}
+                />
+            }
         </Screen>
     );
 }

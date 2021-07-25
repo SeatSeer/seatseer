@@ -4,6 +4,7 @@ import MainTabs from './user-screens/MainTabs';
 import VerifyEmailScreen from './auth-screens/VerifyEmailScreen';
 import AuthStack from './auth-screens/AuthStack';
 import AccountDeleted from './AccountDeleted';
+import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
@@ -22,6 +23,7 @@ export default function Start() {
 
     return (
         <NavigationContainer theme={theme}>
+            <StatusBar style={darkTheme ? 'light' : 'dark'} />
             <Stack.Navigator
             headerMode="none"
             initialRouteName="LoadingScreen">

@@ -15,7 +15,7 @@ import { Button } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../../misc_components/DismissKeyboard';
 import { createAccount } from '../../api/auth';
-import { initializeDarkTheme } from '../../api/rtdb';
+import { initializeDarkTheme, initializeNotifications } from '../../api/rtdb';
 import { setStateToIsLoading } from '../../store/slices/authSlice';
 import { useDispatch } from 'react-redux';
 
@@ -52,6 +52,7 @@ export default function SignUpScreen() {
             createAccount({ name, email, password },
                 // onSuccess callback function
                 async (user) => {
+                    await initializeNotifications(user.uid, () => {}, console.error);
                     await initializeDarkTheme(user.uid, () => {}, console.error);
                     dispatch(setStateToIsLoading());
                 },
@@ -144,6 +145,7 @@ export default function SignUpScreen() {
                             <TextInput
                                 ref={passwordTextInput}
                                 style={styles.password_text_input}
+                                autoCapitalize="none"
                                 placeholder="Password"
                                 returnKeyType="next"
                                 placeholderTextColor="#003f5c"
@@ -159,6 +161,7 @@ export default function SignUpScreen() {
                             <TextInput
                                 ref={reEnterPasswordTextInput}
                                 style={styles.password_text_input}
+                                autoCapitalize="none"
                                 placeholder="Re-enter password"
                                 returnKeyType="go"
                                 placeholderTextColor="#003f5c"

@@ -1,37 +1,36 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, StyleSheet, View, TextInput, KeyboardAvoidingView, Dimensions } from 'react-native';
+import { Alert, StyleSheet, View, TextInput, KeyboardAvoidingView } from 'react-native';
 import { Button } from 'react-native-paper';
-import DismissKeyboard from '../../../misc_components/DismissKeyboard';
-import Screen from '../../../misc_components/Screen';
-import CustomText from '../../../misc_components/CustomText';
-import { addFeedback } from '../../../api/rtdb';
+import DismissKeyboard from '../../../../misc_components/DismissKeyboard';
+import Screen from '../../../../misc_components/Screen';
+import { addReport } from '../../../../api/rtdb';
 import { useSelector } from 'react-redux';
 
-export default function Feedback({ navigation }) {
-    const [text, setText] = useState("");
+export default function FaultDetails({ navigation, route }) {
+    const [details, setDetails] = useState("");
     const currentUserId = useSelector((state) => state.auth.currentUserId);
-    const feedbackTextInput = useRef();
+    const detailsTextInput = useRef();
+    const { location, seatNumber } = route.params;
 
     useEffect(() => {
-        feedbackTextInput.current.focus();
+        detailsTextInput.current.focus();
     }, []);
 
     function handleSubmit() {
-        if (text) {
+        if (details) {
             Alert.alert(
-                "Feedback Submission",
-                "Would you like to submit your feedback?",
+                "Report Submission",
+                "Would you like to submit this form?",
                 [
                     {
                         text: "Yes",
                         onPress: () => {
-                            addFeedback(currentUserId, text,
+                            addReport(currentUserId, location, seatNumber, details,
                                 // onSuccess
                                 () => {
-                                    setText("");
                                     Alert.alert(
-                                        "Feedback Submitted",
-                                        "Thank you for your feedback! We'll keep working hard to improve SeatSeer!",
+                                        "Report Submitted",
+                                        "Thank you for your help!",
                                         [{ text: "OK", onPress: () => navigation.navigate("Settings") }],
                                         { cancelable: true }
                                     )
@@ -46,17 +45,20 @@ export default function Feedback({ navigation }) {
                     }
                 ],
                 { cancelable: true }
-            )
+            );
         } else {
             Alert.alert(
-                "Invalid Feedback",
-                "Please write some feedback before submitting.",
-                [{ text: "OK" }],
-                { cancelable: true }
-            )
+                "Incomplete Details",
+                "Please fill in the details of the fault you have encountered.",
+                [
+                    {
+                        text: "OK"
+                    }
+                ]
+            );
         }
     }
-
+    
     return (
         <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -64,16 +66,14 @@ export default function Feedback({ navigation }) {
         >
             <DismissKeyboard>
                 <Screen screenStyle={styles.container}>
-                    <CustomText text={"Tell us how we can improve!"} textStyle={{fontWeight: 'bold', fontSize: 20, marginVertical: 5}} />
-                    
-                    <View style={styles.feedback_input_view}>
+                    <View style={styles.details_input_view}>
                         <TextInput
-                            ref={feedbackTextInput}
-                            style={styles.feedback_text_input}
-                            returnKeyType="go"
+                            ref={detailsTextInput}
+                            style={styles.details_text_input}
+                            returnKeyType="done"
                             placeholderTextColor="#003f5c"
-                            placeholder="Write your feedback here"
-                            onChangeText={setText}
+                            placeholder="e.g. Seat sensor stopped working"
+                            onChangeText={setDetails}
                             multiline={true}
                             onSubmitEditing={handleSubmit}
                             allowFontScaling={false}
@@ -85,15 +85,14 @@ export default function Feedback({ navigation }) {
                         onPress={handleSubmit}
                         color='#46f583'
                         uppercase={false}
-                        style={{marginTop: 10, width: '80%'}}
-                    >Submit feedback</Button>
+                        style={{marginTop: 20, width: '80%'}}
+                    >Submit report</Button>
                 </Screen>
             </DismissKeyboard>
         </KeyboardAvoidingView>
-    );
-}
 
-const { width, height } = Dimensions.get('window');
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -101,14 +100,15 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
 
-    feedback_input_view: {
+    details_input_view: {
         backgroundColor: "#dbd6d2",
         width: "80%",
         height: "60%",
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        marginTop: 10
     },
 
-    feedback_text_input: {
+    details_text_input: {
         backgroundColor: "#dbd6d2",
         height: 45,
         width: "100%",
