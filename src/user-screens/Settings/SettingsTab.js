@@ -3,7 +3,7 @@ import Settings from './Settings';
 import ChangePassword from './ChangePassword';
 import UpdateEmail from './UpdateEmail';
 import DeleteAccountAuthentication from './DeleteAccountAuthentication';
-import Tutorial from './Tutorial';
+// import Tutorial from './Tutorial';
 import Feedback from './Feedback';
 import ReportFaultySeat from './ReportFaultySeat';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -14,12 +14,12 @@ export default function SettingsTab() {
     return (
         <SettingsStack.Navigator initialRouteName="Settings">
             <SettingsStack.Screen name="Settings" component={Settings} />
-            <SettingsStack.Screen name="ChangePassword" component={ChangePassword} />
-            <SettingsStack.Screen name="UpdateEmail" component={UpdateEmail} options={{title: ""}} />
-            <SettingsStack.Screen name="DeleteAccountAuthentication" component={DeleteAccountAuthentication} options={{title: ""}} />
-            <SettingsStack.Screen name="Tutorial" component={Tutorial} />
-            <SettingsStack.Screen name="Feedback" component={Feedback} options={{title: ""}} />
-            <SettingsStack.Screen name="ReportFaultySeat" component={ReportFaultySeat} options={{title: ""}} />
+            <SettingsStack.Screen name="ChangePassword" component={ChangePassword} options={{title: "Reset Password"}} />
+            <SettingsStack.Screen name="UpdateEmail" component={UpdateEmail} options={{title: "Update Email"}} />
+            <SettingsStack.Screen name="DeleteAccountAuthentication" component={DeleteAccountAuthentication} options={{title: "Delete Account"}} />
+            {/* <SettingsStack.Screen name="Tutorial" component={Tutorial} /> */}
+            <SettingsStack.Screen name="Feedback" component={Feedback} options={{title: "Feedback Form"}} />
+            <SettingsStack.Screen name="ReportFaultySeat" component={ReportFaultySeat} options={{headerShown: false}} />
         </SettingsStack.Navigator>
     );
 }

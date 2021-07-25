@@ -99,3 +99,99 @@ export const deleteAllUserData = async (userId, onSuccess, onError) => {
         return onError(error);
     }
 }
+
+export const addNotification = async (userId, deleteTime, locationId, onSuccess, onError) => {
+    try {
+        const location = db.ref(`notifications/${userId}`).child(`locations/${locationId}`);
+        await location.set(deleteTime);
+        // notification has a .key field where the locationId object is stored
+        return onSuccess(location);
+    } catch (error) {
+        return onError(error);
+    }
+}
+
+export const removeNotification = async (userId, locationId, onSuccess, onError) => {
+    try {
+        await db.ref(`notifications/${userId}/locations/${locationId}`).remove();
+        return onSuccess();
+    } catch (error) {
+        return onError(error);
+    }
+}
+
+export const subscribeToNotificationsChanges = (userId, onValueChanged) => {
+    const locations = db.ref(`notifications/${userId}/locations`);
+    locations.on("value", (dataSnapshot) => onValueChanged(dataSnapshot.val()));
+    return () => locations.off("value");
+}
+
+export const checkNotification = async (userId, locationId, onSuccess, onError) => {
+    try {
+        const notificationsSnapshot = await db.ref(`notifications/${userId}`).get();
+        const location = notificationsSnapshot.child(`locations/${locationId}`).exists();
+        return onSuccess(location);
+    } catch (error) {
+        return onError(error);
+    }
+}
+
+export const initializeNotifications = async (userId, onSuccess, onError) => {
+    try {
+        const userNotificationsSettings = db.ref(`notifications`).child(`${userId}/notificationsSettings`);
+        await userNotificationsSettings.set({
+            expoPushToken: "",
+            timeLimitHours: 0,
+            timeLimitMinutes: 30,
+            thresholdVacancy: 1,
+            groupedSeats: false
+        });
+        const unreadNotifications = db.ref(`notifications`).child(`${userId}/unreadNotifications`);
+        await unreadNotifications.set(0);
+        return onSuccess(userNotificationsSettings);
+    } catch (error) {
+        return onError(error);
+    }
+}
+
+export const checkUnreadNotifications = async (userId, onSuccess, onError) => {
+    try {
+        const unreadNotificationsSnapshot = await db.ref(`notifications/${userId}/unreadNotifications`).get();
+        const unreadNotifications = unreadNotificationsSnapshot.val();
+        return onSuccess(unreadNotifications);
+    } catch (error) {
+        return onError(error);
+    }
+}
+
+export const changeUnreadNotifications = async (userId, newValue, onSuccess, onError) => {
+    try {
+        const unreadNotifications = db.ref(`notifications/${userId}/unreadNotifications`);
+        await unreadNotifications.set(newValue);
+        const unreadNotificationsSnapshot = await unreadNotifications.get();
+        return onSuccess(unreadNotificationsSnapshot.val());
+    } catch (error) {
+        return onError(error);
+    }
+}
+
+export const checkNotificationsSettings = async (userId, onSuccess, onError) => {
+    try {
+        const notificationsSettingsSnapshot = await db.ref(`notifications/${userId}/notificationsSettings`).get();
+        const notificationsSettings = notificationsSettingsSnapshot.val();
+        return onSuccess(notificationsSettings);
+    } catch (error) {
+        return onError(error);
+    }
+}
+
+export const changeNotificationSetting = async (userId, notificationSetting, notificationSettingNewValue, onSuccess, onError) => {
+    try {
+        const setting = db.ref(`notifications/${userId}/notificationsSettings`).child(`${notificationSetting}`);
+        await setting.set(notificationSettingNewValue);
+        const settingSnapshot = await setting.get();
+        return onSuccess(settingSnapshot);
+    } catch (error) {
+        return onError(error);
+    }
+}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TouchableOpacity, StyleSheet, View, Dimensions, Platform, Alert } from 'react-native';
 import Screen from '../../../misc_components/Screen';
+import CustomText from '../../../misc_components/CustomText';
 import MapView, { Marker } from 'react-native-maps';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
@@ -78,6 +79,7 @@ export default function Search() {
                 mapRef.current.animateToRegion(mapRegion, 10);
                 setCurrentRegion(mapRegion);
             } catch (error) {
+                // console.log(error);
                 Alert.alert(
                     "Oops, something went wrong!",
                     "We are unable to obtain your last known position.",
@@ -117,11 +119,12 @@ export default function Search() {
                                 title={marker.title}
                                 description={marker.description}
                             >
-                            {
+                            {/* {
                                 Platform.OS === "ios"
                                     ? <Avatar size="small" rounded title={marker.title} containerStyle={{backgroundColor: '#b0b0b0'}} />
                                     : <Avatar size="small" rounded title={marker.title} titleStyle={{ fontSize: 10 }} containerStyle={{backgroundColor: '#b0b0b0'}} />
-                            }
+                            } */}
+                            <Avatar size="small" rounded renderPlaceholderContent={<CustomText text={marker.title} textStyle={{color: 'white', fontSize: 10}} />} containerStyle={{backgroundColor: '#b0b0b0'}} />
                             </Marker>
                         ))
                         : (<></>)

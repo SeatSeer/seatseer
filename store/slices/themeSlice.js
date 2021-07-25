@@ -13,7 +13,7 @@ export const themeSlice = createSlice({
             state.darkTheme = !state.darkTheme;
         },
         displayDarkTheme: (state, action) => {
-            // payload will contain the current userId
+            // payload will contain the current setting for dark theme in firebase
             state.darkTheme = action.payload;
         }
     }
