@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, StyleSheet, View, TextInput, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, View, TextInput, KeyboardAvoidingView } from 'react-native';
 import { Button } from 'react-native-paper';
 import DismissKeyboard from '../../../../misc_components/DismissKeyboard';
 import Screen from '../../../../misc_components/Screen';
 import CustomText from '../../../../misc_components/CustomText';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { idSearch, checkValidLocationId, checkValidSeatId } from '../../../../backend/ElasticSearch';
 
 export default function SeatDetails({ navigation, route }) {
     const [location, setLocation] = useState("");
@@ -15,7 +17,6 @@ export default function SeatDetails({ navigation, route }) {
     
     useEffect(() => {
         seatLocationTextInput.current.focus();
-        console.log("uh")
     }, []);
 
     useEffect(() => {
@@ -27,9 +28,25 @@ export default function SeatDetails({ navigation, route }) {
 
     function handleSubmit() {
         if (location && seatNumber) {
-            setLocationFieldError(null);
-            setSeatNumberFieldError(null);
-            navigation.navigate("FaultDetails", { location, seatNumber });
+            // Query from backend to check if the inputs are valid
+            idSearch([location], 
+                (results) => {
+                    if (!checkValidLocationId(results)) {
+                        setLocationFieldError(`Invalid location ID.`);
+                        setSeatNumberFieldError(null);
+                        return;
+                    }
+                    if (!checkValidSeatId(results, seatNumber)) {
+                        setLocationFieldError(null);
+                        setSeatNumberFieldError(`Invalid seat ID.`);
+                        return;
+                    }
+                    setLocationFieldError(null);
+                    setSeatNumberFieldError(null);
+                    navigation.navigate("FaultDetails", { location, seatNumber });
+                },
+                (error) => console.error(`ID search in Seat Details: ${error}`)
+            )
         } else {
             if (!location) {
                 setLocationFieldError("Compulsory field.");
@@ -41,15 +58,6 @@ export default function SeatDetails({ navigation, route }) {
             } else {
                 setSeatNumberFieldError(null);
             }
-            Alert.alert(
-                "Incomplete Details",
-                "Please fill in the location ID and seat number",
-                [
-                    {
-                        text: "OK"
-                    }
-                ]
-            );
         }
     }
 
@@ -76,6 +84,7 @@ export default function SeatDetails({ navigation, route }) {
                                 onSubmitEditing={() => seatNumberTextInput.current.focus()}
                                 allowFontScaling={false}
                                 defaultValue={route.params ? route.params.locationId : ""}
+                                value={location}
                             />
                         </View>
                         {
@@ -84,7 +93,7 @@ export default function SeatDetails({ navigation, route }) {
                                 : <></>
                         }
 
-                        <CustomText text={"Seat number"} textStyle={{alignSelf: 'flex-start', fontSize: 12, marginBottom: 2}} />
+                        <CustomText text={"Seat ID"} textStyle={{alignSelf: 'flex-start', fontSize: 12, marginBottom: 2}} />
                         <View style={{...styles.seat_number_view, borderWidth: seatNumberFieldError ? 1 : 0, borderColor: 'red'}}>
                             <TextInput
                                 ref={seatNumberTextInput}
@@ -97,6 +106,7 @@ export default function SeatDetails({ navigation, route }) {
                                 onSubmitEditing={handleSubmit}
                                 allowFontScaling={false}
                                 defaultValue={route.params ? route.params.seatNumber : ""}
+                                value={seatNumber}
                             />
                         </View>
                         {
@@ -112,7 +122,8 @@ export default function SeatDetails({ navigation, route }) {
                         color='#cfcdcc'
                         uppercase={false}
                         style={{width: '80%', marginTop: 20}}
-                    >Scan a QR code</Button>
+                        icon={({ size, color }) => (<Ionicons name="qr-code-outline" color={color} size={size} />)}
+                    >Scan QR (autofills seat info)</Button>
 
                     <Button
                         mode="contained"

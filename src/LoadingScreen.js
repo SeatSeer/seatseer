@@ -19,6 +19,7 @@ import {
  } from 'expo-notifications';
 import { setOnAuthStateChanged, setOnUserEmailVerifiedChanged } from '../api/auth';
 import { getDarkTheme, checkNotificationsSettings, checkUnreadNotifications , changeNotificationSetting, changeUnreadNotifications } from '../api/rtdb';
+import { updateKafkaNotifications } from '../backend/Kafka';
 
 // addNotificationReceivedListener(notification => {
 //     // Notification will be one of the following cases:
@@ -70,6 +71,10 @@ async function registerForPushNotificationsAsync() {
 
 export default function MainScreen() {
     const dispatch = useDispatch();
+    const timeLimitHours = useSelector((state) => state.notifications.timeLimitHours);
+    const timeLimitMinutes = useSelector((state) => state.notifications.timeLimitMinutes);
+    const thresholdVacancy = useSelector((state) => state.notifications.thresholdVacancy);
+    const groupedSeats = useSelector((state) => state.notifications.groupedSeats);
     const accountDeleted = useSelector((state) => state.auth.accountDeleted);
 
     useEffect(() => {
@@ -102,6 +107,7 @@ export default function MainScreen() {
                         registerForPushNotificationsAsync().then(token => {
                             dispatch(setExpoPushToken(token));
                             changeNotificationSetting(user.uid, 'expoPushToken', token, () => {}, () => {});
+                            updateKafkaNotifications(user.uid, token, timeLimitHours, timeLimitMinutes, thresholdVacancy, groupedSeats, () => {}, () => {});
                         });
                     },
                     () => {
