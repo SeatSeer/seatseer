@@ -18,6 +18,7 @@ import { createAccount } from '../../api/auth';
 import { initializeDarkTheme, initializeNotifications } from '../../api/rtdb';
 import { setStateToIsLoading } from '../../store/slices/authSlice';
 import { useDispatch } from 'react-redux';
+import { updateKafkaNotifications } from '../../backend/Kafka';
 
 export default function SignUpScreen() {
     const [name, setName] = useState('');
@@ -54,6 +55,7 @@ export default function SignUpScreen() {
                 async (user) => {
                     await initializeNotifications(user.uid, () => {}, console.error);
                     await initializeDarkTheme(user.uid, () => {}, console.error);
+                    await updateKafkaNotifications(user.uid, "", 0, 30, 1, false, () => {}, () => {})
                     dispatch(setStateToIsLoading());
                 },
                 // onError callback function

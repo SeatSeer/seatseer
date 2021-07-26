@@ -172,6 +172,18 @@ export const filterWords = {
     "I": "Near To Mrt"
 }
 
+export const checkValidLocationId = (results) => {
+    return results.hits.hits.length > 0;
+}
+
+export const checkValidSeatId = (results, seatId) => {
+    if (results.hits.hits.length) {
+        return results.hits.hits[0]._source.total >= Number(seatId);
+    } else {
+        return false;
+    }
+}
+
 export const transformToMarkers = (results) => {
     return results.hits.hits.map((data, index) => {
         return {

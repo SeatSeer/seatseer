@@ -310,17 +310,35 @@ export default function Panel({ data, handleRefresh }) {
                     { cancelable: true }
                 )
             } else {
-                // Format the expiry date and time correctly to store in firebase and kafka
-                const notificationDeleteTime = new Date(new Date().valueOf() + timeLimitHours * 3600000 + timeLimitMinutes * 60000).toISOString();
-                addNotification(currentUserId, notificationDeleteTime, data.id,
-                    // onSuccess
-                    () => {
-                        setAlert(true);
-                        addToKafkaNotifications(currentUserId, expoPushToken, data.id, () => console.log("SUCCESS"), (error) => console.error(`BAD NEWS: ${error}`))
-                    },
-                    // onError
-                    console.error
-                )
+                // If the vacancy of the room is higher than the user's threshold vacancy, alert the user to double confirm
+                if (Number(data.seats) > thresholdVacancy) {
+                    Alert.alert(
+                        "Alert",
+                        "The current number of vacant seats in this room is already higher than the number of vacant seats you are currently looking for (i.e. your threshold vacancy).\nDo you still want to be notified about vacancy changes for this location?",
+                        [
+                            {
+                                text: "Yes",
+                                onPress: () => {
+                                    // Format the expiry date and time correctly to store in firebase and kafka
+                                    const notificationDeleteTime = new Date(new Date().valueOf() + timeLimitHours * 3600000 + timeLimitMinutes * 60000).toISOString();
+                                    addNotification(currentUserId, notificationDeleteTime, data.id,
+                                        // onSuccess
+                                        () => {
+                                            setAlert(true);
+                                            addToKafkaNotifications(currentUserId, expoPushToken, data.id, () => console.log("SUCCESS"), (error) => console.error(`BAD NEWS: ${error}`))
+                                        },
+                                        // onError
+                                        console.error
+                                    )
+                                }
+                            },
+                            {
+                                text: "No"
+                            }
+                        ],
+                        { cancelable: true }
+                    )
+                }
             }
         }
     }
