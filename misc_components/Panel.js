@@ -131,8 +131,8 @@ function ReviewsTab(props) {
                         }
                     },
                     { text: "No" },
-                    { cancelable: true }
-                ]
+                ],
+                { cancelable: true }
             )
         }
     }
