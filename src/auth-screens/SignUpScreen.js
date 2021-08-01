@@ -40,7 +40,16 @@ export default function SignUpScreen() {
 
     function handleSignUp() {
         Keyboard.dismiss();
-        if (password !== reEnterPassword) {
+        if (!name) {
+            Alert.alert(
+                "Username invalid",
+                `Please enter a username.`,
+                [{
+                    text: "OK"
+                }],
+                { cancelable: true }
+            )
+        } else if (password !== reEnterPassword) {
             Alert.alert(
                 "Passwords don't match",
                 `The password you have re-entered is not the same as the password you initially keyed in.`,
