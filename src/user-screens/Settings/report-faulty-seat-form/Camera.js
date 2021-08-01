@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import Screen from '../../../../misc_components/Screen';
 import CustomText from '../../../../misc_components/CustomText';
 import { BarCodeScanner } from 'expo-barcode-scanner';
@@ -23,11 +23,22 @@ export default function Camera({ navigation }) {
     function handleBarCodeScanned({ type, data }) {
         /** @todo Create separate alert to reject QR codes not designed by us */
         setScanned(true);
-        const seatDetails = JSON.parse(data);
-        navigation.navigate('SeatDetails', {
-            locationId: seatDetails.roomId,
-            seatNumber: seatDetails.seatNumber
-        })
+        try {
+            const seatDetails = JSON.parse(data);
+            navigation.navigate('SeatDetails', {
+                locationId: seatDetails.roomId,
+                seatNumber: seatDetails.seatNumber
+            })
+            // setScanned(false);
+        } catch (error) {
+            Alert.alert(
+                "Invalid QR code",
+                "Please scan a QR code located on our seats!",
+                [
+                    { text: "OK", onPress: () => setScanned(false) }
+                ]
+            )
+        }
     }
 
     if (hasPermission === null) {
