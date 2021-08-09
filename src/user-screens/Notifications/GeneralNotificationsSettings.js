@@ -1,10 +1,9 @@
-import React, { useLayoutEffect, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, View, StyleSheet } from 'react-native';
 import Screen from '../../../misc_components/Screen';
 import CustomText from '../../../misc_components/CustomText';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTheme } from '@react-navigation/native';
-import { HeaderBackButton } from '@react-navigation/stack';
 import RNPickerSelect from 'react-native-picker-select';
 import SwitchToggle from 'react-native-switch-toggle';
 import { hours, minutes, seatThresholds } from '../../../constants/pickerItems';
@@ -50,8 +49,11 @@ export default function GeneralNotificationsSettings({ navigation }) {
                                 }
                                 if (newThresholdVacancy !== thresholdVacancy) {
                                     dispatch(updateNotificationsSettings({ currentUserId, notificationSetting: 'thresholdVacancy', value: newThresholdVacancy }));
+                                    if (newThresholdVacancy === 1) {
+                                        dispatch(updateNotificationsSettings({ currentUserId, notificationSetting: 'groupedSeats', value: false }));
+                                    }
                                 }
-                                if (newGroupedSeats !== groupedSeats) {
+                                if (newGroupedSeats !== groupedSeats && thresholdVacancy !== 1) {
                                     dispatch(updateNotificationsSettings({ currentUserId, notificationSetting: 'groupedSeats', value: newGroupedSeats }));
                                 }
                                 updateKafkaNotifications(currentUserId, expoPushToken, newTimeLimitHours, newTimeLimitMinutes, newThresholdVacancy, newGroupedSeats,
@@ -85,7 +87,6 @@ export default function GeneralNotificationsSettings({ navigation }) {
                             placeholder={{}}
                             items={hours}
                             onValueChange={(value, index) => {
-                                // dispatch(updateNotificationsSettings({ currentUserId, notificationSetting: 'timeLimitHours', value }));
                                 setNewTimeLimitHours(value);
                             }}
                             value={newTimeLimitHours}
@@ -102,8 +103,11 @@ export default function GeneralNotificationsSettings({ navigation }) {
                             placeholder={{}}
                             items={minutes}
                             onValueChange={(value, index) => {
-                                // dispatch(updateNotificationsSettings({ currentUserId, notificationSetting: 'timeLimitMinutes', value }));
-                                setNewTimeLimitMinutes(value);
+                                if (newTimeLimitMinutes === 0 && newTimeLimitHours === 0) {
+                                    setNewTimeLimitMinutes(1);
+                                } else {
+                                    setNewTimeLimitMinutes(value);
+                                }
                             }}
                             value={newTimeLimitMinutes}
                             useNativeAndroidPickerStyle={false}
@@ -133,7 +137,6 @@ export default function GeneralNotificationsSettings({ navigation }) {
                             placeholder={{}}
                             items={seatThresholds}
                             onValueChange={(value, index) => {
-                                // dispatch(updateNotificationsSettings({ currentUserId, notificationSetting: 'thresholdVacancy', value }));
                                 setNewThresholdVacancy(value);
                             }}
                             value={newThresholdVacancy}
@@ -181,7 +184,6 @@ export default function GeneralNotificationsSettings({ navigation }) {
                         circleColorOn="white"
                         disabled={newThresholdVacancy === 1}
                         onPress={() => {
-                            // dispatch(updateNotificationsSettings({ currentUserId, notificationSetting: 'groupedSeats', value: !groupedSeats }));
                             setNewGroupedSeats(!newGroupedSeats);
                         }}
                     />
