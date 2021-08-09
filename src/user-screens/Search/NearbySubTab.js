@@ -3,7 +3,7 @@ import { FlatList } from "react-native";
 import Panel from "../../../misc_components/Panel";
 import Screen from '../../../misc_components/Screen';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
-import { geoSearch } from "../../../backend/ElasticSearch";
+import { geoSearch, hardcodedGeoSearch } from "../../../backend/ElasticSearch";
 
 /**
  * props contains 3 fields passed from the main Search tab
@@ -116,6 +116,7 @@ export default function NearbySubTab(props) {
             // If the user has not indicated their location permissions yet, we do not make a query.
             if (props.permission !== null) {
                 geoSearch(props.currentRegion.latitude, props.currentRegion.longitude, 0, 10,
+                // hardcodedGeoSearch(
                     // onSuccess callback
                     (results) => {
                         // Filter out all of the locations that are not visible in the current region

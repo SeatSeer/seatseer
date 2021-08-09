@@ -5,7 +5,7 @@ import Start from './src/Start';
 import { LogBox } from 'react-native';
 
 export default function App() {
-  LogBox.ignoreAllLogs();
+  // LogBox.ignoreAllLogs();
   return (
     <Provider store={store}>
       <Start />

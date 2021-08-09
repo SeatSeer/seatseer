@@ -272,3 +272,30 @@ export const sendCommentToElasticSearch = async (username, rating, comment, loca
         return onFailure(error);
     }
 }
+
+export const hardcodedGeoSearch = (onSuccess, onFailure) => {
+    const data = {
+        hits: {
+            hits: [
+                {
+                    _source: {
+                        ID: "AA1",
+                        name: "LOCATION 1",
+                        vacant: "5",
+                        total: "20",
+                        location: {
+                            lat: "1.3742895697749762",
+                            lon: "103.8701888554675",
+                        },
+                        rating: "5",
+                        ratingInfo: [1, 5],
+                        commments: ["Username\`5\`This is a comment"],
+                        features: ["A", "B", "C"],
+                        seatingSize: "2",
+                    }
+                },
+            ]
+        }
+    }
+    return onSuccess(data);
+}

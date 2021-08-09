@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, View, StyleSheet, TouchableOpacity, TextInput, ScrollView, Dimensions, SectionList, KeyboardAvoidingView } from "react-native";
+import { Alert, View, StyleSheet, TouchableOpacity, TextInput, ScrollView, Dimensions, SectionList, KeyboardAvoidingView, Image } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar, Badge, Overlay, Rating } from "react-native-elements";
 import { Button } from "react-native-paper";
@@ -19,6 +19,7 @@ function FloorPlanTab(props) {
     return (
         <ScrollView style={{flex: 1, paddingHorizontal: 5}}>
             <CustomText text={"Coming soon!"} />
+            <Image source={require('../assets/mock-floorplan.png')} style={{resizeMode: 'contain', alignSelf: 'center'}} />
         </ScrollView>
     )
 }
