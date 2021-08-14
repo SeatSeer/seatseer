@@ -21,7 +21,6 @@ export default function Camera({ navigation }) {
      * @param {String} data - The information encoded in the bar code.
      */
     function handleBarCodeScanned({ type, data }) {
-        /** @todo Create separate alert to reject QR codes not designed by us */
         setScanned(true);
         try {
             const seatDetails = JSON.parse(data);

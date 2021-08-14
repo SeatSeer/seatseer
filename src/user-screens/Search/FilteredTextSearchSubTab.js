@@ -63,12 +63,6 @@ export default function FilteredTextSearchSubTab(props) {
     const isFocused = useIsFocused();
     const { dark, colors } = useTheme();
 
-    // useFocusEffect(useCallback(() => {
-    //     /** @todo Fix bug where keyboard keeps popping up after search result is submitted */
-    //     searchBox.current.focus();
-    //     return () => searchBox.current.blur();
-    // }))
-
     /**
      * Set the markers on the map only when this tab is in focus, and everytime the panels on this map change
      */
