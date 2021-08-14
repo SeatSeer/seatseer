@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { TouchableOpacity, StyleSheet, View, Dimensions, Platform, Alert } from 'react-native';
+import { TouchableOpacity, StyleSheet, View, Dimensions, Alert } from 'react-native';
 import Screen from '../../../misc_components/Screen';
 import CustomText from '../../../misc_components/CustomText';
 import MapView, { Marker } from 'react-native-maps';
@@ -119,11 +119,6 @@ export default function Search() {
                                 title={marker.title}
                                 description={marker.description}
                             >
-                            {/* {
-                                Platform.OS === "ios"
-                                    ? <Avatar size="small" rounded title={marker.title} containerStyle={{backgroundColor: '#b0b0b0'}} />
-                                    : <Avatar size="small" rounded title={marker.title} titleStyle={{ fontSize: 10 }} containerStyle={{backgroundColor: '#b0b0b0'}} />
-                            } */}
                             <Avatar size="small" rounded renderPlaceholderContent={<CustomText text={marker.title} textStyle={{color: 'white', fontSize: 10}} />} containerStyle={{backgroundColor: '#b0b0b0'}} />
                             </Marker>
                         ))

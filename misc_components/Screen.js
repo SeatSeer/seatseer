@@ -26,19 +26,9 @@ export default function Screen(props) {
 const styles = StyleSheet.create({
     view_container: {
         flex: 1,
-        // alignItems: 'center',
-        // justifyContent: 'center',
-        // padding: 0,
-        // width: '100%',
-        // height: '100%'
     },
 
     scroll_view_container_style: {
         flexGrow: 1
-        // flex: 1,
-        // alignItems: 'center',
-        // justifyContent: 'center',
-        // padding: 0,
-        // width: '100%',
     }
 });

@@ -2,7 +2,8 @@ const headers = {
     "Content-Type": "application/vnd.kafka.json.v2+json"
 }
 
-const url = "http://54.161.242.111:8082/topics"
+/** Endpoint for RESTful API call to Kafka */
+const url = "http://34.227.176.142:8082/topics"
 
 export const addToKafkaNotifications = async (userID, expoPushToken, roomID, onSuccess, onFailure) => {
     try {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, Text, SafeAreaView, Dimensions } from 'react-native';
+import { Image, StyleSheet, Dimensions } from 'react-native';
 import Screen from '../../misc_components/Screen';
 import CustomText from '../../misc_components/CustomText';
 import { Button } from 'react-native-paper';

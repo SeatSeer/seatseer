@@ -12,28 +12,10 @@ import {
     getExpoPushTokenAsync,
     setNotificationChannelAsync,
     AndroidImportance,
-    setNotificationHandler,
-    addNotificationReceivedListener,
-    addNotificationResponseReceivedListener,
-    scheduleNotificationAsync
  } from 'expo-notifications';
 import { setOnAuthStateChanged, setOnUserEmailVerifiedChanged } from '../api/auth';
 import { getDarkTheme, checkNotificationsSettings, checkUnreadNotifications , changeNotificationSetting, changeUnreadNotifications } from '../api/rtdb';
 import { updateKafkaNotifications } from '../backend/Kafka';
-
-// addNotificationReceivedListener(notification => {
-//     // Notification will be one of the following cases:
-//     // 'ON' -> There is seat vacancy at a location according to the conditions of the user
-//     // 'OFF' -> Seat vacancy no longer available at a location according to the conditions of the user
-//     if (notification.request.content.title === 'on') {
-
-//     } else {
-
-//     }
-// })
-
-// addNotificationResponseReceivedListener()
-
 
 async function registerForPushNotificationsAsync() {
     let token;

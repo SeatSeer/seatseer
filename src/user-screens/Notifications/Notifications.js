@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState, useRef } from 'react';
-import { FlatList, StyleSheet, Platform } from 'react-native';
+import { FlatList } from 'react-native';
 import Screen from '../../../misc_components/Screen';
 import Panel from '../../../misc_components/Panel';
 import { Button } from 'react-native-elements';
@@ -16,18 +16,12 @@ export default function Notifications({ navigation }) {
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            // headerLeft: () => (<Ionicons name="ellipsis-vertical" color="#1e90ff" size={20} onPress={() => navigation.navigate('GeneralNotificationsSettings')} />),
             headerLeft: () => (<Button title="Options" type="clear" onPress={() => navigation.navigate('GeneralNotificationsSettings')} titleStyle={{color: 'tomato'}} />),
             headerLeftContainerStyle: {
                 alignItems: 'center',
                 paddingLeft: 5
             },
-            headerTitle: "Notifications",
-            // headerRight: () => (<Button title="Edit" type="clear" onPress={() => {}} titleStyle={{color: 'tomato'}} />),
-            // headerRightContainerStyle: {
-            //     alignItems: 'center',
-            //     paddingRight: 5
-            // }
+            headerTitle: "Notifications"
         });
     }, [navigation]);
 
