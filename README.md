@@ -8,7 +8,7 @@
    - [3.2 Future](#future)
 - [4. Architecture](#architecture)
    - [4.1 Site Map](#site-map)
-   - [4.2 Activity Diagram](#activity)
+   - [4.2 Activity Diagram](#activity-diagram)
    - [4.3 Program Flowchart](#program-flowchart)
    - [4.4 Data Management](#data-management)
 - [5. System Testing](#system-testing)
@@ -20,13 +20,13 @@
 ## <a name="introduction"></a>1. Introduction
 ### Deployed Mobile Application
 
-![Poster](https://github.com/SeatSeer/seatseer/blob/master/images/Poster.png)
+![Poster](images/Poster.png)
 
 Link to our mobile application: [https://exp.host/@seatseer/seatseer](https://exp.host/@seatseer/seatseer)
 
 Please try our application on **Android**, as iOS does not allow deployment unless an explicit approval is given by Apple. We have performed our demo locally on iOS to show how it might look on the platform.
 
-(**NOTE**: Please contact us via [email](seatseerorbital2021@gmail.com) prior to testing our app. Our application is currently deployed on AWS using an “educate account”, which shuts down services every 4 hours.)
+(**NOTE**: Please contact us via email at **seatseerorbital2021@gmail.com** prior to testing our app. Our application is currently deployed on AWS using an “educate account”, which shuts down services every 4 hours.)
 
 ### Motivation
 
@@ -47,12 +47,6 @@ Inspired by the SAF medical corps motto, “To seek, To save, To serve”, SeatS
 
 ## <a name="user-stories"></a>2. User Stories
 
-**High priority \> Must Have: \* \* \***
-
-**Medium priority \> Should Have: \* \***
-
-**Low priority \> Good to Have: \***
-
 **Our target audience is NUS students who is interested in finding a seat**
 
 As a student in NUS, ...
@@ -69,6 +63,12 @@ As a student in NUS, ...
 | \* \* | Be **notified immediately** for a vacancy for a certain place where I love to study at but cannot find an available seat | Do not have to **physically check** for vacancies every now and then |
 | \* | **Interact** with the public space by reading and writing **comments** and ratings about it | **Share** and **communicate** with people the perks and inconveniences of the venue |
 
+**High priority \> Must Have: \* \* \***
+
+**Medium priority \> Should Have: \* \***
+
+**Low priority \> Good to Have: \***
+
 _Note: all the low priority features (features that we deem non vital for normal use of the application), will be mentioned in the section [3.2 Possible Future Implementations](#future)
 
 ## <a name="components"></a>3. Components
@@ -84,53 +84,53 @@ The frontend of our mobile application is made up of these main components:
 
 Below is the mock-up of our home tab.
 
-![Home tab](https://github.com/SeatSeer/seatseer/blob/master/images/Home_Tab.png)
+![Home tab](images/Home_Tab.png)
 
 #### **Search tab**
 
 Below shows search results by your current location.
 
-![Location search](https://github.com/SeatSeer/seatseer/blob/master/images/Location_Search.png)
+![Location search](images/Location_Search.png)
 
 Below shows in-depth information about each room.
 
-![Panel information](https://github.com/SeatSeer/seatseer/blob/master/images/Panel_Information.png)
+![Panel information](images/Panel_Information.png)
 
 Below shows rooms registered as Favorites.
 
-![Favorites tab](https://github.com/SeatSeer/seatseer/blob/master/images/Favorites_Tab.png)
+![Favorites tab](images/Favorites_Tab.png)
 
 Below shows search results by text and filter queries.
 
-![Text search](https://github.com/SeatSeer/seatseer/blob/master/images/Text_Search.png)
+![Text search](images/Text_Search.png)
 
 #### **Notification tab**
 
 Below shows our Notification tab.
 
-![Notification tab](https://github.com/SeatSeer/seatseer/blob/master/images/Notification_Tab.png)
+![Notification tab](images/Notification_Tab.png)
 
 #### **Settings**
 
 Below shows our Settings.
 
-![Settings](https://github.com/SeatSeer/seatseer/blob/master/images/Settings.png)
+![Settings](images/Settings.png)
 
 Our app allows for dark mode as well.
 
-![Dark mode](https://github.com/SeatSeer/seatseer/blob/master/images/Dark_Mode.png)
+![Dark mode](images/Dark_Mode.png)
 
 We have created 'feedback' and 'Report a fault' forms for our users.
 
-![Feedback](https://github.com/SeatSeer/seatseer/blob/master/images/Feedback.png)
+![Feedback](images/Feedback.png)
 
-![Report a fault](https://github.com/SeatSeer/seatseer/blob/master/images/Report_Fault.png)
+![Report a fault](images/Report_Fault.png)
 
 There are account control features like update email, and delete account as well.
 
-![Update email](https://github.com/SeatSeer/seatseer/blob/master/images/Update_Email.png)
+![Update email](images/Update_Email.png)
 
-![Delete account](https://github.com/SeatSeer/seatseer/blob/master/images/Delete_Account.png)
+![Delete account](images/Delete_Account.png)
 
 ### <a name="future"></a>3.2 Possible Future Implementations
 
@@ -140,19 +140,19 @@ For the hardware design of the sensors, we referred to 2 papers that have explor
 
 To address the possibility of students removing the sensors, we refer to a [project done by 5 undergraduates at University College London (UCL)](https://www.element14.com/community/community/stem-academy/stem-projects/blog/2017/06/08/study-hunt-library-seat-availability-live-monitoring-system). This project focused on using infrared sensors **attached to ceilings** instead of the standard pressure plates on chairs. Such a solution also has other benefits such as protecting user **privacy** as it acts as an alternative to using surveillance cameras.
 
-![Sensor hardware](https://github.com/SeatSeer/seatseer/blob/master/images/Sensor_Hardware.png)
+![Sensor hardware](images/Sensor_Hardware.png)
 
-![Sensor diagram](https://github.com/SeatSeer/seatseer/blob/master/images/Sensor_Diagram.png)
+![Sensor diagram](images/Sensor_Diagram.png)
 
 Signals were sent over WiFi to a cloud server via a RESTful API. However, a downside to this is that it cannot be applied to **open areas** without ceilings.
 
 To address the issue of detecting “**choped**” seats, we refer to a [study done by researchers at Singapore Management University (SMU)](https://ink.library.smu.edu.sg/cgi/viewcontent.cgi?article=4118&context=sis_research). They explored utilised **capacitive sensors** attached to the underside of a table to detect seat hogging.
 
-![Capacitive sensors](https://github.com/SeatSeer/seatseer/blob/master/images/Capacitive_Sensors.png)
+![Capacitive sensors](images/Capacitive_Sensors.png)
 
 A person occupying a seat has capacitance that overlaps with that of a book and a laptop’s capacitance range. The higher **variance** in signal for a person occupying a seat as compared to an object allows human occupancy to be differentiated.
 
-![Performance graph](https://github.com/SeatSeer/seatseer/blob/master/images/Performance_Graph.png)
+![Performance graph](images/Performance_Graph.png)
 
 This could be applied to our project where if someone leaves a seat unoccupied with their items still at their seat, the sensor could update **every 1 minute** to check the seat’s status.
 
@@ -161,19 +161,19 @@ This could be applied to our project where if someone leaves a seat unoccupied w
 
 The diagram below shows the various screens in the app, and how a user might go about **navigating** from one to another.
 
-![User logged out](https://github.com/SeatSeer/seatseer/blob/master/images/Logged_Out.png)
+![User logged out](images/Logged_Out.png)
 
-![User logged in](https://github.com/SeatSeer/seatseer/blob/master/images/Logged_In.png)
+![User logged in](images/Logged_In.png)
 
 ### <a name="activity-diagram"></a>4.2 Activity Diagram
 
 The diagram below shows how a SeatSeer user might **interact** with the app’s features and interface.
 
-![Activity Diagram](https://github.com/SeatSeer/seatseer/blob/master/images/Activity_Diagram.png)
+![Activity Diagram](images/Activity_Diagram.png)
 
 ### <a name="program-flowchart"></a>4.3 Program Flowchart
 
-![Program flowchart](https://github.com/SeatSeer/seatseer/blob/master/images/Program_Flowchart.png)
+![Program flowchart](images/Program_Flowchart.png)
 
 #### **Tech Stack**
 - React Native
@@ -245,14 +245,15 @@ We regretfully have yet to implement the **Home tab** feature, along with the ba
 
 The diagrams below show how SeatSeer manages **user and seat data** in JSON format.
 
-![Data Management](https://github.com/SeatSeer/seatseer/blob/master/images/Data_Management.png)
+![Data Management](images/Data_Management.png)
 
 ## <a name="system-testing"></a>5. System Testing
+
 ### <a name="quality-assurance"></a>5.1 Quality Assurance
 
 #### **Frontend Testing**
 
-![Frontend Testing](https://github.com/SeatSeer/seatseer/blob/master/images/Frontend_Testing.png)
+![Frontend Testing](images/Frontend_Testing.png)
 
 We ran automated test cases on an Android device using **TestProject**. We created a detailed list of test cases for Regression Testing and selected a few major cases that will become the backbone of our app functionality to be part of Smoke Testing. 
 
@@ -260,7 +261,7 @@ TestProject was ideal for running **automated test cases**. It records user acti
 
 #### **Backend Testing**
 
-![Backend Testing](https://github.com/SeatSeer/seatseer/blob/master/images/Backend_Testing.png)
+![Backend Testing](images/Backend_Testing.png)
 
 We ran automated test cases for back-end endpoints by sending HTTP requests using **Postman**. There are three notable endpoints, which are ElasticSearch, Firebase, and Kafka Rest API.
 
@@ -301,7 +302,7 @@ In this section, we will give a **summary of the feedback** received, and how we
 1. Scale up the dataset and check if the system is able to handle the large dataset.
 2. Deal with loopholes such as non-existent location, non-local location, or empty review. Decide on how to handle and display such cases.
 
-We also scaled up our dataset size from **1873**, and were happy to observe that our system could handle these data with ease. For now, if the registered room has a non-existent location (i.e. the latitude and longitude values are absent or invalid), we will not display the location on the map. Non-local locations will be displayed nonetheless. Empty reviews are not possible as it is mandatory to fill up at least a rating before submitting a review.
+We also scaled up our dataset size to **1873**, and were happy to observe that our system could handle these data with ease. For now, if the registered room has a non-existent location (i.e. the latitude and longitude values are absent or invalid), we will not display the location on the map. Non-local locations will be displayed nonetheless. Empty reviews are not possible as it is mandatory to fill up at least a rating before submitting a review.
 
 ## <a name="acknowledgements"></a>6. Acknowledgements
 
