@@ -1,4 +1,7 @@
 # SeatSeer
+
+[![Watch the video](images/Logo.png)](https://youtu.be/NM91nd0S68I)
+
 ## Mobile App Built for Orbital 2021
 
 - [1. Introduction](#introduction)
