@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e1ce831e-b5ad-401c-b706-0a4da57b506d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/BackendUI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CurrentVacancy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DataGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ElasticConsumer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/NotificationManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SensorProducer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../frontend/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/api/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api/firebase.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/api/firebase.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api/rtdb.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/api/rtdb.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/adaptive-icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/adaptive-icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/expo.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/expo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/favicon.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/favicon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/firebase.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/firebase.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/kafka-night-mode.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/kafka-night-mode.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/kafka.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/kafka.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/logo-with-transparency.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/logo-with-transparency.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/logo-without-text-with-transparency.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/logo-without-text-with-transparency.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/logo-without-text.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/logo-without-text.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/mock-floorplan.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/mock-floorplan.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/mock-home-2.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/mock-home-2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/mock-home.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/mock-home.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/mongodb.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/mongodb.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/react-native.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/react-native.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/splash.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/assets/splash.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../babel.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/babel.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElasticSearch.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/backend/ElasticSearch.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Kafka.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/backend/Kafka.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../constants/pickerItems.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/constants/pickerItems.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../constants/themes.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/constants/themes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../misc_components/CrowdednessIndicator.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/misc_components/CrowdednessIndicator.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../misc_components/CustomText.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/misc_components/CustomText.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../misc_components/DismissKeyboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/misc_components/DismissKeyboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../misc_components/Panel.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/misc_components/Panel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../misc_components/Screen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/misc_components/Screen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/AccountDeleted.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/AccountDeleted.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/LoadingScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/LoadingScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/Start.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/Start.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/auth-screens/AuthStack.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/auth-screens/AuthStack.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/auth-screens/LoginScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/auth-screens/LoginScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/auth-screens/SignUpScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/auth-screens/SignUpScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/auth-screens/StartScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/auth-screens/StartScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/auth-screens/VerifyEmailScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/auth-screens/VerifyEmailScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/MainTabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/MainTabs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Notifications/GeneralNotificationsSettings.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Notifications/GeneralNotificationsSettings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Notifications/Notifications.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Notifications/Notifications.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Notifications/NotificationsTab.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Notifications/NotificationsTab.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Search/FavouritesSubTab.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Search/FavouritesSubTab.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Search/FilteredTextSearchSubTab.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Search/FilteredTextSearchSubTab.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Search/NearbySubTab.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Search/NearbySubTab.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Search/Search.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Search/Search.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Search/SearchTab.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Search/SearchTab.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Settings/ChangePassword.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Settings/ChangePassword.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Settings/DeleteAccountAuthentication.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Settings/DeleteAccountAuthentication.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Settings/Feedback.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Settings/Feedback.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Settings/ReportFaultySeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Settings/ReportFaultySeat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Settings/Settings.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Settings/Settings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Settings/SettingsTab.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Settings/SettingsTab.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Settings/UpdateEmail.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Settings/UpdateEmail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Settings/report-faulty-seat-form/Camera.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Settings/report-faulty-seat-form/Camera.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Settings/report-faulty-seat-form/FaultDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Settings/report-faulty-seat-form/FaultDetails.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/user-screens/Settings/report-faulty-seat-form/SeatDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/user-screens/Settings/report-faulty-seat-form/SeatDetails.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../store/slices/authSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/store/slices/authSlice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../store/slices/notificationsSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/store/slices/notificationsSlice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../store/slices/themeSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/store/slices/themeSlice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../store/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/store/store.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/yarn.lock" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1yDrA24qkjHEsGPfqieqkROoACV" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../Y1S2/Java files/Playground" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e1ce831e-b5ad-401c-b706-0a4da57b506d" name="Changes" comment="" />
+      <created>1631796852983</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1631796852983</updated>
+    </task>
+    <servers />
+  </component>
+</project>
