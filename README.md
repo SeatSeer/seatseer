@@ -2,6 +2,10 @@
 
 [![Watch the video](images/Video.png)](https://youtu.be/NM91nd0S68I)
 
+SeatSeer is created by Bryan Kwok and Lee Jae Ho.
+
+To read our codebase, [here](https://github.com/SeatSeer/seatseer)!
+
 ## Mobile App Built for Orbital 2021
 
 - [1. Introduction](#introduction)
